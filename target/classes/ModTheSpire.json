@@ -1,0 +1,10 @@
+{
+  "modid": "SaveStateMod",
+  "name": "STS Save State Mod",
+  "author_list": ["Board Engineer"],
+  "description": "${project.description}",
+  "version": "1.0.0",
+  "sts_version": "${SlayTheSpire.version}",
+  "mts_version": "${ModTheSpire.version}",
+  "dependencies": ["basemod"]
+}
