@@ -4,7 +4,7 @@
   "author_list": ["Board Engineer"],
   "description": "${project.description}",
   "version": "1.0.0",
-  "sts_version": "${SlayTheSpire.version}",
-  "mts_version": "${ModTheSpire.version}",
+  "sts_version": "11-30-2020",
+  "mts_version": "3.18.1",
   "dependencies": ["basemod"]
 }

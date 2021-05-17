@@ -36,7 +36,7 @@ public class SaveStateMod implements PostInitializeSubscriber {
         public static final String ID = "savestatemod:savestate";
 
         public SaveStateTopPanel() {
-            super(new Texture("save.png"), ID);
+            super(new Texture("savestate.png"), ID);
         }
 
         @Override
@@ -49,7 +49,7 @@ public class SaveStateMod implements PostInitializeSubscriber {
         public static final String ID = "savestatemod:loadstate";
 
         public LoadStateTopPanel() {
-            super(new Texture("Icon.png"), ID);
+            super(new Texture("loadstate.png"), ID);
         }
 
         @Override
