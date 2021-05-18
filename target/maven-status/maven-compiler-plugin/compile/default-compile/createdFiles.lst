@@ -225,6 +225,7 @@ savestate\powers\powerstates\NextTurnBlockPowerState.class
 savestate\powers\powerstates\ironclad\DemonFormPowerState.class
 savestate\powers\powerstates\monsters\SharpHidePowerState.class
 savestate\monsters\exordium\SentryState.class
+savestate\actions\PutOnDeckActionState.class
 savestate\monsters\city\TorchHeadState$NoAnimationsPatch.class
 savestate\monsters\exordium\AcidSlime_SState.class
 savestate\monsters\beyond\TimeEaterState.class
@@ -316,6 +317,7 @@ savestate\actions\MakeTempCardInHandActionState.class
 savestate\powers\powerstates\silent\RetainCardPowerState.class
 savestate\monsters\city\SneckoState$NoAnimationsPatch.class
 savestate\powers\powerstates\monsters\UnawakenedPowerState.class
+savestate\actions\PutOnDeckActionState$forceNotDonePatch.class
 savestate\monsters\beyond\AwakenedOneState$NoUpdatePatch.class
 savestate\powers\powerstates\monsters\TimeWarpPowerState.class
 savestate\orbs\LightningOrbState$LightningEOTPatch.class

@@ -7,7 +7,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -32,6 +31,33 @@
     </orderEntry>
     <orderEntry type="module-library">
       <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/ModTheSpire.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.megacrit.cardcrawl:slaythespire:11-30-2020">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/desktop-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: basemod:BaseMod-root:5.32.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/BaseMod.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.evacipated.cardcrawl:ModTheSpire:3.18.1">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib/ModTheSpire.jar!/" />
         </CLASSES>
