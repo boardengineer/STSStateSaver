@@ -143,19 +143,21 @@ public class ReptomancerState extends MonsterState {
     }
 
     public void postMonstersLoad(Reptomancer reptomancer) {
-        ArrayList<AbstractMonster> allMonsters = AbstractDungeon.getMonsters().monsters;
+        if (AbstractDungeon.getMonsters() != null) {
+            ArrayList<AbstractMonster> allMonsters = AbstractDungeon.getMonsters().monsters;
 
-        AbstractCreature[] daggers = ReflectionHacks
-                .getPrivate(reptomancer, Reptomancer.class, "daggers");
+            AbstractCreature[] daggers = ReflectionHacks
+                    .getPrivate(reptomancer, Reptomancer.class, "daggers");
 
-        for (int i = 0; i < daggerIndeces.size(); i++) {
-            if (daggerIndeces.get(i) == null) {
-                daggers[i] = null;
-            } else {
-                if (daggerIndeces.get(i) < allMonsters.size()) {
-                    daggers[i] = allMonsters.get(daggerIndeces.get(i));
-                } else {
+            for (int i = 0; i < daggerIndeces.size(); i++) {
+                if (daggerIndeces.get(i) == null) {
                     daggers[i] = null;
+                } else {
+                    if (daggerIndeces.get(i) < allMonsters.size()) {
+                        daggers[i] = allMonsters.get(daggerIndeces.get(i));
+                    } else {
+                        daggers[i] = null;
+                    }
                 }
             }
         }

@@ -9,6 +9,7 @@ public class EnqueueEndTurnAction extends AbstractGameAction {
     @Override
     public void update() {
         this.addToBot(new EndTurnAction());
+
         if (!AbstractDungeon.getCurrRoom().skipMonsterTurn) {
             this.addToBot(new MonsterStartTurnAction());
         }

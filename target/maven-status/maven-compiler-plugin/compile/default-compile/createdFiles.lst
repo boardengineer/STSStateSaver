@@ -1,7 +1,10 @@
+savestate\actions\BetterDiscardPileToHandActionState.class
 savestate\powers\powerstates\common\NoDrawPowerState.class
 savestate\powers\powerstates\monsters\AngerPowerState.class
+savestate\actions\NightmareActionState.class
 savestate\selectscreen\GridCardSelectScreenState.class
 savestate\powers\powerstates\silent\NoxiousFumesPowerState.class
+savestate\actions\SetupActionState$NoDoubleExhaustActionPatch.class
 savestate\monsters\exordium\CultistState$YetNoAnimationsPatch.class
 savestate\powers\powerstates\monsters\RegenerateMonsterPowerState.class
 savestate\powers\powerstates\common\RitualPowerState.class
@@ -79,6 +82,7 @@ savestate\CreatureState.class
 savestate\monsters\city\MuggerState$NoAnimationsPatch.class
 savestate\orbs\OrbState.class
 savestate\monsters\beyond\WrithingMassState.class
+savestate\actions\BetterDrawPileToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\powers\powerstates\defect\EchoPowerState.class
 savestate\actions\CurrentActionState.class
 savestate\monsters\city\ShelledParasiteState$NoAnimationsPatch.class
@@ -101,6 +105,7 @@ savestate\powers\powerstates\DrawCardNextTurnPowerState.class
 savestate\monsters\exordium\TheGuardianState$NoAnimationsPatch.class
 savestate\powers\powerstates\ironclad\DarkEmbracePowerState.class
 savestate\powers\powerstates\monsters\MalleablePowerState.class
+savestate\actions\BetterDrawPileToHandActionState.class
 savestate\monsters\city\ByrdState.class
 savestate\relics\OrichalcumState.class
 savestate\powers\powerstates\silent\EnvenomPowerState.class
@@ -134,6 +139,7 @@ savestate\powers\powerstates\monsters\HexPowerState.class
 savestate\powers\powerstates\defect\LockOnPowerState.class
 savestate\monsters\exordium\GremlinFatState.class
 savestate\powers\powerstates\common\SurroundedPowerState.class
+savestate\actions\RecycleActionState.class
 savestate\powers\powerstates\monsters\MinionPowerState.class
 savestate\SaveState.class
 savestate\monsters\exordium\HexaghostState$BurnIncreasePatch.class
@@ -199,6 +205,7 @@ savestate\monsters\exordium\SlimeBossState.class
 savestate\monsters\beyond\DarklingState.class
 savestate\monsters\city\ChampState$NoAnimationsPatch.class
 savestate\actions\DrawCardActionState.class
+savestate\actions\RecycleActionState$NoDoubleExhaustActionPatch.class
 savestate\powers\powerstates\RagePowerState.class
 savestate\monsters\beyond\GiantHeadState.class
 savestate\monsters\exordium\FungiBeastState.class
@@ -220,6 +227,7 @@ savestate\monsters\beyond\ReptomancerState.class
 savestate\monsters\exordium\LagavulinState.class
 savestate\relics\RelicState.class
 savestate\powers\powerstates\common\RegenPowerState.class
+savestate\SaveStateMod$RemoveUnpalayablePotionsPatch.class
 savestate\SaveStateMod$LoadStateTopPanel.class
 savestate\powers\powerstates\NextTurnBlockPowerState.class
 savestate\powers\powerstates\ironclad\DemonFormPowerState.class
@@ -293,6 +301,7 @@ savestate\fastobjects\ScreenShakeFast.class
 savestate\powers\powerstates\defect\EnergizedBluePowerState.class
 savestate\powers\powerstates\watcher\LiveForeverPowerState.class
 savestate\PotionState$2.class
+savestate\SaveStateMod$TestThingPanel.class
 savestate\relics\UnceasingTopState.class
 savestate\monsters\city\CenturionState$NoAnimationsPatch.class
 savestate\actions\GainBlockActionState.class
@@ -308,6 +317,7 @@ savestate\monsters\beyond\OrbWalkerState$YetNoAnimationsPatch.class
 savestate\relics\HoveringKiteState.class
 savestate\monsters\exordium\SpikeSlime_MState.class
 savestate\powers\Power.class
+savestate\actions\NightmareActionState$NoDoubleExhaustActionPatch.class
 savestate\monsters\city\BanditPointyState.class
 savestate\powers\powerstates\common\StrengthPowerState.class
 savestate\monsters\beyond\TimeEaterState$YetNoAnimationsPatch.class
@@ -327,9 +337,11 @@ savestate\powers\powerstates\common\GainStrengthPowerState.class
 savestate\powers\powerstates\watcher\EndTurnDeathPowerState.class
 savestate\PlayerState.class
 savestate\powers\powerstates\common\BarricadePowerState.class
+savestate\actions\BetterDiscardPileToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\actions\EnqueueEndTurnAction.class
 savestate\monsters\exordium\SpikeSlime_LState.class
 savestate\powers\powerstates\ironclad\CorruptionPowerState.class
+savestate\actions\SetupActionState.class
 savestate\monsters\exordium\LouseNormalState$NoAnimationsPatch.class
 savestate\powers\powerstates\defect\RepairPowerState.class
 savestate\powers\powerstates\monsters\BackAttackPowerState.class
@@ -347,6 +359,7 @@ savestate\powers\powerstates\monsters\AngryPowerState.class
 savestate\actions\ClearCardQueueActionState.class
 savestate\powers\powerstates\defect\StormPowerState.class
 savestate\monsters\beyond\MawState$YetNoAnimationsPatch.class
+savestate\powers\powerstates\silent\NightmarePowerState.class
 savestate\SaveStateMod.class
 savestate\monsters\city\BronzeAutomatonState$NoAnimationsPatch.class
 savestate\powers\powerstates\monsters\PainfulStabsPowerState.class

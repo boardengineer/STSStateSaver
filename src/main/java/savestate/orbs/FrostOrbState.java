@@ -45,7 +45,7 @@ public class FrostOrbState extends OrbState {
                         .filter(orb -> orb instanceof Frost)
                         .count();
 
-                blizzard.baseDamage = frostCount + blizzard.magicNumber;
+                blizzard.baseDamage = frostCount * blizzard.magicNumber;
                 blizzard.calculateCardDamage(null);
 
                 actionManager

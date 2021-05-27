@@ -73,7 +73,7 @@ public class RngState {
                                    .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public void loadRng() {
+    public void loadRng(long floorNum) {
         Settings.seed = seed;
         AbstractDungeon.monsterRng = new Random(Settings.seed, monsterRng.counter);
         AbstractDungeon.mapRng = new Random(Settings.seed, mapRng.counter);
@@ -83,11 +83,17 @@ public class RngState {
         AbstractDungeon.treasureRng = new Random(Settings.seed, treasureRng.counter);
         AbstractDungeon.relicRng = new Random(Settings.seed, relicRng.counter);
         AbstractDungeon.potionRng = new Random(Settings.seed, potionRng.counter);
-        AbstractDungeon.monsterHpRng = new Random(Settings.seed, monsterHpRng.counter);
-        AbstractDungeon.aiRng = new Random(Settings.seed, aiRng.counter);
-        AbstractDungeon.shuffleRng = new Random(Settings.seed, shuffleRng.counter);
-        AbstractDungeon.cardRandomRng = new Random(Settings.seed, cardRandomRng.counter);
-        AbstractDungeon.miscRng = new Random(Settings.seed, miscRng.counter);
+
+        AbstractDungeon.monsterHpRng = new Random(Settings.seed
+                .longValue() + floorNum, monsterHpRng.counter);
+        AbstractDungeon.aiRng = new Random(Settings.seed.longValue() + floorNum, aiRng.counter);
+        AbstractDungeon.shuffleRng = new Random(Settings.seed
+                .longValue() + floorNum, shuffleRng.counter);
+        AbstractDungeon.cardRandomRng = new Random(Settings.seed
+                .longValue() + floorNum, cardRandomRng.counter);
+        AbstractDungeon.miscRng = new Random(Settings.seed.longValue() + floorNum, miscRng.counter);
+
+
         EventHelper.setChances(eventHelperChances);
     }
 

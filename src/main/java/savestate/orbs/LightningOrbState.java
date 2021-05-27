@@ -5,6 +5,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.DamageAction;
+import com.megacrit.cardcrawl.actions.common.DamageAllEnemiesAction;
 import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -35,11 +36,19 @@ public class LightningOrbState extends OrbState {
         @SpirePrefixPatch
         public static SpireReturn doEOT(Lightning lightning) {
             if (shouldGoFast) {
-                // TODO electro power
-                AbstractCreature m = AbstractDungeon.getRandomMonster();
-                DamageInfo info = new DamageInfo(AbstractDungeon.player, lightning.passiveAmount, DamageInfo.DamageType.THORNS);
-                AbstractDungeon.actionManager
-                        .addToTop(new DamageAction(m, info, AbstractGameAction.AttackEffect.NONE, true));
+                if (AbstractDungeon.player.hasPower("Electro")) {
+                    lightning.applyFocus();
+                    AbstractDungeon.actionManager
+                            .addToTop(new DamageAllEnemiesAction(AbstractDungeon.player, DamageInfo
+                                    .createDamageMatrix(lightning.passiveAmount, true, true), DamageInfo.DamageType.THORNS, AbstractGameAction.AttackEffect.NONE));
+                } else {
+                    AbstractCreature m = AbstractDungeon.getRandomMonster();
+                    lightning.applyFocus();
+                    DamageInfo info = new DamageInfo(AbstractDungeon.player, lightning.passiveAmount, DamageInfo.DamageType.THORNS);
+
+                    AbstractDungeon.actionManager
+                            .addToTop(new DamageAction(m, info, AbstractGameAction.AttackEffect.NONE, true));
+                }
                 return SpireReturn.Return(null);
             }
 

@@ -27,7 +27,7 @@ public class ExhaustActionState implements CurrentActionState {
     public ExhaustAction loadCurrentAction() {
         ExhaustAction result = new ExhaustAction(AbstractDungeon.player, AbstractDungeon.player, amount, isRandom, anyNumber);
 
-        // This should make the action only trigger the second hald of the update
+        // This should make the action only trigger the second half of the update
         ReflectionHacks
                 .setPrivate(result, AbstractGameAction.class, "duration", 0);
 

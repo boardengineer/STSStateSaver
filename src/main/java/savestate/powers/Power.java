@@ -1,6 +1,6 @@
 package savestate.powers;
 
-import savestate.powers.PowerState;
+import com.megacrit.cardcrawl.powers.AbstractPower;
 import savestate.powers.powerstates.*;
 import savestate.powers.powerstates.common.*;
 import savestate.powers.powerstates.defect.*;
@@ -8,7 +8,6 @@ import savestate.powers.powerstates.ironclad.*;
 import savestate.powers.powerstates.monsters.*;
 import savestate.powers.powerstates.silent.*;
 import savestate.powers.powerstates.watcher.*;
-import com.megacrit.cardcrawl.powers.AbstractPower;
 
 import java.util.function.Function;
 
@@ -101,6 +100,7 @@ public enum Power {
     NEXT_TURN_BLOCK("Next Turn Block", power -> new NextTurnBlockPowerState(power)),
     MINION("Minion", power -> new MinionPowerState(power)),
     MODE_SHIFT("Mode Shift", power -> new ModeShiftPowerState(power)),
+    NIGHTMARE("Night Terror", power -> new NightmarePowerState(power), json -> new NightmarePowerState(json)),
     NIRVANA("Nirvana", power -> new NirvanaPowerState(power)),
     NO_BLOCK_POWER("NoBlockPower", power -> new NoBlockPowerState(power)),
     NO_DRAW("No Draw", power -> new NoDrawPowerState(power)),

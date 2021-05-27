@@ -9,12 +9,14 @@ C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\WrithingMassState.jav
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\SlimeBossState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\RollMoveActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\SplitPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\NightmareActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\ChampState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\GainBlockActionState.java
 C:\stuff\SaveState\src\main\java\savestate\MapRoomNodeState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\ClearCardQueueActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\watcher\LiveForeverPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\DrawCardNextTurnPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\RecycleActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\GainStrengthPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\ShiftingPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\GremlinFatState.java
@@ -74,6 +76,7 @@ C:\stuff\SaveState\src\main\java\savestate\orbs\FrostOrbState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\ActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\AcidSlime_SState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\MagnetismPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\SetupActionState.java
 C:\stuff\SaveState\src\main\java\savestate\orbs\PlasmaOrbState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\RepairPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\EntanglePowerState.java
@@ -98,6 +101,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\EchoPowerSt
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\watcher\LikeWaterPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\ChangeStateActionState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\LanternState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\BetterDiscardPileToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\SentryState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\watcher\RushdownPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\RepulsorState.java
@@ -273,12 +277,14 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\BlockReturnPowerSt
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\GiantHeadState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\CurlUpPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\PenNibPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\NightmarePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\FireBreathingPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\RemoveSpecificPowerActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\PowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\DemonFormPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\AcidSlime_LState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\FlameBarrierPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\PutOnDeckActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\ArtifactPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\ExploderState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\DarkEmbracePowerState.java

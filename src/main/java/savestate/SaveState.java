@@ -184,9 +184,9 @@ public class SaveState {
                 .add(allCards.get(index)));
 
         if (!this.gridSelectedCards.isEmpty()) {
-            System.err
-                    .println("there were selected cards " + this.gridSelectedCards + " " + allCards
-                            .get(this.gridSelectedCards.get(0)));
+//            System.err
+//                    .println("there were selected cards " + this.gridSelectedCards + " " + allCards
+//                            .get(this.gridSelectedCards.get(0)));
         }
 
         DrawCardAction.drawnCards.clear();
@@ -197,7 +197,7 @@ public class SaveState {
         AbstractDungeon.getCurrRoom().monsters.monsters.forEach(AbstractMonster::applyPowers);
         AbstractDungeon.player.hand.applyPowers();
 
-        rngState.loadRng();
+        rngState.loadRng(floorNum);
     }
 
     public int getPlayerHealth() {

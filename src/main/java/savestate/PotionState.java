@@ -102,9 +102,5 @@ public class PotionState {
         add(SkillPotion.POTION_ID);
         add(SmokeBomb.POTION_ID);
         add(Elixir.POTION_ID);
-
-        // TODO: but why?
-        add(DistilledChaosPotion.POTION_ID);
-//        add(FirePotion.POTION_ID);
     }};
 }

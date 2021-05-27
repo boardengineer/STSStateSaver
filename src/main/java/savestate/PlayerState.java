@@ -114,6 +114,8 @@ public class PlayerState extends CreatureState {
 
         // TODO This should ideally happen during load but only once per run
         AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
+        SaveStateMod.shouldResetDungeon = true;
+
         CardCrawlGame.dungeon.initializeCardPools();
 
         this.gameHandSize = parsed.get("game_hand_size").getAsInt();
