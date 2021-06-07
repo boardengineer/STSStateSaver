@@ -1,18 +1,25 @@
 package savestate;
 
 import basemod.ReflectionHacks;
+import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.megacrit.cardcrawl.actions.defect.ChannelAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.orbs.AbstractOrb;
+import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
 import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,6 +32,7 @@ public class PlayerState extends CreatureState {
     private final AbstractPlayer.PlayerClass chosenClass;
     private final int gameHandSize;
     private final int masterHandSize;
+    private final int potionSLots;
     private final int startingMaxHP;
 
     private final int energyManagerEnergy;
@@ -54,7 +62,7 @@ public class PlayerState extends CreatureState {
 
     public final ArrayList<PotionState> potions;
 
-    private final ArrayList<RelicState> relics;
+    public final ArrayList<RelicState> relics;
 
     public PlayerState(AbstractPlayer player) {
         super(player);
@@ -99,6 +107,7 @@ public class PlayerState extends CreatureState {
         this.inspectHb = player.inspectHb == null ? null : new HitboxState(player.inspectHb);
         this.damagedThisCombat = player.damagedThisCombat;
         this.maxOrbs = player.maxOrbs;
+        this.potionSLots = player.potionSlots;
 
 
         this.title = player.title;
@@ -121,6 +130,7 @@ public class PlayerState extends CreatureState {
         this.gameHandSize = parsed.get("game_hand_size").getAsInt();
         this.masterHandSize = parsed.get("master_hand_size").getAsInt();
         this.startingMaxHP = parsed.get("starting_max_hp").getAsInt();
+        this.potionSLots = parsed.get("potion_slots").getAsInt();
 
         this.energyManagerEnergy = parsed.get("energy_manager_energy").getAsInt();
         this.energyPanelTotalEnergy = parsed.get("energy_panel_total_energy").getAsInt();
@@ -141,6 +151,7 @@ public class PlayerState extends CreatureState {
         this.discardPile = decodeCardList(parsed.get("discard_pile").getAsString());
         this.exhaustPile = decodeCardList(parsed.get("exhaust_pile").getAsString());
         this.limbo = decodeCardList(parsed.get("limbo").getAsString());
+
 
         this.relics = Stream.of(parsed.get("relics").getAsString().split(RELIC_DELIMETER))
                             .filter(s -> !s.isEmpty()).map(RelicState::forJsonString)
@@ -173,6 +184,7 @@ public class PlayerState extends CreatureState {
         player.gameHandSize = this.gameHandSize;
         player.masterHandSize = this.masterHandSize;
         player.startingMaxHP = this.startingMaxHP;
+        player.potionSlots = this.potionSLots;
 
         CardState.freeCardList(player.masterDeck.group);
         CardState.freeCardList(player.drawPile.group);
@@ -249,6 +261,38 @@ public class PlayerState extends CreatureState {
         return player;
     }
 
+    @SpirePatch(clz = ChannelAction.class, method = "update")
+    public static class tsSpy2 {
+        @SpirePrefixPatch
+        public static SpireReturn spy(ChannelAction action) {
+            if (shouldGoFast) {
+                AbstractOrb orbType = ReflectionHacks
+                        .getPrivate(action, ChannelAction.class, "orbType");
+                boolean autoEvoke = ReflectionHacks
+                        .getPrivate(action, ChannelAction.class, "autoEvoke");
+
+                if (autoEvoke) {
+                    AbstractDungeon.player.channelOrb(orbType);
+                } else {
+                    Iterator var1 = AbstractDungeon.player.orbs.iterator();
+
+                    while (var1.hasNext()) {
+                        AbstractOrb o = (AbstractOrb) var1.next();
+                        if (o instanceof EmptyOrbSlot) {
+                            AbstractDungeon.player.channelOrb(orbType);
+                            break;
+                        }
+                    }
+                }
+
+                action.isDone = true;
+                return SpireReturn.Return(null);
+            } else {
+                return SpireReturn.Continue();
+            }
+        }
+    }
+
     public int getDamagedThisCombat() {
         return damagedThisCombat;
     }
@@ -306,6 +350,7 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("discard_pile", encodeCardList(discardPile));
         playerStateJson.addProperty("exhaust_pile", encodeCardList(exhaustPile));
         playerStateJson.addProperty("limbo", encodeCardList(limbo));
+        playerStateJson.addProperty("potion_slots", potionSLots);
 
         playerStateJson.addProperty("relics", relics.stream().map(RelicState::encode)
                                                     .collect(Collectors.joining(RELIC_DELIMETER)));
@@ -351,4 +396,75 @@ public class PlayerState extends CreatureState {
         return result;
     }
 
+    public String diffEncode() {
+        JsonObject playerStateJson = new JsonObject();
+
+//        playerStateJson.addProperty("draw_pile", encodeCardList(drawPile));
+        playerStateJson.addProperty("hand", diffEncodeCardList(hand));
+        playerStateJson.addProperty("discard_pile", diffEncodeCardList(discardPile));
+
+        playerStateJson.addProperty("energy_manager_energy", energyManagerEnergy);
+        playerStateJson.addProperty("energy_manager_max_master", energyManagerMaxMaster);
+        playerStateJson.addProperty("energy_panel_total_energy", energyPanelTotalEnergy);
+
+        playerStateJson.addProperty("creature", super.diffEncode());
+
+        JsonArray orbChanneledThisCombatArray = new JsonArray();
+        for (OrbState orb : orbsChanneledThisCombat) {
+            orbChanneledThisCombatArray.add(orb.encode());
+        }
+        playerStateJson.add("orbs_channeled_this_combat", orbChanneledThisCombatArray);
+
+        return playerStateJson.toString();
+    }
+
+    public static boolean diff(String diffString1, String diffString2) {
+        JsonObject one = new JsonParser().parse(diffString1).getAsJsonObject();
+        JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
+
+        boolean allMatch = true;
+
+        /*boolean discardMatch = one.get("discard_pile").getAsString()
+                                  .equals(two.get("discard_pile").getAsString());
+        if (!discardMatch) {
+            allMatch = false;
+            System.err.println("player discard mismatch");
+            System.err.println(one.get("discard_pile").getAsString());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("discard_pile").getAsString());
+        }*/
+
+        boolean handsMatch = one.get("hand").getAsString().equals(two.get("hand").getAsString());
+        if (!handsMatch) {
+            allMatch = false;
+            System.err.println("player hand mismatch");
+            System.err.println(one.get("hand").getAsString());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("hand").getAsString());
+        }
+
+        boolean statsMatch = CreatureState
+                .diff(one.get("creature").getAsString(), two.get("creature").getAsString());
+        if (!statsMatch) {
+            allMatch = false;
+        }
+
+        boolean energyMatch = one.get("energy_panel_total_energy").getAsInt() == two
+                .get("energy_panel_total_energy").getAsInt();
+        if (!energyMatch) {
+            allMatch = false;
+            System.err.println("energy_panel_total_energy energy mismatch");
+
+            System.err.println(one.get("energy_panel_total_energy").getAsInt());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("energy_panel_total_energy").getAsInt());
+        }
+
+        return allMatch;
+    }
+
+    public static String diffEncodeCardList(ArrayList<CardState> cardList) {
+        return cardList.stream().map(CardState::diffEncode)
+                       .collect(Collectors.joining(CARD_DELIMETER));
+    }
 }

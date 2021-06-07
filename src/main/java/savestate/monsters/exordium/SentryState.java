@@ -1,9 +1,6 @@
 package savestate.monsters.exordium;
 
 import basemod.ReflectionHacks;
-import savestate.fastobjects.AnimationStateFast;
-import savestate.monsters.Monster;
-import savestate.monsters.MonsterState;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
@@ -11,11 +8,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.MakeTempCardInDiscardAction;
+import com.megacrit.cardcrawl.actions.common.ReducePowerAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.EnergyManager;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.exordium.Sentry;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
+import savestate.fastobjects.AnimationStateFast;
+import savestate.monsters.Monster;
+import savestate.monsters.MonsterState;
 
 import static savestate.SaveStateMod.shouldGoFast;
 
@@ -104,8 +106,22 @@ public class SentryState extends MonsterState {
     public static class SpyOnRecharrgePatch {
         public static SpireReturn Prefix(EnergyManager _instance) {
             if (shouldGoFast) {
-                // TODO add conserver effects
-                EnergyPanel.setEnergy(_instance.energy);
+                if (AbstractDungeon.player.hasRelic("Ice Cream")) {
+                    if (EnergyPanel.totalCount > 0) {
+                        AbstractDungeon.player.getRelic("Ice Cream").flash();
+                    }
+
+                    EnergyPanel.addEnergy(_instance.energy);
+                } else if (AbstractDungeon.player.hasPower("Conserve")) {
+                    if (EnergyPanel.totalCount > 0) {
+                        AbstractDungeon.actionManager
+                                .addToTop(new ReducePowerAction(AbstractDungeon.player, AbstractDungeon.player, "Conserve", 1));
+                    }
+
+                    EnergyPanel.addEnergy(_instance.energy);
+                } else {
+                    EnergyPanel.setEnergy(_instance.energy);
+                }
 
                 return SpireReturn.Return(null);
             }

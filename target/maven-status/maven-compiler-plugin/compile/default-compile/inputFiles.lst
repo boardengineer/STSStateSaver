@@ -233,6 +233,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\StrengthPow
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\CombustPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\CentennialPuzzleState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\BookOfStabbingState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\NewQueueCardActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\GremlinLeaderState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\HelloPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\StrikeUpPowerState.java
@@ -250,7 +251,10 @@ C:\stuff\SaveState\src\main\java\savestate\CreatureState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\ending\SpireShieldState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\LouseDefensiveState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\DualWieldActionState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\LoseEnergyActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\ReptomancerState.java
+C:\stuff\SaveState\src\main\java\savestate\relics\ArtOfWarState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\SetDontTriggerActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\BanditLeaderState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\BlurPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\EnableEndTurnButtonActionState.java
@@ -276,8 +280,10 @@ C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\FungiBeastState.jav
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\BlockReturnPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\GiantHeadState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\CurlUpPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\BetterDrawPileToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\PenNibPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\NightmarePowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\TriggerEndOfTurnOrbsActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\FireBreathingPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\RemoveSpecificPowerActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\PowerState.java

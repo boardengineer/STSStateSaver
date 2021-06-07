@@ -36,7 +36,7 @@ public class TimeEaterState extends MonsterState {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.usedHaste = parsed.get("used_haste").getAsBoolean();
-        this.firstTurn = parsed.get("fist_turn").getAsBoolean();
+        this.firstTurn = parsed.get("first_turn").getAsBoolean();
 
         monsterTypeNumber = Monster.MAW.ordinal();
     }
@@ -58,7 +58,7 @@ public class TimeEaterState extends MonsterState {
         JsonObject monsterStateJson = new JsonParser().parse(super.encode()).getAsJsonObject();
 
         monsterStateJson.addProperty("used_haste", usedHaste);
-        monsterStateJson.addProperty("fist_turn", firstTurn);
+        monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
     }

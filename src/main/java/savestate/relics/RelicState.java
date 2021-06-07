@@ -9,8 +9,8 @@ import com.megacrit.cardcrawl.helpers.RelicLibrary;
 import com.megacrit.cardcrawl.relics.*;
 
 public class RelicState {
-    private final String relicId;
-    private final int counter;
+    public final String relicId;
+    public final int counter;
     private final boolean grayscale;
     private final boolean pulse;
 

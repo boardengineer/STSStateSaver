@@ -3,6 +3,7 @@ package savestate.actions;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.*;
 import com.megacrit.cardcrawl.actions.defect.RecycleAction;
+import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
 import com.megacrit.cardcrawl.actions.unique.*;
 
 import java.util.function.Function;
@@ -19,7 +20,8 @@ public enum CurrentAction {
     NIGHTMARE_ACTION(NightmareAction.class, action -> new NightmareActionState(action)),
     RECYCLE_ACTION(RecycleAction.class, action -> new RecycleActionState()),
     RETAIN_CARDS_ACTION(RetainCardsAction.class, action -> new RetainCardsActionState(action)),
-    SETUP_ACTION(SetupAction.class, action -> new SetupActionState());
+    SETUP_ACTION(SetupAction.class, action -> new SetupActionState()),
+    TRIGGER_END_OF_TURN_ORBS_ACTION(TriggerEndOfTurnOrbsAction.class, action -> new TriggerEndOfTurnOrbsActionState());
 
     public Function<AbstractGameAction, CurrentActionState> factory;
     public Class<? extends AbstractGameAction> actionClass;

@@ -79,13 +79,13 @@ public class HexaghostState extends MonsterState {
                 .setPrivate(monster, Hexaghost.class, "burnUpgraded", burnUpgraded);
         ReflectionHacks
                 .setPrivate(monster, Hexaghost.class, "orbActiveCount", orbActiveCount);
-        ArrayList<HexaghostOrb> orbs = ReflectionHacks
-                .getPrivate(monster, Hexaghost.class, "orbs");
-        for (int i = 0; i < activeOrbs.size(); i++) {
-            if (activeOrbs.get(i)) {
-                orbs.get(i).activate(0, 0);
-            }
-        }
+//        ArrayList<HexaghostOrb> orbs = ReflectionHacks
+//                .getPrivate(monster, Hexaghost.class, "orbs");
+//        for (int i = 0; i < activeOrbs.size(); i++) {
+//            if (activeOrbs.get(i)) {
+//                orbs.get(i).activate(0, 0);
+//            }
+//        }
 
         return monster;
     }

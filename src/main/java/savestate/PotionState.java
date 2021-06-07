@@ -74,15 +74,15 @@ public class PotionState {
         // Just play fruit juice
         put(FruitJuice.POTION_ID, 0);
         put(GamblersBrew.POTION_ID, 500);
-        put(GhostInAJar.POTION_ID, 120);
-        put(HeartOfIron.POTION_ID, 150);
-        put(LiquidBronze.POTION_ID, 50);
+        put(GhostInAJar.POTION_ID, 80);
+        put(HeartOfIron.POTION_ID, 80);
+        put(LiquidBronze.POTION_ID, 20);
         put(LiquidMemories.POTION_ID, 30);
         put(PoisonPotion.POTION_ID, 20);
         put(PotionOfCapacity.POTION_ID, 0);
         put(SmokeBomb.POTION_ID, 0);
         put(PowerPotion.POTION_ID, 50);
-        put(RegenPotion.POTION_ID, 100);
+        put(RegenPotion.POTION_ID, 64);
         put(SneckoOil.POTION_ID, 75);
         put(SpeedPotion.POTION_ID, 75);
         put(StancePotion.POTION_ID, 0);
@@ -102,5 +102,6 @@ public class PotionState {
         add(SkillPotion.POTION_ID);
         add(SmokeBomb.POTION_ID);
         add(Elixir.POTION_ID);
+        add(CultistPotion.POTION_ID);
     }};
 }

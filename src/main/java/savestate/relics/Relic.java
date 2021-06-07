@@ -5,6 +5,7 @@ import com.megacrit.cardcrawl.relics.*;
 import java.util.function.Function;
 
 public enum Relic {
+    ART_OF_WAE(ArtOfWar.ID, relic -> new ArtOfWarState(relic), json -> new ArtOfWarState(json)),
     CENTENNIAL_PUZZLE(CentennialPuzzle.ID, relic -> new CentennialPuzzleState(relic), json -> new CentennialPuzzleState(json)),
     GAMBLING_CHIP(GamblingChip.ID, relic -> new GamblingChipState(relic), json -> new GamblingChipState(json)),
     HOVERING_KITE(HoveringKite.ID, relic -> new HoveringKiteState(relic), json -> new HoveringKiteState(json)),

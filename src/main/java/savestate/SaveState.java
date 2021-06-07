@@ -82,6 +82,7 @@ public class SaveState {
                 .forEach(card -> {
                     int index = allCards.indexOf(card);
                     if (index == -1) {
+                        // Powers don't have indeces
                         this.cardsPlayedThisTurnBackup.add(new CardState(card));
                     } else {
                         this.cardsPlayedThisTurn.add(allCards.indexOf(card));
@@ -226,6 +227,49 @@ public class SaveState {
         saveStateJson.addProperty("is_screen_up", isScreenUp);
         saveStateJson.addProperty("ascension_level", ascensionLevel);
 
+        System.err.println("completed encoding");
         return saveStateJson.toString();
+    }
+
+    public String diffEncode() {
+        JsonObject saveStateJson = new JsonObject();
+
+        saveStateJson.addProperty("rng_state", rngState.encode());
+        saveStateJson.addProperty("cur_map_node_state", curMapNodeState.diffEncode());
+        saveStateJson.addProperty("player_state", playerState.diffEncode());
+
+        return saveStateJson.toString();
+    }
+
+    public static boolean diff(String diffString1, String diffString2) {
+        JsonObject one = new JsonParser().parse(diffString1).getAsJsonObject();
+        JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
+
+        boolean allMatch = true;
+
+        boolean playerMatch = PlayerState
+                .diff(one.get("player_state").getAsString(), two.get("player_state").getAsString());
+        if (!playerMatch) {
+            allMatch = false;
+            System.err.println("player state mismatch");
+        }
+
+        boolean roomMatch = MapRoomNodeState
+                .diff(one.get("cur_map_node_state").getAsString(), two.get("cur_map_node_state")
+                                                                      .getAsString());
+        if (!roomMatch) {
+            allMatch = false;
+            System.err.println("room state mismatch");
+        }
+
+        boolean rngMatch = one.get("rng_state").getAsString().equals(two.get("rng_state").getAsString());
+        if(!rngMatch) {
+            allMatch = false;
+            System.err.println(one.get("rng_state").getAsString());
+            System.err.println("----------------------------------------------");
+            System.err.println(two.get("rng_state").getAsString());
+        }
+
+        return allMatch;
     }
 }

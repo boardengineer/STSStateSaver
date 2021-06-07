@@ -233,6 +233,50 @@ public class MapRoomNodeState {
         return mapRoomNodeStateJson.toString();
     }
 
+    public String diffEncode() {
+        JsonObject mapRoomNodeStateJson = new JsonObject();
+
+        mapRoomNodeStateJson
+                .addProperty("monster_data", monsterData.stream().map(MonsterState::diffEncode)
+                                                        .collect(Collectors
+                                                                .joining(MONSTER_DELIMETER)));
+        return mapRoomNodeStateJson.toString();
+    }
+
+    public static boolean diff(String diffString1, String diffString2) {
+        boolean result = true;
+
+        JsonObject one = new JsonParser().parse(diffString1).getAsJsonObject();
+        JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
+
+        boolean monstersMatch = diffMonsterList(one.get("monster_data").getAsString(), two
+                .get("monster_data").getAsString());
+        if (!monstersMatch) {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public static boolean diffMonsterList(String diffString1, String diffString2) {
+        boolean result = true;
+
+        String[] monsters1 = diffString1.split(MONSTER_DELIMETER);
+        String[] monsters2 = diffString1.split(MONSTER_DELIMETER);
+
+        boolean lengthsEqual = monsters1.length == monsters2.length;
+        if (!lengthsEqual) {
+            result = false;
+            System.err.println("different monster counts");
+        } else {
+            for (int i = 0; i < monsters1.length; i++) {
+                result = result && MonsterState.diff(monsters1[i], monsters2[i]);
+            }
+        }
+
+        return result;
+    }
+
 
     private enum RoomType {
         MONSTER,

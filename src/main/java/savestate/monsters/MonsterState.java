@@ -199,6 +199,29 @@ public abstract class MonsterState extends CreatureState {
         return monsterStateJson.toString();
     }
 
+    public String diffEncode() {
+        JsonObject monsterStateJson = new JsonObject();
+
+        monsterStateJson.addProperty("creature", super.diffEncode());
+
+        return monsterStateJson.toString();
+    }
+
+    public static boolean diff(String diffString1, String diffString2) {
+        boolean result = true;
+
+        JsonObject one = new JsonParser().parse(diffString1).getAsJsonObject();
+        JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
+
+        boolean statsEqual = CreatureState
+                .diff(one.get("creature").getAsString(), two.get("creature").getAsString());
+        if (!statsEqual) {
+            result = false;
+        }
+
+        return result;
+    }
+
     // static copy of AbstractMonster.setHp
     public static void setHp(AbstractMonster monster, int minHp, int maxHp) {
         monster.currentHealth = AbstractDungeon.monsterHpRng.random(minHp, maxHp);

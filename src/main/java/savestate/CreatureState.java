@@ -1,9 +1,9 @@
 package savestate;
 
-import savestate.powers.PowerState;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
+import savestate.powers.PowerState;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 /**
  * State object analog of AbstractCreature
- *
+ * <p>
  * At time of writing, there is no known use for this other than overrides in MonsterState and
  * PlayerState.  Subclasses should have a load method that calls the load method of this class.
  */
@@ -226,5 +226,66 @@ public class CreatureState {
                                                               .joining(POWER_DELIMETER)));
 
         return creatureStateJson.toString();
+    }
+
+    public String diffEncode() {
+        JsonObject creatureStateJson = new JsonObject();
+
+        creatureStateJson.addProperty("name", name);
+        creatureStateJson.addProperty("current_health", currentHealth);
+        creatureStateJson.addProperty("current_block", currentBlock);
+        creatureStateJson.addProperty("powers", powers.stream().map(PowerState::encode)
+                                                      .collect(Collectors
+                                                              .joining(POWER_DELIMETER)));
+
+        return creatureStateJson.toString();
+    }
+
+    public static boolean diff(String diffString1, String diffString2) {
+        boolean result = true;
+
+        JsonObject one = new JsonParser().parse(diffString1).getAsJsonObject();
+        JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
+
+        int currentHealth = one.get("current_health").getAsInt();
+        String name = one.get("name").getAsString();
+
+        boolean nameMatch = name.equals(two.get("name").getAsString());
+        if (!nameMatch) {
+            result = false;
+            System.err
+                    .printf("name; actual:%s expected:%s\n", name, two.get("name").getAsString());
+        }
+
+        boolean healthMatch = currentHealth == two.get("current_health").getAsInt();
+        if (!healthMatch) {
+            result = false;
+            System.err
+                    .printf("Mismatched %s Health; actual:%d expected:%d\n", name, currentHealth, two
+                            .get("current_health").getAsInt());
+        }
+
+        boolean blockMatch = one.get("current_block").getAsInt() == two.get("current_block")
+                                                                       .getAsInt();
+        if (!blockMatch) {
+            result = false;
+            System.err
+                    .printf("Mismatched %s Health; actual:%d expected:%d\n", name, one
+                            .get("current_block").getAsInt(), two
+                            .get("current_block").getAsInt());
+        }
+
+        if (currentHealth > 0) {
+            boolean powersMatch = one.get("powers").getAsString().equals(two.get("powers")
+                                                                            .getAsString());
+            if (!powersMatch) {
+                result = false;
+                System.err.println(one.get("powers").getAsString());
+                System.err.println("--------------------------------------");
+                System.err.println(two.get("powers").getAsString());
+            }
+        }
+
+        return result;
     }
 }

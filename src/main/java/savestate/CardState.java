@@ -3,6 +3,7 @@ package savestate;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 
 import java.util.*;
@@ -16,6 +17,8 @@ public class CardState {
     private final int baseDamage;
     private final int baseBlock;
     private final int cost;
+    private final int damage;
+    private final int misc;
     private final int costForTurn;
     private final int magicNumber;
     private final int baseMagicNumber;
@@ -30,6 +33,8 @@ public class CardState {
     private final boolean isCostModified;
     private final boolean dontTriggerOnUseCard;
     private final boolean exhaust;
+    private final boolean isEthereal;
+    private final boolean retain;
 
     private static HashMap<String, HashSet<AbstractCard>> freeCards;
 
@@ -57,7 +62,8 @@ public class CardState {
         this.baseDamage = card.baseDamage;
         this.cost = card.cost;
         this.exhaust = card.exhaust;
-
+        this.retain = card.retain;
+        this.damage = card.damage;
         this.costForTurn = card.costForTurn;
 
         this.inBottleFlame = card.inBottleFlame;
@@ -80,12 +86,14 @@ public class CardState {
         this.target_y = card.target_y;
 
         this.angle = card.angle;
+        this.misc = card.misc;
         this.targetAngle = card.targetAngle;
 
         this.drawScale = card.drawScale;
         this.targetDrawScale = card.targetDrawScale;
         this.timesUpgraded = card.timesUpgraded;
         this.dontTriggerOnUseCard = card.dontTriggerOnUseCard;
+        this.isEthereal = card.isEthereal;
     }
 
     public CardState(String jsonString) {
@@ -112,6 +120,10 @@ public class CardState {
         this.baseBlock = parsed.get("base_block").getAsInt();
         this.timesUpgraded = parsed.get("times_upgraded").getAsInt();
         this.exhaust = parsed.get("exhaust").getAsBoolean();
+        this.isEthereal = parsed.get("is_ethereal").getAsBoolean();
+        this.misc = parsed.get("misc").getAsInt();
+        this.damage = parsed.get("damage").getAsInt();
+        this.retain = parsed.get("retain").getAsBoolean();
 
         // TODO
         this.current_x = 0;
@@ -164,6 +176,10 @@ public class CardState {
         result.timesUpgraded = timesUpgraded;
         result.exhaust = exhaust;
         result.dontTriggerOnUseCard = dontTriggerOnUseCard;
+        result.isEthereal = isEthereal;
+        result.misc = misc;
+        result.retain = retain;
+        result.damage = damage;
 
         return result;
     }
@@ -194,6 +210,22 @@ public class CardState {
         cardStateJson.addProperty("base_block", baseBlock);
         cardStateJson.addProperty("times_upgraded", timesUpgraded);
         cardStateJson.addProperty("exhaust", exhaust);
+        cardStateJson.addProperty("is_ethereal", isEthereal);
+        cardStateJson.addProperty("misc", misc);
+        cardStateJson.addProperty("damage", damage);
+        cardStateJson.addProperty("retain", retain);
+
+        return cardStateJson.toString();
+    }
+
+    public String diffEncode() {
+        JsonObject cardStateJson = new JsonObject();
+
+        cardStateJson.addProperty("card_id", cardId);
+        cardStateJson.addProperty("cost", cost);
+        cardStateJson.addProperty("cost_for_turn", costForTurn);
+        cardStateJson.addProperty("upgraded", upgraded);
+        cardStateJson.addProperty("base_magic_number", magicNumber);
 
         return cardStateJson.toString();
     }
@@ -208,7 +240,7 @@ public class CardState {
     }
 
     public static void freeCard(AbstractCard card) {
-        if (card == null) {
+        if (card == null || true) {
             return;
         }
 
@@ -256,5 +288,63 @@ public class CardState {
 
     private static AbstractCard getFreshCard(String key) {
         return CardLibrary.getCard(key).makeCopy();
+    }
+
+    public static int indexForCard(AbstractCard card) {
+        int testIndex = 0;
+
+        for (AbstractCard candidate : AbstractDungeon.player.hand.group) {
+            if (candidate == candidate) {
+                return testIndex;
+            }
+            testIndex++;
+        }
+
+        for (AbstractCard candidate : AbstractDungeon.player.discardPile.group) {
+            if (candidate == candidate) {
+                return testIndex;
+            }
+            testIndex++;
+        }
+
+        for (AbstractCard candidate : AbstractDungeon.player.drawPile.group) {
+            if (candidate == candidate) {
+                return testIndex;
+            }
+            testIndex++;
+        }
+
+        return -1;
+    }
+
+    public static AbstractCard cardForIndex(int index) {
+        if (index == -1) {
+            throw new IllegalStateException("No card found");
+        }
+
+        int testIndex = 0;
+
+        for (AbstractCard candidate : AbstractDungeon.player.hand.group) {
+            if (index == testIndex) {
+                return candidate;
+            }
+            testIndex++;
+        }
+
+        for (AbstractCard candidate : AbstractDungeon.player.discardPile.group) {
+            if (index == testIndex) {
+                return candidate;
+            }
+            testIndex++;
+        }
+
+        for (AbstractCard candidate : AbstractDungeon.player.drawPile.group) {
+            if (index == testIndex) {
+                return candidate;
+            }
+            testIndex++;
+        }
+
+        return null;
     }
 }

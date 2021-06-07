@@ -3,6 +3,9 @@ package savestate.actions;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.ClearCardQueueAction;
 import com.megacrit.cardcrawl.actions.common.*;
+import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
+import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
+import com.megacrit.cardcrawl.actions.utility.NewQueueCardAction;
 import com.megacrit.cardcrawl.actions.utility.UseCardAction;
 import savestate.fastobjects.actions.UpdateOnlyUseCardAction;
 
@@ -23,13 +26,17 @@ public enum Action {
     ESCAPE_ACTION(EscapeAction.class, action -> new EscapeActionState(action)),
     GAIN_BLOCK_ACTION(GainBlockAction.class, action -> new GainBlockActionState(action)),
     GAIN_ENERGY_ACTION(GainEnergyAction.class, action -> new GainEnergyActionState(action)),
+    LOSE_ENERGY_ACTION(LoseEnergyAction.class, action -> new LoseEnergyActionState(action)),
     LOSE_HP_ACTION(LoseHPAction.class, action -> new LoseHPActionState(action)),
     MAKE_TEMP_CARD_IN_DRAW_PILE_ACTION(MakeTempCardInDrawPileAction.class, action -> new MakeTempCardInDrawPileActionState(action)),
     MAKE_TEMP_CARD_IN_HAND_ACTION(MakeTempCardInHandAction.class, action -> new MakeTempCardInHandActionState(action)),
+    NEW_QUEUE_CARD_ACTION(NewQueueCardAction.class, action -> new NewQueueCardActionState()),
     REDUCE_POWER_ACTION(ReducePowerAction.class, action -> new ReducePowerActionState(action)),
     REMOVE_SPECIFIC_POWER_ACTION(RemoveSpecificPowerAction.class, action -> new RemoveSpecificPowerActionState(action)),
     ROLL_MOVE_ACTION(RollMoveAction.class, action -> new RollMoveActionState(action)),
+    SET_DONT_TRIGGER_ACTION(SetDontTriggerAction.class, action -> new SetDontTriggerActionState(action)),
     SET_MOVE_ACTION(SetMoveAction.class, action -> new SetMoveActionState(action)),
+    TRIGGER_END_OF_TURN_ORBS_ACTION(TriggerEndOfTurnOrbsAction.class, action -> new TriggerEndOfTurnOrbsActionState()),
     UPDATE_ONLY_USE_CARD_ACTION(UpdateOnlyUseCardAction.class, action -> new UseCardActionState((UpdateOnlyUseCardAction) action)),
     USE_CARD_ACTION(UseCardAction.class, action -> new UseCardActionState((UseCardAction) action));
 

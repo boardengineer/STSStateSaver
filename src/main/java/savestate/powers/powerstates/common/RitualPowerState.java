@@ -8,8 +8,7 @@ import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.RitualPower;
 import savestate.powers.PowerState;
 
-public class RitualPowerState extends PowerState
-{
+public class RitualPowerState extends PowerState {
     private final boolean skipFirst;
 
     public RitualPowerState(AbstractPower power) {
