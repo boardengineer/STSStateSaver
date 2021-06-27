@@ -14,14 +14,14 @@ public class CardState {
     public final String cardId;
     public final boolean upgraded;
     private final int timesUpgraded;
-    private final int baseDamage;
+    public final int baseDamage;
     private final int baseBlock;
     private final int cost;
     private final int damage;
     private final int misc;
     private final int costForTurn;
     private final int magicNumber;
-    private final int baseMagicNumber;
+    public final int baseMagicNumber;
     private final int block;
     private final boolean freeToPlayOnce;
     private final String name;

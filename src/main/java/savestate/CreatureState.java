@@ -29,7 +29,7 @@ public class CreatureState {
     private final float dialogX;
     private final float dialogY;
 
-    private final int gold;
+    public final int gold;
     private final int displayGold;
     private final boolean isDying;
     private final boolean isDead;
@@ -270,7 +270,7 @@ public class CreatureState {
         if (!blockMatch) {
             result = false;
             System.err
-                    .printf("Mismatched %s Health; actual:%d expected:%d\n", name, one
+                    .printf("Mismatched %s bleck; actual:%d expected:%d\n", name, one
                             .get("current_block").getAsInt(), two
                             .get("current_block").getAsInt());
         }

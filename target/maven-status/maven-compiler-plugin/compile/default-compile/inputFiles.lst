@@ -9,6 +9,7 @@ C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\WrithingMassState.jav
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\SlimeBossState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\RollMoveActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\SplitPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\ScryActionState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\NightmareActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\ChampState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\GainBlockActionState.java
@@ -151,6 +152,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\RagePowerState.jav
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\PoisonPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\watcher\WrathNextTurnPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\UseCardActionState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\RemoveDebuffsActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\ShelledParasiteState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\GremlinWizardState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\VulnerablePowerState.java
@@ -165,6 +167,7 @@ C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\DonuState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\FlightPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\Action.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\AwakenedOneState.java
+C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\TheBombPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\EnvenomPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\ThousandCutsPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\RelicState.java
@@ -232,6 +235,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\RegenPowerS
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\StrengthPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\CombustPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\CentennialPuzzleState.java
+C:\stuff\SaveState\src\main\java\savestate\relics\OrangePelletsState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\BookOfStabbingState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\NewQueueCardActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\GremlinLeaderState.java
@@ -244,6 +248,7 @@ C:\stuff\SaveState\src\main\java\savestate\CardState.java
 C:\stuff\SaveState\src\main\java\savestate\PlayerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\PainfulStabsPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\CurrentActionState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\OmniscienceActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\VigorPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\SharpHidePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\DuplicationPowerState.java

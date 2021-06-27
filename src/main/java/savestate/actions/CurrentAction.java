@@ -5,6 +5,8 @@ import com.megacrit.cardcrawl.actions.common.*;
 import com.megacrit.cardcrawl.actions.defect.RecycleAction;
 import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
 import com.megacrit.cardcrawl.actions.unique.*;
+import com.megacrit.cardcrawl.actions.utility.ScryAction;
+import com.megacrit.cardcrawl.actions.watcher.OmniscienceAction;
 
 import java.util.function.Function;
 
@@ -17,9 +19,11 @@ public enum CurrentAction {
     DUAL_WIELD_ACTION(DualWieldAction.class, action -> new DualWieldActionState(action)),
     EXHAUST_ACTION(ExhaustAction.class, action -> new ExhaustActionState(action)),
     PUT_ON_DECK_ACTION(PutOnDeckAction.class, action -> new PutOnDeckActionState(action)),
+    OMNISCIENCE_ACTION(OmniscienceAction.class, action -> new OmniscienceActionState(action)),
     NIGHTMARE_ACTION(NightmareAction.class, action -> new NightmareActionState(action)),
     RECYCLE_ACTION(RecycleAction.class, action -> new RecycleActionState()),
     RETAIN_CARDS_ACTION(RetainCardsAction.class, action -> new RetainCardsActionState(action)),
+    SCRY_ACTION(ScryAction.class, action -> new ScryActionState(action)),
     SETUP_ACTION(SetupAction.class, action -> new SetupActionState()),
     TRIGGER_END_OF_TURN_ORBS_ACTION(TriggerEndOfTurnOrbsAction.class, action -> new TriggerEndOfTurnOrbsActionState());
 

@@ -11,6 +11,7 @@ public enum Relic {
     HOVERING_KITE(HoveringKite.ID, relic -> new HoveringKiteState(relic), json -> new HoveringKiteState(json)),
     LANTERN(Lantern.ID, relic -> new LanternState(relic), json -> new LanternState(json)),
     NECRONOMICON(Necronomicon.ID, relic -> new NecronomiconState(relic), json -> new NecronomiconState(json)),
+    ORANGE_PELLETS(OrangePellets.ID, relic -> new OrangePelletsState(relic), json -> new OrangePelletsState(json)),
     ORICHALCUM(Orichalcum.ID, relic -> new OrichalcumState(relic), json -> new OrichalcumState(json)),
     POCKETWATCH(Pocketwatch.ID, relic -> new PocketwatchState(relic), json -> new PocketwatchState(json)),
     RED_SKULL(RedSkull.ID, relic -> new RedSkullState(relic), json -> new RedSkullState(json)),

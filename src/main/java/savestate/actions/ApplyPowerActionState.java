@@ -1,11 +1,12 @@
 package savestate.actions;
 
 import basemod.ReflectionHacks;
-import savestate.powers.PowerState;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
+import savestate.StateFactories;
+import savestate.powers.PowerState;
 
 public class ApplyPowerActionState implements ActionState {
     private final PowerState powerToApply;
@@ -18,8 +19,10 @@ public class ApplyPowerActionState implements ActionState {
 
     public ApplyPowerActionState(ApplyPowerAction action) {
         this.targetIndex = ActionState.indexForCreature(action.target);
-        this.powerToApply = new PowerState((AbstractPower) ReflectionHacks
-                .getPrivate(action, ApplyPowerAction.class, "powerToApply"));
+
+        AbstractPower power = ReflectionHacks
+                .getPrivate(action, ApplyPowerAction.class, "powerToApply");
+        this.powerToApply = StateFactories.powerByIdMap.get(power.ID).factory.apply(power);;
         this.amount = action.amount;
     }
 

@@ -1,7 +1,6 @@
 package savestate.monsters;
 
 import basemod.ReflectionHacks;
-import savestate.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -10,6 +9,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.EnemyMoveInfo;
+import savestate.*;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -139,9 +139,8 @@ public abstract class MonsterState extends CreatureState {
                                     .peek(state -> state.owner = monster)
                                     .collect(Collectors.toCollection(ArrayList::new));
 
-        monster.setMove(moveName, moveInfo.nextMove, moveInfo.intent, moveInfo.baseDamage, moveInfo.multiplier, moveInfo.isMultiDamage);
-        monster.setIntentBaseDmg(moveInfo.baseDamage);
 
+        ReflectionHacks.setPrivate(monster, AbstractMonster.class, "move", moveInfo.loadMoveInfo());
         monster.moveHistory = this.moveHistory.stream()
                                               .collect(Collectors.toCollection(ArrayList::new));
 
@@ -158,6 +157,7 @@ public abstract class MonsterState extends CreatureState {
             monster.showHealthBar();
             monster.createIntent();
         }
+
 
         if (!shouldGoFast && monster.currentBlock > 0) {
             ReflectionHacks
@@ -203,6 +203,14 @@ public abstract class MonsterState extends CreatureState {
         JsonObject monsterStateJson = new JsonObject();
 
         monsterStateJson.addProperty("creature", super.diffEncode());
+        monsterStateJson.addProperty("intent_name", intent.name());
+
+        monsterStateJson
+                .addProperty("move_history", moveHistory.stream().map(b -> String.valueOf(b))
+                                                        .collect(Collectors
+                                                                .joining(MOVE_HISTORY_DELIMETER)));
+
+        monsterStateJson.addProperty("move_info", moveInfo.encode());
 
         return monsterStateJson.toString();
     }
@@ -216,6 +224,34 @@ public abstract class MonsterState extends CreatureState {
         boolean statsEqual = CreatureState
                 .diff(one.get("creature").getAsString(), two.get("creature").getAsString());
         if (!statsEqual) {
+            result = false;
+        }
+
+//        boolean intentEqual = one.get("intent_name").getAsString()
+//                                 .equals(two.get("intent_name").getAsString());
+//        if (!intentEqual) {
+//            System.err.printf("intent one: %s, intent two: %s\n", one.get("intent_name")
+//                                                                     .getAsString(), two
+//                    .get("intent_name").getAsString());
+//            result = false;
+//        }
+
+        boolean moveHistoryEqual = one.get("move_history").getAsString()
+                                      .equals(two.get("move_history").getAsString());
+        if (!moveHistoryEqual) {
+            System.err
+                    .printf("move_history one: %s, move_history two: %s\n", one.get("move_history")
+                                                                               .getAsString(), two
+                            .get("move_history").getAsString());
+            result = false;
+        }
+
+        boolean moveEqual = one.get("move_info").getAsString()
+                               .equals(two.get("move_info").getAsString());
+        if (!moveEqual) {
+            System.err.printf("move_info one: %s, move_info two: %s\n", one.get("move_info")
+                                                                           .getAsString(), two
+                    .get("move_info").getAsString());
             result = false;
         }
 

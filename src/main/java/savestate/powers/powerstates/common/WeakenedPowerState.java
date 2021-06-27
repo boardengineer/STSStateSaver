@@ -8,8 +8,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.WeakPower;
 
-public class WeakenedPowerState extends PowerState
-{
+public class WeakenedPowerState extends PowerState {
     private final boolean justApplied;
 
     public WeakenedPowerState(AbstractPower power) {

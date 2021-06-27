@@ -41,4 +41,8 @@ public class EnemyMoveInfoState {
 
         return enemyMoveInfoStateJson.toString();
     }
+
+    public EnemyMoveInfo loadMoveInfo() {
+        return new EnemyMoveInfo(nextMove, intent, baseDamage, multiplier, isMultiDamage);
+    }
 }

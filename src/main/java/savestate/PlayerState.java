@@ -14,6 +14,7 @@ import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
+import com.megacrit.cardcrawl.stances.AbstractStance;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
 import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
@@ -45,6 +46,7 @@ public class PlayerState extends CreatureState {
     private final HitboxState inspectHb;
     private final int damagedThisCombat;
     private final String title;
+    private final String stance;
 
     private final boolean renderCorpse;
 
@@ -108,7 +110,7 @@ public class PlayerState extends CreatureState {
         this.damagedThisCombat = player.damagedThisCombat;
         this.maxOrbs = player.maxOrbs;
         this.potionSLots = player.potionSlots;
-
+        this.stance = player.stance.ID;
 
         this.title = player.title;
     }
@@ -171,6 +173,8 @@ public class PlayerState extends CreatureState {
         parsed.get("orbs_channeled_this_combat").getAsJsonArray()
               .forEach(orbElement -> this.orbsChanneledThisCombat
                       .add(OrbState.forJsonString(orbElement.getAsString())));
+
+        this.stance = parsed.get("stance").getAsString();
 
         //TODO
         this.renderCorpse = false;
@@ -246,6 +250,8 @@ public class PlayerState extends CreatureState {
         player.damagedThisCombat = this.damagedThisCombat;
         player.title = this.title;
         player.maxOrbs = this.maxOrbs;
+
+        player.stance = AbstractStance.getStanceFromName(stance);
 
         ReflectionHacks
                 .setPrivate(player, AbstractPlayer.class, "renderCorpse", this.renderCorpse);
@@ -351,6 +357,7 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("exhaust_pile", encodeCardList(exhaustPile));
         playerStateJson.addProperty("limbo", encodeCardList(limbo));
         playerStateJson.addProperty("potion_slots", potionSLots);
+        playerStateJson.addProperty("stance", stance);
 
         playerStateJson.addProperty("relics", relics.stream().map(RelicState::encode)
                                                     .collect(Collectors.joining(RELIC_DELIMETER)));
@@ -402,10 +409,12 @@ public class PlayerState extends CreatureState {
 //        playerStateJson.addProperty("draw_pile", encodeCardList(drawPile));
         playerStateJson.addProperty("hand", diffEncodeCardList(hand));
         playerStateJson.addProperty("discard_pile", diffEncodeCardList(discardPile));
+        playerStateJson.addProperty("draw_pile", encodeCardList(drawPile));
 
         playerStateJson.addProperty("energy_manager_energy", energyManagerEnergy);
         playerStateJson.addProperty("energy_manager_max_master", energyManagerMaxMaster);
         playerStateJson.addProperty("energy_panel_total_energy", energyPanelTotalEnergy);
+        playerStateJson.addProperty("stance", stance);
 
         playerStateJson.addProperty("creature", super.diffEncode());
 
@@ -424,7 +433,8 @@ public class PlayerState extends CreatureState {
 
         boolean allMatch = true;
 
-        /*boolean discardMatch = one.get("discard_pile").getAsString()
+        /*
+        boolean discardMatch = one.get("discard_pile").getAsString()
                                   .equals(two.get("discard_pile").getAsString());
         if (!discardMatch) {
             allMatch = false;
@@ -432,7 +442,19 @@ public class PlayerState extends CreatureState {
             System.err.println(one.get("discard_pile").getAsString());
             System.err.println("-----------------------------------");
             System.err.println(two.get("discard_pile").getAsString());
-        }*/
+        }
+
+        boolean drawMismatch = one.get("draw_pile").getAsString()
+                                  .equals(two.get("draw_pile").getAsString());
+        if (!drawMismatch) {
+            allMatch = false;
+            System.err.println("player draw mismatch");
+            System.err.println(one.get("draw_pile").getAsString());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("draw_pile").getAsString());
+        }
+
+         */
 
         boolean handsMatch = one.get("hand").getAsString().equals(two.get("hand").getAsString());
         if (!handsMatch) {
@@ -441,6 +463,15 @@ public class PlayerState extends CreatureState {
             System.err.println(one.get("hand").getAsString());
             System.err.println("-----------------------------------");
             System.err.println(two.get("hand").getAsString());
+        }
+
+        boolean stanceMatch = one.get("stance").getAsString().equals(two.get("stance").getAsString());
+        if (!stanceMatch) {
+            allMatch = false;
+            System.err.println("player stance mismatch");
+            System.err.println(one.get("stance").getAsString());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("stance").getAsString());
         }
 
         boolean statsMatch = CreatureState

@@ -262,7 +262,7 @@ public class MapRoomNodeState {
         boolean result = true;
 
         String[] monsters1 = diffString1.split(MONSTER_DELIMETER);
-        String[] monsters2 = diffString1.split(MONSTER_DELIMETER);
+        String[] monsters2 = diffString2.split(MONSTER_DELIMETER);
 
         boolean lengthsEqual = monsters1.length == monsters2.length;
         if (!lengthsEqual) {

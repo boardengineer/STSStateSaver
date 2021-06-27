@@ -23,6 +23,7 @@ savestate\monsters\city\TaskmasterState.class
 savestate\powers\powerstates\NoSkillsPowerState.class
 savestate\powers\powerstates\ModeShiftPowerState.class
 savestate\powers\powerstates\monsters\RegrowPowerState.class
+savestate\actions\OmniscienceActionState$NoOmniscienceActionPatch.class
 savestate\monsters\beyond\SpikerState$YetNoAnimationsPatch.class
 savestate\monsters\city\CenturionState.class
 savestate\monsters\ending\SpireSpearState$NoAnimationConstructorPatch.class
@@ -39,6 +40,7 @@ savestate\powers\powerstates\ironclad\BerserkPowerState.class
 savestate\powers\powerstates\silent\BlurPowerState.class
 savestate\actions\DamageAllEnemiesActionState.class
 savestate\monsters\exordium\LouseNormalState.class
+savestate\SaveState$CountLessonLearnedHitsPatch.class
 savestate\actions\ChangeStateActionState.class
 savestate\powers\powerstates\defect\LoopPowerState.class
 savestate\powers\powerstates\silent\ToolsOfTheTradePowerState.class
@@ -65,6 +67,7 @@ savestate\orbs\FrostOrbState$NoFXOnUsePatch.class
 savestate\powers\powerstates\ConservePowerState.class
 savestate\CombatRewardScreenState.class
 savestate\actions\DiscardActionState.class
+savestate\actions\OmniscienceActionState.class
 savestate\monsters\exordium\HexaghostState$NoDisposeBodyCreationAnimationsPatch.class
 savestate\monsters\beyond\SnakerDaggerState$YetNoAnimationsPatch.class
 savestate\actions\ExhaustActionState$NoDoubleExhaustActionPatch.class
@@ -132,6 +135,7 @@ savestate\monsters\beyond\DonuState$YetNoAnimationsPatch.class
 savestate\actions\DiscardPileToTopOfDeckActionState$NoDoubleDualWieldPatch.class
 savestate\powers\powerstates\BlockReturnPowerState.class
 savestate\monsters\exordium\SpikeSlime_SState.class
+savestate\actions\ScryActionState.class
 savestate\monsters\exordium\GremlinNobState.class
 savestate\powers\powerstates\watcher\WaveOfTheHandPowerState.class
 savestate\PotionState.class
@@ -144,6 +148,7 @@ savestate\powers\powerstates\common\SurroundedPowerState.class
 savestate\actions\RecycleActionState.class
 savestate\powers\powerstates\monsters\MinionPowerState.class
 savestate\SaveState.class
+savestate\SaveState$CountParasitesPatch.class
 savestate\monsters\exordium\HexaghostState$BurnIncreasePatch.class
 savestate\relics\GamblingChipState.class
 savestate\powers\powerstates\monsters\SporeCloudPowerState.class
@@ -159,6 +164,7 @@ savestate\powers\powerstates\watcher\ForesightPowerState.class
 savestate\monsters\ending\SpireShieldState$NoAnimationConstructorPatch.class
 savestate\powers\powerstates\defect\ElectroPowerState.class
 savestate\actions\RetainCardsActionState.class
+savestate\powers\powerstates\common\TheBombPowerState.class
 savestate\CardState.class
 savestate\monsters\beyond\NemesisState$NoUpdatePatch.class
 savestate\powers\powerstates\monsters\StasisPowerState.class
@@ -186,6 +192,7 @@ savestate\monsters\exordium\SlaverBlueState.class
 savestate\powers\powerstates\ironclad\FeelNoPainPowerState.class
 savestate\powers\powerstates\watcher\MarkPowerState.class
 savestate\fastobjects\AnimationStateDataFast.class
+savestate\relics\OrangePelletsState.class
 savestate\actions\DiscardAtEndOfTurnActionState.class
 savestate\monsters\city\TheCollectorState$NoUpdateAnimationsPatch.class
 savestate\monsters\exordium\SpikeSlime_SState$NoAnimationsPatch.class
@@ -276,6 +283,7 @@ savestate\powers\powerstates\silent\ThousandCutsPowerState.class
 savestate\monsters\exordium\CultistState.class
 savestate\monsters\city\TheCollectorState$NoAnimationsPatch.class
 savestate\monsters\exordium\HexaghostState.class
+savestate\actions\ScryActionState$NoDoubleScryPatch.class
 savestate\monsters\exordium\GremlinThiefState$NoAnimationsPatch.class
 savestate\monsters\exordium\AcidSlime_LState.class
 savestate\powers\powerstates\watcher\FreeAttackPowerState.class
@@ -391,6 +399,7 @@ savestate\powers\powerstates\monsters\InvinciblePowerState.class
 savestate\powers\powerstates\ironclad\CombustPowerState.class
 savestate\relics\NecronomiconState.class
 savestate\powers\powerstates\ironclad\FireBreathingPowerState.class
+savestate\actions\RemoveDebuffsActionState.class
 savestate\DamageInfoState.class
 savestate\monsters\city\SnakePlantState.class
 savestate\monsters\exordium\GremlinNobState$NoAnimationsPatch.class
