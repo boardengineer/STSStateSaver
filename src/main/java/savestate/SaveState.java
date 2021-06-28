@@ -303,13 +303,13 @@ public class SaveState {
             System.err.println("player state mismatch");
         }
 
-//        boolean roomMatch = MapRoomNodeState
-//                .diff(one.get("cur_map_node_state").getAsString(), two.get("cur_map_node_state")
-//                                                                      .getAsString());
-//        if (!roomMatch) {
-//            allMatch = false;
-//            System.err.println("room state mismatch");
-//        }
+        boolean roomMatch = MapRoomNodeState
+                .diff(one.get("cur_map_node_state").getAsString(), two.get("cur_map_node_state")
+                                                                      .getAsString());
+        if (!roomMatch) {
+            allMatch = false;
+            System.err.println("room state mismatch");
+        }
 
         boolean rngMatch = one.get("rng_state").getAsString()
                               .equals(two.get("rng_state").getAsString());

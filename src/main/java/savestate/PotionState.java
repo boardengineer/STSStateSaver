@@ -56,7 +56,7 @@ public class PotionState {
         put(BottledMiracle.POTION_ID, 60);
         put(ColorlessPotion.POTION_ID, 15);
         put(CultistPotion.POTION_ID, 30);
-        put(CunningPotion.POTION_ID, 20);
+        put(CunningPotion.POTION_ID, 40);
         put(DexterityPotion.POTION_ID, 12);
         put(DistilledChaosPotion.POTION_ID, 40);
         put(DuplicationPotion.POTION_ID, 50);

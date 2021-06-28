@@ -86,7 +86,7 @@ public enum Power {
     INFINITE_BLADES("Infinite Blades", power -> new InfiniteBladesPowerState(power)),
     INTANGIBLE("Intangible", power -> new IntangiblePowerState(power), json -> new IntangiblePowerState(json)),
     INTANGIBLE_PLAYER("IntangiblePlayer", power -> new IntangiblePlayerPowerState(power)),
-    INVINCIBLE("Invincible", power -> new InvinciblePowerState(power)),
+    INVINCIBLE("Invincible", power -> new InvinciblePowerState(power), json -> new InvinciblePowerState(json)),
     JUGGERNAUT("Juggernaut", power -> new JuggernautPowerState(power)),
     LIFE_LINK("Life Link", power -> new RegrowPowerState(power)),
     LIKE_WATER_POWER("LikeWaterPower", power -> new LikeWaterPowerState(power)),
@@ -140,7 +140,7 @@ public enum Power {
     STUDY("Study", power -> new StudyPowerState(power)),
     SURROUNDED("Surrounded", power -> new SurroundedPowerState(power)),
     THIEVERY("Thievery", power -> new ThieveryPowerState(power)),
-//    THE_BOMB("TheBomb", power -> new Bomb)
+    //    THE_BOMB("TheBomb", power -> new Bomb)
     THOUSAND_CUTS("Thousand Cuts", power -> new ThousandCutsPowerState(power)),
     TIME_MAZE_POWER("TimeMazePower", power -> new TimeMazePowerState(power), json -> new TimeMazePowerState(json)),
     TIME_WARP("Time Warp", power -> new TimeWarpPowerState(power)),
