@@ -36,7 +36,8 @@ public class DiscardPileToTopOfDeckActionState implements CurrentActionState {
     public static class NoDoubleDualWieldPatch {
         public static void Postfix(DiscardPileToTopOfDeckAction _instance) {
             // Force the action to stay in the the manager until cards are selected
-            if (AbstractDungeon.isScreenUp) {
+            if (AbstractDungeon.gridSelectScreen.selectedCards
+                    .isEmpty() && AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;
             }
         }

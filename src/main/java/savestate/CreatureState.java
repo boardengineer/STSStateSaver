@@ -147,6 +147,9 @@ public class CreatureState {
         creature.id = this.id;
         creature.powers = this.powers.stream().map(powerState -> powerState.loadPower(creature))
                                      .collect(Collectors.toCollection(ArrayList::new));
+
+//        System.err.println(creature.powers);
+
         creature.isPlayer = this.isPlayer;
         creature.isBloodied = this.isBloodied;
         creature.drawX = this.drawX;
@@ -275,6 +278,7 @@ public class CreatureState {
                             .get("current_block").getAsInt());
         }
 
+        // TODO make more granular or nightmare will be problematic
         if (currentHealth > 0) {
             boolean powersMatch = one.get("powers").getAsString().equals(two.get("powers")
                                                                             .getAsString());

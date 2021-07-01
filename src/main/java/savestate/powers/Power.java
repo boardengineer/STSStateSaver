@@ -118,7 +118,7 @@ public enum Power {
     REGENERATION("Regeneration", power -> new RegenPowerState(power)),
     PEN_NIB("Pen Nib", power -> new PenNibPowerState(power)),
     PLATED_ARMOR("Plated Armor", power -> new PlatedArmorPowerState(power)),
-    REBOUND("Rebound", power -> new ReboundPowerState(power)),
+    REBOUND("Rebound", power -> new ReboundPowerState(power), json -> new ReboundPowerState(json)),
     REGENRATE("Regenerate", power -> new RegenerateMonsterPowerState(power)),
     REPAIR("Repair", power -> new RepairPowerState(power)),
     RETAIN_CARDS("Retain Cards", power -> new RetainCardPowerState(power)),

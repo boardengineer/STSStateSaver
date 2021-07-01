@@ -1,35 +1,55 @@
 package savestate.selectscreen;
 
 import basemod.ReflectionHacks;
-import savestate.CardState;
-import savestate.PlayerState;
-import savestate.actions.ActionState;
-import savestate.actions.CurrentActionState;
 import com.megacrit.cardcrawl.actions.GameActionManager;
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
+import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.select.GridCardSelectScreen;
+import savestate.SaveState;
+import savestate.actions.ActionState;
+import savestate.actions.CurrentActionState;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class GridCardSelectScreenState {
-    private final ArrayList<CardState> selectedCards;
+    private final ArrayList<SaveState.CardStateContainer> selectedCards;
 
     private final CurrentActionState currentActionState;
     private final ArrayList<ActionState> actionQueue;
 
     // TODO this will probably need to be turned into a State object
     private final CardGroup targetGroup;
+    private final ArrayList<SaveState.CardStateContainer> groupCards;
 
     private final boolean isDisabled;
     private final int cardSelectAmount;
     private final int numCards;
 
     public GridCardSelectScreenState() {
-        this.selectedCards = PlayerState
-                .toCardStateArray(AbstractDungeon.gridSelectScreen.selectedCards);
+        ArrayList<AbstractCard> allCards = new ArrayList<>();
+
+        AbstractPlayer player = AbstractDungeon.player;
+
+        allCards.addAll(player.masterDeck.group);
+        allCards.addAll(player.drawPile.group);
+        allCards.addAll(player.hand.group);
+        allCards.addAll(player.discardPile.group);
+        allCards.addAll(player.exhaustPile.group);
+        allCards.addAll(player.limbo.group);
+
+        this.selectedCards = new ArrayList<>();
+        AbstractDungeon.gridSelectScreen.selectedCards
+                .forEach(card -> SaveState.CardStateContainer
+                        .forCard(card, allCards));
+
         this.targetGroup = AbstractDungeon.gridSelectScreen.targetGroup;
+        this.groupCards = new ArrayList<>();
+        AbstractDungeon.gridSelectScreen.targetGroup.group
+                .forEach(card -> groupCards
+                        .add(SaveState.CardStateContainer.forCard(card, allCards)));
+
         this.isDisabled = AbstractDungeon.gridSelectScreen.confirmButton.isDisabled;
 
         this.cardSelectAmount = ReflectionHacks
@@ -51,11 +71,25 @@ public class GridCardSelectScreenState {
     }
 
     public void loadGridSelectScreen() {
-        AbstractDungeon.gridSelectScreen.selectedCards = this.selectedCards.stream()
-                                                                           .map(CardState::loadCard)
-                                                                           .collect(Collectors
-                                                                                   .toCollection(ArrayList::new));
-        AbstractDungeon.gridSelectScreen.targetGroup = targetGroup;
+        ArrayList<AbstractCard> allCards = new ArrayList<>();
+
+        AbstractPlayer player = AbstractDungeon.player;
+
+        allCards.addAll(player.masterDeck.group);
+        allCards.addAll(player.drawPile.group);
+        allCards.addAll(player.hand.group);
+        allCards.addAll(player.discardPile.group);
+        allCards.addAll(player.exhaustPile.group);
+        allCards.addAll(player.limbo.group);
+
+        AbstractDungeon.gridSelectScreen.selectedCards = new ArrayList<>();
+        selectedCards.forEach(cardStateContainer -> cardStateContainer.loadCard(allCards));
+
+
+        AbstractDungeon.gridSelectScreen.targetGroup = new CardGroup(CardGroup.CardGroupType.UNSPECIFIED);
+        this.groupCards.forEach(cardStateContainer -> AbstractDungeon.gridSelectScreen.targetGroup
+                .addToTop(cardStateContainer.loadCard(allCards)));
+
         AbstractDungeon.gridSelectScreen.confirmButton.isDisabled = this.isDisabled;
 
         ReflectionHacks

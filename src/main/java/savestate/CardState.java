@@ -33,8 +33,10 @@ public class CardState {
     private final boolean isCostModified;
     private final boolean dontTriggerOnUseCard;
     private final boolean exhaust;
+    private final boolean purgeOnUse;
     private final boolean isEthereal;
     private final boolean retain;
+    private final boolean selfRetain;
 
     private static HashMap<String, HashSet<AbstractCard>> freeCards;
 
@@ -62,6 +64,7 @@ public class CardState {
         this.baseDamage = card.baseDamage;
         this.cost = card.cost;
         this.exhaust = card.exhaust;
+        this.purgeOnUse = card.purgeOnUse;
         this.retain = card.retain;
         this.damage = card.damage;
         this.costForTurn = card.costForTurn;
@@ -78,6 +81,7 @@ public class CardState {
         this.isCostModified = card.isCostModified;
         this.magicNumber = card.magicNumber;
         this.baseMagicNumber = card.baseMagicNumber;
+        this.selfRetain = card.selfRetain;
 
         this.current_x = card.current_x;
         this.current_y = card.current_y;
@@ -120,10 +124,12 @@ public class CardState {
         this.baseBlock = parsed.get("base_block").getAsInt();
         this.timesUpgraded = parsed.get("times_upgraded").getAsInt();
         this.exhaust = parsed.get("exhaust").getAsBoolean();
+        this.purgeOnUse = parsed.get("purge_on_use").getAsBoolean();
         this.isEthereal = parsed.get("is_ethereal").getAsBoolean();
         this.misc = parsed.get("misc").getAsInt();
         this.damage = parsed.get("damage").getAsInt();
         this.retain = parsed.get("retain").getAsBoolean();
+        this.selfRetain = parsed.get("self_retain").getAsBoolean();
 
         // TODO
         this.current_x = 0;
@@ -175,11 +181,13 @@ public class CardState {
         result.baseBlock = baseBlock;
         result.timesUpgraded = timesUpgraded;
         result.exhaust = exhaust;
+        result.purgeOnUse = purgeOnUse;
         result.dontTriggerOnUseCard = dontTriggerOnUseCard;
         result.isEthereal = isEthereal;
         result.misc = misc;
         result.retain = retain;
         result.damage = damage;
+        result.selfRetain = selfRetain;
 
         return result;
     }
@@ -211,9 +219,11 @@ public class CardState {
         cardStateJson.addProperty("times_upgraded", timesUpgraded);
         cardStateJson.addProperty("exhaust", exhaust);
         cardStateJson.addProperty("is_ethereal", isEthereal);
+        cardStateJson.addProperty("purge_on_use",purgeOnUse);
         cardStateJson.addProperty("misc", misc);
         cardStateJson.addProperty("damage", damage);
         cardStateJson.addProperty("retain", retain);
+        cardStateJson.addProperty("self_retain", selfRetain);
 
         return cardStateJson.toString();
     }

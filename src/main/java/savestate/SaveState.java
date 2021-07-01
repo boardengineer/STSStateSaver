@@ -30,13 +30,12 @@ public class SaveState {
 
 
     private final ArrayList<Integer> cardsPlayedThisTurn;
-    private final ArrayList<Integer> cardsPlayedThisCombat;
-    private final ArrayList<Integer> gridSelectedCards;
+    private final ArrayList<CardStateContainer> cardsPlayedThisCombat;
+    private final ArrayList<CardStateContainer> gridSelectedCards;
     private final ArrayList<Integer> drawnCards;
 
     // Load cards from scratch if necessary, ideally they'll be released elsewhere
     private final ArrayList<CardState> cardsPlayedThisTurnBackup;
-    private final ArrayList<CardState> cardsPlayedThisCombatBackup;
 
     AbstractDungeon.CurrentScreen screen;
 
@@ -101,25 +100,18 @@ public class SaveState {
                 });
 
         this.cardsPlayedThisCombat = new ArrayList<>();
-        this.cardsPlayedThisCombatBackup = new ArrayList<>();
         this.lessonLearnedCount = CountLessonLearnedHitsPatch.count;
         this.parasiteCount = CountParasitesPatch.count;
 
         AbstractDungeon.actionManager.cardsPlayedThisCombat
-                .forEach(card -> {
-                    int index = allCards.indexOf(card);
-                    if (index == -1) {
-                        // Powers don't have indeces
-                        this.cardsPlayedThisCombatBackup.add(new CardState(card));
-                    } else {
-                        this.cardsPlayedThisCombat.add(allCards.indexOf(card));
-                    }
-                });
+                .forEach(card -> this.cardsPlayedThisCombat
+                        .add(CardStateContainer.forCard(card, allCards)));
 
         this.gridSelectedCards = new ArrayList<>();
 
         AbstractDungeon.gridSelectScreen.selectedCards
-                .forEach(card -> this.gridSelectedCards.add(allCards.indexOf(card)));
+                .forEach(card -> this.gridSelectedCards
+                        .add(CardStateContainer.forCard(card, allCards)));
 
         this.drawnCards = new ArrayList<>();
         DrawCardAction.drawnCards.forEach(card -> this.drawnCards.add(allCards.indexOf(card)));
@@ -160,7 +152,6 @@ public class SaveState {
         this.cardsPlayedThisTurn = new ArrayList<>();
         this.cardsPlayedThisTurnBackup = new ArrayList<>();
         this.cardsPlayedThisCombat = new ArrayList<>();
-        this.cardsPlayedThisCombatBackup = new ArrayList<>();
         this.gridSelectedCards = new ArrayList<>();
         this.drawnCards = new ArrayList<>();
     }
@@ -186,6 +177,7 @@ public class SaveState {
 
         GameActionManager.totalDiscardedThisTurn = totalDiscardedThisTurn;
 
+        AbstractDungeon.gridSelectScreen.selectedCards.clear();
         if (handSelectScreenState != null) {
             handSelectScreenState.loadHandSelectScreenState();
         } else if (gridCardSelectScreenState != null) {
@@ -221,14 +213,11 @@ public class SaveState {
                         .add(card.loadCard()));
 
         this.cardsPlayedThisCombat
-                .forEach(index -> AbstractDungeon.actionManager.cardsPlayedThisCombat
-                        .add(allCards.get(index)));
-        this.cardsPlayedThisCombatBackup
-                .forEach(card -> AbstractDungeon.actionManager.cardsPlayedThisCombat
-                        .add(card.loadCard()));
+                .forEach(container -> AbstractDungeon.actionManager.cardsPlayedThisCombat
+                        .add(container.loadCard(allCards)));
         AbstractDungeon.gridSelectScreen.selectedCards.clear();
-        this.gridSelectedCards.forEach(index -> AbstractDungeon.gridSelectScreen.selectedCards
-                .add(allCards.get(index)));
+        this.gridSelectedCards.forEach(container -> AbstractDungeon.gridSelectScreen.selectedCards
+                .add(container.loadCard(allCards)));
 
         if (!this.gridSelectedCards.isEmpty()) {
 //            System.err
@@ -331,6 +320,32 @@ public class SaveState {
 
 
         return allMatch;
+    }
+
+    public static class CardStateContainer {
+        private int cardIndex = -1;
+        private CardState cardState = null;
+
+        public static CardStateContainer forCard(AbstractCard card, ArrayList<AbstractCard> allCards) {
+            CardStateContainer result = new CardStateContainer();
+            int index = allCards.indexOf(card);
+            if (index == -1) {
+                // Powers don't have indeces
+                result.cardState = new CardState(card);
+            } else {
+                result.cardIndex = index;
+            }
+
+            return result;
+        }
+
+        public AbstractCard loadCard(ArrayList<AbstractCard> allCards) {
+            if (cardIndex == -1) {
+                return cardState.loadCard();
+            } else {
+                return allCards.get(cardIndex);
+            }
+        }
     }
 
     @SpirePatch(clz = LessonLearnedAction.class, method = "update")

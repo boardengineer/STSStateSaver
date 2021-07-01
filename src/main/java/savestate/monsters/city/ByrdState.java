@@ -92,6 +92,7 @@ public class ByrdState extends MonsterState {
                     _instance.nextMove = move.nextMove;
                     ReflectionHacks.setPrivate(_instance, Byrd.class, "isFlying", false);
                 }
+                _instance.createIntent();
                 return SpireReturn.Return(null);
             }
             return SpireReturn.Continue();

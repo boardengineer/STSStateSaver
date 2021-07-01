@@ -155,8 +155,9 @@ public abstract class MonsterState extends CreatureState {
 
         if (!shouldGoFast) {
             monster.showHealthBar();
-            monster.createIntent();
         }
+
+        monster.createIntent();
 
 
         if (!shouldGoFast && monster.currentBlock > 0) {
@@ -227,14 +228,14 @@ public abstract class MonsterState extends CreatureState {
             result = false;
         }
 
-//        boolean intentEqual = one.get("intent_name").getAsString()
-//                                 .equals(two.get("intent_name").getAsString());
-//        if (!intentEqual) {
-//            System.err.printf("intent one: %s, intent two: %s\n", one.get("intent_name")
-//                                                                     .getAsString(), two
-//                    .get("intent_name").getAsString());
-//            result = false;
-//        }
+        boolean intentEqual = one.get("intent_name").getAsString()
+                                 .equals(two.get("intent_name").getAsString());
+        if (!intentEqual) {
+            System.err.printf("intent one: %s, intent two: %s\n", one.get("intent_name")
+                                                                     .getAsString(), two
+                    .get("intent_name").getAsString());
+            result = false;
+        }
 
         boolean moveHistoryEqual = one.get("move_history").getAsString()
                                       .equals(two.get("move_history").getAsString());

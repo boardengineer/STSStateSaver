@@ -30,6 +30,7 @@ public class DevaPowerState extends PowerState {
         DevaPower result = new DevaPower(targetAndSource);
 
         ReflectionHacks.setPrivate(result, DevaPower.class, "energyGainAmount", energyGainAmount);
+        result.amount = amount;
 
         return result;
     }

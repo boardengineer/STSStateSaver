@@ -6,8 +6,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.PoisonPower;
 
-public class PoisonPowerState extends PowerState
-{
+public class PoisonPowerState extends PowerState {
     public PoisonPowerState(AbstractPower power) {
         super(power);
     }

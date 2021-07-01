@@ -5,8 +5,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.BiasPower;
 
-public class BiasPowerState extends PowerState
-{
+public class BiasPowerState extends PowerState {
     public BiasPowerState(AbstractPower power) {
         super(power);
     }

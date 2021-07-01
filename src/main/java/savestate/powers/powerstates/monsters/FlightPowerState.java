@@ -8,8 +8,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.FlightPower;
 
-public class FlightPowerState extends PowerState
-{
+public class FlightPowerState extends PowerState {
     private final int storedAmount;
 
     public FlightPowerState(AbstractPower power) {

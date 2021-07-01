@@ -301,10 +301,10 @@ savestate\powers\powerstates\silent\WraithFormPowerState.class
 savestate\monsters\beyond\GiantHeadState$YetNoAnimationsPatch.class
 savestate\PotionState$1.class
 savestate\monsters\city\BookOfStabbingState.class
-savestate\orbs\LightningOrbState$LightningEOTPatch$1.class
 savestate\RngState.class
 savestate\monsters\city\ChosenState$NoAnimationsPatch.class
 savestate\monsters\exordium\GremlinWarriorState$NoAnimationsPatch.class
+savestate\actions\ExhumeActionState.class
 savestate\powers\powerstates\ironclad\FlameBarrierPowerState.class
 savestate\actions\SetDontTriggerActionState.class
 savestate\monsters\city\BanditLeaderState.class
@@ -336,6 +336,7 @@ savestate\monsters\city\BanditPointyState.class
 savestate\powers\powerstates\common\StrengthPowerState.class
 savestate\monsters\beyond\TimeEaterState$YetNoAnimationsPatch.class
 savestate\monsters\ending\CorrputHeartState$NoAnimationConstructorPatch.class
+savestate\SaveState$CardStateContainer.class
 savestate\powers\powerstates\monsters\BeatOfDeathPowerState.class
 savestate\actions\MakeTempCardInHandActionState.class
 savestate\powers\powerstates\silent\RetainCardPowerState.class
@@ -345,7 +346,6 @@ savestate\relics\ArtOfWarState.class
 savestate\actions\PutOnDeckActionState$forceNotDonePatch.class
 savestate\monsters\beyond\AwakenedOneState$NoUpdatePatch.class
 savestate\powers\powerstates\monsters\TimeWarpPowerState.class
-savestate\orbs\LightningOrbState$LightningEOTPatch.class
 savestate\powers\powerstates\common\ThornsPowerState.class
 savestate\monsters\city\BanditLeaderState$NoAnimationsPatch.class
 savestate\powers\powerstates\common\GainStrengthPowerState.class
@@ -402,6 +402,7 @@ savestate\powers\powerstates\ironclad\FireBreathingPowerState.class
 savestate\actions\RemoveDebuffsActionState.class
 savestate\DamageInfoState.class
 savestate\monsters\city\SnakePlantState.class
+savestate\actions\ExhumeActionState$NoDoubleExhumePatch.class
 savestate\monsters\exordium\GremlinNobState$NoAnimationsPatch.class
 savestate\monsters\exordium\LooterState$NoAnimationsPatch.class
 savestate\monsters\city\ByrdState$NoAnimationsPatch.class

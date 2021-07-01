@@ -18,6 +18,7 @@ public enum CurrentAction {
     DISCARD_PILE_TO_TOP_OF_DECK_ACTION(DiscardPileToTopOfDeckAction.class, action -> new DiscardPileToTopOfDeckActionState(action)),
     DUAL_WIELD_ACTION(DualWieldAction.class, action -> new DualWieldActionState(action)),
     EXHAUST_ACTION(ExhaustAction.class, action -> new ExhaustActionState(action)),
+    EXHUME_ACTION(ExhumeAction.class, action -> new ExhumeActionState(action)),
     PUT_ON_DECK_ACTION(PutOnDeckAction.class, action -> new PutOnDeckActionState(action)),
     OMNISCIENCE_ACTION(OmniscienceAction.class, action -> new OmniscienceActionState(action)),
     NIGHTMARE_ACTION(NightmareAction.class, action -> new NightmareActionState(action)),
