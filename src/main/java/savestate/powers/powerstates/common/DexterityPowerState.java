@@ -5,8 +5,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.DexterityPower;
 
-public class DexterityPowerState extends PowerState
-{
+public class DexterityPowerState extends PowerState {
     public DexterityPowerState(AbstractPower power) {
         super(power);
     }

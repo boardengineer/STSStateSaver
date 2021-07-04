@@ -26,7 +26,7 @@ public class TimeEaterState extends MonsterState {
         this.usedHaste = ReflectionHacks.getPrivate(monster, TimeEater.class, "usedHaste");
         this.firstTurn = ReflectionHacks.getPrivate(monster, TimeEater.class, "firstTurn");
 
-        monsterTypeNumber = Monster.MAW.ordinal();
+        monsterTypeNumber = Monster.TIME_EATER.ordinal();
     }
 
     public TimeEaterState(String jsonString) {
@@ -38,7 +38,7 @@ public class TimeEaterState extends MonsterState {
         this.usedHaste = parsed.get("used_haste").getAsBoolean();
         this.firstTurn = parsed.get("first_turn").getAsBoolean();
 
-        monsterTypeNumber = Monster.MAW.ordinal();
+        monsterTypeNumber = Monster.TIME_EATER.ordinal();
     }
 
     @Override

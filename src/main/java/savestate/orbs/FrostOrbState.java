@@ -10,9 +10,9 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.Frost;
+import savestate.SaveStateMod;
 
 import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.actionManager;
-import static savestate.SaveStateMod.shouldGoFast;
 
 public class FrostOrbState extends OrbState {
     public FrostOrbState(AbstractOrb orb) {
@@ -39,7 +39,7 @@ public class FrostOrbState extends OrbState {
     public static class NoFXOnUsePatch {
         @SpirePrefixPatch
         public static SpireReturn silentUse(Blizzard blizzard, AbstractPlayer p, AbstractMonster m) {
-            if (shouldGoFast) {
+            if (SaveStateMod.shouldGoFast) {
                 int frostCount = (int) actionManager.orbsChanneledThisCombat
                         .stream()
                         .filter(orb -> orb instanceof Frost)

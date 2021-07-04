@@ -16,14 +16,15 @@ import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
 import com.megacrit.cardcrawl.stances.AbstractStance;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
-import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
+import savestate.orbs.OrbState;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static savestate.SaveStateMod.addRuntime;
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class PlayerState extends CreatureState {
@@ -181,8 +182,15 @@ public class PlayerState extends CreatureState {
     }
 
     public AbstractPlayer loadPlayer() {
+        long startLoad = System.currentTimeMillis();
+
         AbstractPlayer player = CardCrawlGame.characterManager.getCharacter(chosenClass);
+
+        addRuntime("player 0", System.currentTimeMillis() - startLoad);
+
         super.loadCreature(player);
+
+        addRuntime("player 1", System.currentTimeMillis() - startLoad);
 
         player.chosenClass = this.chosenClass;
         player.gameHandSize = this.gameHandSize;
@@ -197,8 +205,13 @@ public class PlayerState extends CreatureState {
         CardState.freeCardList(player.exhaustPile.group);
         CardState.freeCardList(player.limbo.group);
 
+        addRuntime("player 2", System.currentTimeMillis() - startLoad);
+
         player.masterDeck.group = this.masterDeck.stream().map(CardState::loadCard)
                                                  .collect(Collectors.toCollection(ArrayList::new));
+
+        addRuntime("player 20", System.currentTimeMillis() - startLoad);
+
         player.drawPile.group = this.drawPile.stream().map(CardState::loadCard)
                                              .collect(Collectors.toCollection(ArrayList::new));
         player.hand.group = this.hand.stream().map(CardState::loadCard)
@@ -213,8 +226,11 @@ public class PlayerState extends CreatureState {
         player.limbo.group = this.limbo.stream().map(CardState::loadCard)
                                        .collect(Collectors.toCollection(ArrayList::new));
 
+        addRuntime("player 21", System.currentTimeMillis() - startLoad);
         player.relics = this.relics.stream().map(RelicState::loadRelic)
                                    .collect(Collectors.toCollection(ArrayList::new));
+
+        addRuntime("player 3", System.currentTimeMillis() - startLoad);
 
         if (!shouldGoFast) {
             AbstractDungeon.topPanel.adjustRelicHbs();
@@ -263,6 +279,7 @@ public class PlayerState extends CreatureState {
             }
             player.update();
         }
+        addRuntime("player total", System.currentTimeMillis() - startLoad);
 
         return player;
     }

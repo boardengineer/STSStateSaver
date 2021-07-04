@@ -72,6 +72,7 @@ savestate\monsters\exordium\HexaghostState$NoDisposeBodyCreationAnimationsPatch.
 savestate\monsters\beyond\SnakerDaggerState$YetNoAnimationsPatch.class
 savestate\actions\ExhaustActionState$NoDoubleExhaustActionPatch.class
 savestate\monsters\beyond\AwakenedOneState$NoRenderPatch.class
+savestate\powers\PowerState$PowerFactories.class
 savestate\powers\powerstates\common\WeakenedPowerState.class
 savestate\actions\SetMoveActionState.class
 savestate\monsters\city\SneckoState.class
@@ -152,6 +153,7 @@ savestate\SaveState$CountParasitesPatch.class
 savestate\monsters\exordium\HexaghostState$BurnIncreasePatch.class
 savestate\relics\GamblingChipState.class
 savestate\powers\powerstates\monsters\SporeCloudPowerState.class
+savestate\actions\ActionState$ActionFactories.class
 savestate\powers\powerstates\ironclad\BrutalityPowerState.class
 savestate\HitboxState.class
 savestate\powers\powerstates\monsters\SlowPowerState.class
@@ -244,6 +246,7 @@ savestate\powers\powerstates\monsters\SharpHidePowerState.class
 savestate\monsters\exordium\SentryState.class
 savestate\actions\PutOnDeckActionState.class
 savestate\monsters\city\TorchHeadState$NoAnimationsPatch.class
+savestate\actions\CurrentActionState$CurrentActionFactories.class
 savestate\monsters\exordium\AcidSlime_SState.class
 savestate\monsters\beyond\TimeEaterState.class
 savestate\powers\powerstates\common\PlatedArmorPowerState.class

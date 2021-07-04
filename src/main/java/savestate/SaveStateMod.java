@@ -18,6 +18,7 @@ import com.megacrit.cardcrawl.integrations.steam.SRCallback;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @SpireInitializer
 public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscriber {
@@ -40,6 +41,8 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
     public static void initialize() {
         BaseMod.subscribe(new SaveStateMod());
     }
+
+    public static HashMap<String, Long> runTimes;
 
     @Override
     public void receivePostInitialize() {
@@ -123,6 +126,15 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
         @SpirePostfixPatch
         public static void removeUnplayables(AbstractPlayer.PlayerClass playerClass) {
             PotionHelper.potions.removeAll(PotionState.UNPLAYABLE_POTIONS);
+        }
+    }
+
+
+    public static void addRuntime(String name, long amount) {
+        if (!runTimes.containsKey(name)) {
+            runTimes.put(name, amount);
+        } else {
+            runTimes.put(name, amount + runTimes.get(name));
         }
     }
 }

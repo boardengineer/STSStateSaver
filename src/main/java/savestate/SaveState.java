@@ -1,5 +1,6 @@
 package savestate;
 
+import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
@@ -13,11 +14,13 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.screens.select.GridCardSelectScreen;
 import savestate.selectscreen.GridCardSelectScreenState;
 import savestate.selectscreen.HandSelectScreenState;
 
 import java.util.ArrayList;
 
+import static savestate.SaveStateMod.addRuntime;
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class SaveState {
@@ -50,6 +53,9 @@ public class SaveState {
     public final int parasiteCount;
 
     public MapRoomNodeState curMapNodeState;
+
+    //TODO move this into something that always gets called
+    private int gridCardSelectAmount = 0;
 
     public SaveState() {
         if (AbstractDungeon.isScreenUp) {
@@ -115,6 +121,8 @@ public class SaveState {
 
         this.drawnCards = new ArrayList<>();
         DrawCardAction.drawnCards.forEach(card -> this.drawnCards.add(allCards.indexOf(card)));
+        this.gridCardSelectAmount = ReflectionHacks
+                .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
     }
 
     public SaveState(String jsonString) {
@@ -157,6 +165,11 @@ public class SaveState {
     }
 
     public void loadState() {
+//        System.err.println("Client side?");
+//        AbstractDungeon.gridSelectScreen.targetGroup = null;
+
+        long startLoad = System.currentTimeMillis();
+
         AbstractDungeon.actionManager.currentAction = null;
         AbstractDungeon.actionManager.actions.clear();
 
@@ -164,7 +177,10 @@ public class SaveState {
         GameActionManager.turn = this.turn;
 
         AbstractDungeon.player = playerState.loadPlayer();
+
+        addRuntime("load 0", System.currentTimeMillis() - startLoad);
         curMapNodeState.loadMapRoomNode(AbstractDungeon.currMapNode);
+        addRuntime("load 1", System.currentTimeMillis() - startLoad);
 
         AbstractDungeon.isScreenUp = isScreenUp;
         AbstractDungeon.screen = screen;
@@ -190,6 +206,7 @@ public class SaveState {
 
         ArrayList<AbstractCard> allCards = new ArrayList<>();
 
+        addRuntime("load 2", System.currentTimeMillis() - startLoad);
         AbstractPlayer player = AbstractDungeon.player;
 
         allCards.addAll(player.masterDeck.group);
@@ -198,6 +215,7 @@ public class SaveState {
         allCards.addAll(player.discardPile.group);
         allCards.addAll(player.exhaustPile.group);
         allCards.addAll(player.limbo.group);
+
 
         AbstractDungeon.actionManager.cardsPlayedThisTurn.clear();
         AbstractDungeon.gridSelectScreen.selectedCards.clear();
@@ -218,6 +236,7 @@ public class SaveState {
         AbstractDungeon.gridSelectScreen.selectedCards.clear();
         this.gridSelectedCards.forEach(container -> AbstractDungeon.gridSelectScreen.selectedCards
                 .add(container.loadCard(allCards)));
+        addRuntime("load 3", System.currentTimeMillis() - startLoad);
 
         if (!this.gridSelectedCards.isEmpty()) {
 //            System.err
@@ -234,6 +253,17 @@ public class SaveState {
         AbstractDungeon.player.hand.applyPowers();
 
         rngState.loadRng(floorNum);
+
+        addRuntime("load total", System.currentTimeMillis() - startLoad);
+        AbstractDungeon.player.isEndingTurn = false;
+        AbstractDungeon.player.endTurnQueued = false;
+        AbstractDungeon.actionManager.phase = GameActionManager.Phase.WAITING_ON_USER;
+        AbstractDungeon.overlayMenu.endTurnButton.enable();
+
+        ReflectionHacks
+                .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount", 0);
+        ReflectionHacks
+                .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "hoveredCard", null);
     }
 
     public int getPlayerHealth() {

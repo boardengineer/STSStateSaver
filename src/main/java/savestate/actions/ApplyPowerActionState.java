@@ -5,8 +5,8 @@ import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
-import savestate.StateFactories;
 import savestate.powers.PowerState;
+import savestate.StateFactories;
 
 public class ApplyPowerActionState implements ActionState {
     private final PowerState powerToApply;

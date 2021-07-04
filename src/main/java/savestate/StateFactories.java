@@ -1,12 +1,14 @@
-
 package savestate;
 
 import savestate.actions.Action;
+import savestate.actions.ActionState;
 import savestate.actions.CurrentAction;
+import savestate.actions.CurrentActionState;
+import savestate.monsters.Monster;
 import savestate.orbs.Orb;
 import savestate.powers.Power;
+import savestate.powers.PowerState;
 import savestate.relics.Relic;
-import savestate.monsters.Monster;
 
 import java.util.HashMap;
 
@@ -15,11 +17,12 @@ import java.util.HashMap;
  * by adding keys and factories directly to these maps
  */
 public class StateFactories {
+    // TODO move inits to a main file
     public static HashMap<String, Monster> monsterByIdMap = createMonsterMap();
-    public static HashMap<String, Power> powerByIdMap = createPowerMap();
+    public static HashMap<String, PowerState.PowerFactories> powerByIdMap = createPowerMap();
     public static HashMap<String, Relic> relicByIdMap = createRelicMap();
-    public static HashMap<Class, Action> actionByClassMap = createActionMap();
-    public static HashMap<Class, CurrentAction> currentActionByClassMap = createCurrentActionMap();
+    public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
+    public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
     public static HashMap<Class, Orb> orbByClassMap = createOrbMap();
 
     private static HashMap<String, Monster> createMonsterMap() {
@@ -30,10 +33,11 @@ public class StateFactories {
         return monsterByIdmap;
     }
 
-    private static HashMap<String, Power> createPowerMap() {
-        HashMap<String, Power> powerByIdmap = new HashMap<>();
+    private static HashMap<String, PowerState.PowerFactories> createPowerMap() {
+        HashMap<String, PowerState.PowerFactories> powerByIdmap = new HashMap<>();
         for (Power power : Power.values()) {
-            powerByIdmap.put(power.powerId, power);
+            powerByIdmap
+                    .put(power.powerId, new PowerState.PowerFactories(power.factory, power.jsonFactory));
         }
         return powerByIdmap;
     }
@@ -46,18 +50,20 @@ public class StateFactories {
         return relicByIdMap;
     }
 
-    private static HashMap<Class, Action> createActionMap() {
-        HashMap<Class, Action> actionByClassMap = new HashMap<>();
+    private static HashMap<Class, ActionState.ActionFactories> createActionMap() {
+        HashMap<Class, ActionState.ActionFactories> actionByClassMap = new HashMap<>();
         for (Action action : Action.values()) {
-            actionByClassMap.put(action.actionClass, action);
+            actionByClassMap
+                    .put(action.actionClass, new ActionState.ActionFactories(action.factory));
         }
         return actionByClassMap;
     }
 
-    private static HashMap<Class, CurrentAction> createCurrentActionMap() {
-        HashMap<Class, CurrentAction> currentActionByClassMap = new HashMap<>();
+    private static HashMap<Class, CurrentActionState.CurrentActionFactories> createCurrentActionMap() {
+        HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = new HashMap<>();
         for (CurrentAction action : CurrentAction.values()) {
-            currentActionByClassMap.put(action.actionClass, action);
+            currentActionByClassMap
+                    .put(action.actionClass, new CurrentActionState.CurrentActionFactories(action.factory));
         }
         return currentActionByClassMap;
     }

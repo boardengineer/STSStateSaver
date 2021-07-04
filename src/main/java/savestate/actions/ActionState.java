@@ -15,6 +15,7 @@ import savestate.StateFactories;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public interface ActionState {
     AbstractGameAction loadAction();
@@ -70,5 +71,13 @@ public interface ActionState {
         }
 
         return actionQueue;
+    }
+
+    class ActionFactories {
+        public Function<AbstractGameAction, ActionState> factory;
+
+        public ActionFactories(Function<AbstractGameAction, ActionState> factory) {
+            this.factory = factory;
+        }
     }
 }

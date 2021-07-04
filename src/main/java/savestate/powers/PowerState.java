@@ -6,6 +6,10 @@ import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 
+import java.util.function.Function;
+
+import static savestate.SaveStateMod.addRuntime;
+
 public class PowerState {
     public final String powerId;
     public final int amount;
@@ -24,9 +28,15 @@ public class PowerState {
     }
 
     public AbstractPower loadPower(AbstractCreature targetAndSource) {
+        long start = System.currentTimeMillis();
+
         if (StateFactories.powerByIdMap.containsKey(powerId)) {
-            return StateFactories.powerByIdMap.get(powerId).factory
+            AbstractPower result = StateFactories.powerByIdMap.get(powerId).factory
                     .apply(new DummyPower(powerId, amount)).loadPower(targetAndSource);
+
+            addRuntime("power" + powerId, System.currentTimeMillis() - start);
+
+            return result;
         }
 
         throw new IllegalStateException("no known state for " + powerId);
@@ -69,5 +79,20 @@ public class PowerState {
             throw new IllegalStateException("No Power State for " + id);
         }
         return StateFactories.powerByIdMap.get(id).jsonFactory.apply(jsonString);
+    }
+
+    public static class PowerFactories {
+        public final Function<AbstractPower, PowerState> factory;
+        public final Function<String, PowerState> jsonFactory;
+
+        public PowerFactories(Function<AbstractPower, PowerState> factory, Function<String, PowerState> jsonFactory) {
+            this.factory = factory;
+            this.jsonFactory = jsonFactory;
+        }
+
+        public PowerFactories(Function<AbstractPower, PowerState> factory) {
+            this.factory = factory;
+            this.jsonFactory = json -> new PowerState(json);
+        }
     }
 }

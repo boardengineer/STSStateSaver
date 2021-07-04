@@ -1,5 +1,6 @@
 package savestate.powers.powerstates.common;
 
+import savestate.SaveStateMod;
 import savestate.powers.PowerState;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
@@ -10,8 +11,6 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.ThornsPower;
-
-import static savestate.SaveStateMod.shouldGoFast;
 
 public class ThornsPowerState extends PowerState {
     public ThornsPowerState(AbstractPower power) {
@@ -26,7 +25,7 @@ public class ThornsPowerState extends PowerState {
     @SpirePatch(clz = ThornsPower.class, method = "onAttacked")
     public static class NoFlashPatch {
         public static SpireReturn Prefix(ThornsPower power, DamageInfo info, int damageAmount) {
-            if (shouldGoFast) {
+            if (SaveStateMod.shouldGoFast) {
                 if (info.type != DamageInfo.DamageType.THORNS && info.type != DamageInfo.DamageType.HP_LOSS && info.owner != null && info.owner != power.owner) {
                     AbstractDungeon.actionManager
                             .addToTop(new DamageAction(info.owner, new DamageInfo(power.owner, power.amount, DamageInfo.DamageType.THORNS), AbstractGameAction.AttackEffect.SLASH_HORIZONTAL, true));

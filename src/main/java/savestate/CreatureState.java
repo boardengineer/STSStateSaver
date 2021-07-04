@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static savestate.SaveStateMod.addRuntime;
+
 /**
  * State object analog of AbstractCreature
  * <p>
@@ -143,11 +145,16 @@ public class CreatureState {
     }
 
     public void loadCreature(AbstractCreature creature) {
+        long start = System.currentTimeMillis();
+
         creature.name = this.name;
         creature.id = this.id;
+        addRuntime("creature prepower", System.currentTimeMillis() - start);
+
         creature.powers = this.powers.stream().map(powerState -> powerState.loadPower(creature))
                                      .collect(Collectors.toCollection(ArrayList::new));
 
+        addRuntime("creature 0", System.currentTimeMillis() - start);
 //        System.err.println(creature.powers);
 
         creature.isPlayer = this.isPlayer;
@@ -157,9 +164,10 @@ public class CreatureState {
         creature.dialogX = this.dialogX;
         creature.dialogY = this.dialogY;
 
-        creature.hb = hb.loadHitbox();
-        creature.healthHb = this.healthHb.loadHitbox();
+//        creature.hb = hb.loadHitbox();
+//        creature.healthHb = this.healthHb.loadHitbox();
 
+        addRuntime("creature 1", System.currentTimeMillis() - start);
         creature.gold = this.gold;
         creature.displayGold = this.displayGold;
         creature.isDying = this.isDying;
@@ -173,14 +181,17 @@ public class CreatureState {
         creature.hb_x = this.hb_x;
         creature.hb_y = this.hb_y;
         creature.hb_w = this.hb_w;
+        addRuntime("creature 2", System.currentTimeMillis() - start);
         creature.currentHealth = this.currentHealth;
         creature.maxHealth = this.maxHealth;
         creature.currentBlock = this.currentBlock;
         creature.hbAlpha = this.hbAlpha;
         creature.animX = this.animX;
         creature.animY = this.animY;
+        addRuntime("creature 3", System.currentTimeMillis() - start);
         creature.reticleAlpha = this.reticleAlpha;
         creature.reticleRendered = this.reticleRendered;
+        addRuntime("creature 4", System.currentTimeMillis() - start);
     }
 
     public int getCurrentHealth() {

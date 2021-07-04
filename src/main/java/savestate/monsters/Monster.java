@@ -1,6 +1,5 @@
 package savestate.monsters;
 
-import savestate.monsters.MonsterState;
 import savestate.monsters.beyond.*;
 import savestate.monsters.city.*;
 import savestate.monsters.ending.CorrputHeartState;
