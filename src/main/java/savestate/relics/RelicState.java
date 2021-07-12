@@ -1,12 +1,14 @@
 package savestate.relics;
 
 import basemod.ReflectionHacks;
-import savestate.fastobjects.NoLoggerMummifiedHand;
-import savestate.StateFactories;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.helpers.RelicLibrary;
-import com.megacrit.cardcrawl.relics.*;
+import com.megacrit.cardcrawl.relics.AbstractRelic;
+import savestate.StateFactories;
+import savestate.fastobjects.NoLoggerMummifiedHand;
+
+import java.util.function.Function;
 
 public class RelicState {
     public final String relicId;
@@ -14,14 +16,14 @@ public class RelicState {
     private final boolean grayscale;
     private final boolean pulse;
 
-    RelicState(AbstractRelic relic) {
+    public RelicState(AbstractRelic relic) {
         this.relicId = relic.relicId;
         this.counter = relic.counter;
         this.grayscale = relic.grayscale;
         this.pulse = ReflectionHacks.getPrivate(relic, AbstractRelic.class, "pulse");
     }
 
-    RelicState(String jsonString) {
+    public RelicState(String jsonString) {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.relicId = parsed.get("relic_id").getAsString();
@@ -77,5 +79,20 @@ public class RelicState {
         }
 
         return new RelicState(jsonString);
+    }
+
+    public static class RelicFactories {
+        public final Function<AbstractRelic, RelicState> factory;
+        public final Function<String, RelicState> jsonFactory;
+
+        public RelicFactories(Function<AbstractRelic, RelicState> factory, Function<String, RelicState> jsonFactory) {
+            this.factory = factory;
+            this.jsonFactory = jsonFactory;
+        }
+
+        public RelicFactories(Function<AbstractRelic, RelicState> factory) {
+            this.factory = factory;
+            this.jsonFactory = json -> new RelicState(json);
+        }
     }
 }

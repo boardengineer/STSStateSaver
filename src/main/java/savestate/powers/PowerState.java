@@ -52,6 +52,16 @@ public class PowerState {
         return jObject.toString();
     }
 
+    public String diffEncode() {
+        if (jObject == null)
+            jObject = new JsonObject();
+
+        jObject.addProperty("power_id", powerId);
+        jObject.addProperty("amount", amount);
+
+        return jObject.toString();
+    }
+
     // A generic empty power so that power factories can be used for basic json powers
     private class DummyPower extends AbstractPower {
         DummyPower(String powerId, int amount) {
@@ -62,6 +72,13 @@ public class PowerState {
 
     public static PowerState forPower(AbstractPower power) {
         String id = power.ID;
+
+        for (String prefix : StateFactories.powerPrefixes) {
+            if (id.startsWith(prefix)) {
+                id = prefix;
+                break;
+            }
+        }
 
         if (!StateFactories.powerByIdMap.containsKey(id)) {
             throw new IllegalStateException("No Power State for " + id);

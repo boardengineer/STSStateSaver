@@ -248,7 +248,7 @@ public class CreatureState {
         creatureStateJson.addProperty("name", name);
         creatureStateJson.addProperty("current_health", currentHealth);
         creatureStateJson.addProperty("current_block", currentBlock);
-        creatureStateJson.addProperty("powers", powers.stream().map(PowerState::encode)
+        creatureStateJson.addProperty("powers", powers.stream().map(PowerState::diffEncode)
                                                       .collect(Collectors
                                                               .joining(POWER_DELIMETER)));
 

@@ -140,7 +140,7 @@ public enum Power {
     STUDY("Study", power -> new StudyPowerState(power)),
     SURROUNDED("Surrounded", power -> new SurroundedPowerState(power)),
     THIEVERY("Thievery", power -> new ThieveryPowerState(power)),
-    //    THE_BOMB("TheBomb", power -> new Bomb)
+    THE_BOMB("TheBomb", power -> new TheBombPowerState(power), json -> new TheBombPowerState(json)),
     THOUSAND_CUTS("Thousand Cuts", power -> new ThousandCutsPowerState(power)),
     TIME_MAZE_POWER("TimeMazePower", power -> new TimeMazePowerState(power), json -> new TimeMazePowerState(json)),
     TIME_WARP("Time Warp", power -> new TimeWarpPowerState(power)),

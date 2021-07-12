@@ -4,6 +4,7 @@ import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.ClearCardQueueAction;
 import com.megacrit.cardcrawl.actions.common.*;
 import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
+import com.megacrit.cardcrawl.actions.unique.EstablishmentPowerAction;
 import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
 import com.megacrit.cardcrawl.actions.unique.RemoveDebuffsAction;
 import com.megacrit.cardcrawl.actions.utility.NewQueueCardAction;
@@ -25,6 +26,7 @@ public enum Action {
     ENABLE_END_TURN_BUTTON_ACTION(EnableEndTurnButtonAction.class, action -> new EnableEndTurnButtonActionState(action)),
     ENQUEUE_END_TURN_ACTION(EnqueueEndTurnAction.class, action -> new EnqueueEndTurnActionState()),
     ESCAPE_ACTION(EscapeAction.class, action -> new EscapeActionState(action)),
+    ESTABLISHMENT_POWER_ACTION(EstablishmentPowerAction.class, action -> new EstablishmentPowerActionState(action)),
     GAIN_BLOCK_ACTION(GainBlockAction.class, action -> new GainBlockActionState(action)),
     GAIN_ENERGY_ACTION(GainEnergyAction.class, action -> new GainEnergyActionState(action)),
     LOSE_ENERGY_ACTION(LoseEnergyAction.class, action -> new LoseEnergyActionState(action)),

@@ -16,7 +16,7 @@ public class NightmarePowerState extends PowerState {
     public NightmarePowerState(AbstractPower power) {
         super(power);
 
-        this.card = new CardState((AbstractCard) ReflectionHacks
+        this.card = CardState.forCard((AbstractCard) ReflectionHacks
                 .getPrivate(power, NightmarePower.class, "card"));
     }
 
@@ -25,7 +25,7 @@ public class NightmarePowerState extends PowerState {
 
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
-        this.card = new CardState(parsed.get("card").getAsString());
+        this.card = CardState.forString(parsed.get("card").getAsString());
     }
 
     @Override

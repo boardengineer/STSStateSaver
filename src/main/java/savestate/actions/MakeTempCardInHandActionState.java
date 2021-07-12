@@ -16,7 +16,7 @@ public class MakeTempCardInHandActionState implements ActionState {
 
     public MakeTempCardInHandActionState(MakeTempCardInHandAction action) {
         AbstractCard card = ReflectionHacks.getPrivate(action, MakeTempCardInHandAction.class, "c");
-        this.c = new CardState(card);
+        this.c = CardState.forCard(card);
         this.amount = action.amount;
     }
 

@@ -14,6 +14,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.powers.TheBombPower;
 import com.megacrit.cardcrawl.screens.select.GridCardSelectScreen;
 import savestate.selectscreen.GridCardSelectScreenState;
 import savestate.selectscreen.HandSelectScreenState;
@@ -57,6 +58,8 @@ public class SaveState {
     //TODO move this into something that always gets called
     private int gridCardSelectAmount = 0;
 
+    private int bombIdOffset;
+
     public SaveState() {
         if (AbstractDungeon.isScreenUp) {
             if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.HAND_SELECT) {
@@ -99,7 +102,7 @@ public class SaveState {
                     int index = allCards.indexOf(card);
                     if (index == -1) {
                         // Powers don't have indeces
-                        this.cardsPlayedThisTurnBackup.add(new CardState(card));
+                        this.cardsPlayedThisTurnBackup.add(CardState.forCard(card));
                     } else {
                         this.cardsPlayedThisTurn.add(allCards.indexOf(card));
                     }
@@ -120,6 +123,8 @@ public class SaveState {
                         .add(CardStateContainer.forCard(card, allCards)));
 
         this.drawnCards = new ArrayList<>();
+        this.bombIdOffset = ReflectionHacks.getPrivateStatic(TheBombPower.class, "bombIdOffset");
+
         DrawCardAction.drawnCards.forEach(card -> this.drawnCards.add(allCards.indexOf(card)));
         this.gridCardSelectAmount = ReflectionHacks
                 .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
@@ -138,6 +143,7 @@ public class SaveState {
 
         this.screen = AbstractDungeon.CurrentScreen
                 .valueOf(parsed.get("screen_name").getAsString());
+        System.err.println(this.screen);
         this.listState = new ListState(parsed.get("list_state").getAsString());
 
         System.err.println("parsing player....");
@@ -150,6 +156,7 @@ public class SaveState {
         this.curMapNodeState = new MapRoomNodeState(parsed.get("cur_map_node_state").getAsString());
         this.isScreenUp = parsed.get("is_screen_up").getAsBoolean();
         this.ascensionLevel = parsed.get("ascension_level").getAsInt();
+        this.bombIdOffset = parsed.get("bomb_id_offset").getAsInt();
 
         // start counting from the json start
         this.lessonLearnedCount = 0;
@@ -218,7 +225,7 @@ public class SaveState {
 
 
         AbstractDungeon.actionManager.cardsPlayedThisTurn.clear();
-        AbstractDungeon.gridSelectScreen.selectedCards.clear();
+//        AbstractDungeon.gridSelectScreen.selectedCards.clear();
         AbstractDungeon.actionManager.cardsPlayedThisCombat.clear();
 
         CountLessonLearnedHitsPatch.count = lessonLearnedCount;
@@ -264,6 +271,7 @@ public class SaveState {
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount", 0);
         ReflectionHacks
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "hoveredCard", null);
+        ReflectionHacks.setPrivateStatic(TheBombPower.class, "bombIdOffset", bombIdOffset);
     }
 
     public int getPlayerHealth() {
@@ -293,6 +301,8 @@ public class SaveState {
         saveStateJson.addProperty("ascension_level", ascensionLevel);
 
         saveStateJson.addProperty("mantra_gained", mantraGained);
+
+        saveStateJson.addProperty("bomb_id_offset", bombIdOffset);
 
         System.err.println("completed encoding");
         return saveStateJson.toString();
@@ -361,7 +371,7 @@ public class SaveState {
             int index = allCards.indexOf(card);
             if (index == -1) {
                 // Powers don't have indeces
-                result.cardState = new CardState(card);
+                result.cardState = CardState.forCard(card);
             } else {
                 result.cardIndex = index;
             }

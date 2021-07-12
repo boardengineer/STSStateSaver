@@ -132,6 +132,7 @@ savestate\monsters\Monster.class
 savestate\powers\powerstates\TimeMazePowerState.class
 savestate\monsters\beyond\RepulsorState.class
 savestate\monsters\exordium\HexaghostState$NoHexaghostImagesPatch.class
+savestate\CardState$CardFactories.class
 savestate\monsters\beyond\DonuState$YetNoAnimationsPatch.class
 savestate\actions\DiscardPileToTopOfDeckActionState$NoDoubleDualWieldPatch.class
 savestate\powers\powerstates\BlockReturnPowerState.class
@@ -208,6 +209,7 @@ savestate\actions\GainEnergyActionState.class
 savestate\powers\powerstates\monsters\CurlUpPowerState.class
 savestate\monsters\beyond\NemesisState$YetNoAnimationsPatch.class
 savestate\powers\powerstates\common\DexterityPowerState.class
+savestate\actions\EstablishmentPowerActionState.class
 savestate\actions\ActionState$1.class
 savestate\monsters\city\BanditPointyState$NoAnimationsPatch.class
 savestate\orbs\PlasmaOrbState.class
@@ -234,6 +236,7 @@ savestate\actions\EscapeActionState.class
 savestate\powers\powerstates\defect\EquilibriumPowerState.class
 savestate\powers\powerstates\common\SadisticPowerState.class
 savestate\powers\powerstates\ironclad\JuggernautPowerState.class
+savestate\relics\RelicState$RelicFactories.class
 savestate\monsters\beyond\ReptomancerState.class
 savestate\monsters\exordium\LagavulinState.class
 savestate\relics\RelicState.class

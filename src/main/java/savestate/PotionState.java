@@ -87,7 +87,7 @@ public class PotionState {
         put(SpeedPotion.POTION_ID, 75);
         put(StancePotion.POTION_ID, 0);
         put(SteroidPotion.POTION_ID, 21);
-        put(HeartOfIron.POTION_ID, 150);
+        put(HeartOfIron.POTION_ID, 100);
         put(StrengthPotion.POTION_ID, 40);
         put(SwiftPotion.POTION_ID, 40);
         put(WeakenPotion.POTION_ID, 50);

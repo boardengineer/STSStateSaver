@@ -1,5 +1,6 @@
 package savestate;
 
+import com.megacrit.cardcrawl.powers.TheBombPower;
 import savestate.actions.Action;
 import savestate.actions.ActionState;
 import savestate.actions.CurrentAction;
@@ -9,8 +10,11 @@ import savestate.orbs.Orb;
 import savestate.powers.Power;
 import savestate.powers.PowerState;
 import savestate.relics.Relic;
+import savestate.relics.RelicState;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class contains maps to state factories.  Modded content can be included in the state saver
@@ -19,8 +23,14 @@ import java.util.HashMap;
 public class StateFactories {
     // TODO move inits to a main file
     public static HashMap<String, Monster> monsterByIdMap = createMonsterMap();
+
+    // Power factories and a set of power names
     public static HashMap<String, PowerState.PowerFactories> powerByIdMap = createPowerMap();
-    public static HashMap<String, Relic> relicByIdMap = createRelicMap();
+    public static HashSet<String> powerPrefixes = createPowerPrefixes();
+
+    public static ArrayList<CardState.CardFactories> cardFactories = new ArrayList<>();
+
+    public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
     public static HashMap<Class, Orb> orbByClassMap = createOrbMap();
@@ -33,6 +43,14 @@ public class StateFactories {
         return monsterByIdmap;
     }
 
+    private static HashSet<String> createPowerPrefixes() {
+        HashSet<String> powerPrefixes = new HashSet<>();
+
+        powerPrefixes.add(TheBombPower.POWER_ID);
+
+        return powerPrefixes;
+    }
+
     private static HashMap<String, PowerState.PowerFactories> createPowerMap() {
         HashMap<String, PowerState.PowerFactories> powerByIdmap = new HashMap<>();
         for (Power power : Power.values()) {
@@ -42,10 +60,11 @@ public class StateFactories {
         return powerByIdmap;
     }
 
-    private static HashMap<String, Relic> createRelicMap() {
-        HashMap<String, Relic> relicByIdMap = new HashMap<>();
+    private static HashMap<String, RelicState.RelicFactories> createRelicMap() {
+        HashMap<String, RelicState.RelicFactories> relicByIdMap = new HashMap<>();
         for (Relic relic : Relic.values()) {
-            relicByIdMap.put(relic.relicId, relic);
+            relicByIdMap
+                    .put(relic.relicId, new RelicState.RelicFactories(relic.factory, relic.jsonFactory));
         }
         return relicByIdMap;
     }

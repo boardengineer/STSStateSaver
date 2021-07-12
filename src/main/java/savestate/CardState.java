@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static savestate.SaveStateMod.shouldGoFast;
 
@@ -219,7 +220,7 @@ public class CardState {
         cardStateJson.addProperty("times_upgraded", timesUpgraded);
         cardStateJson.addProperty("exhaust", exhaust);
         cardStateJson.addProperty("is_ethereal", isEthereal);
-        cardStateJson.addProperty("purge_on_use",purgeOnUse);
+        cardStateJson.addProperty("purge_on_use", purgeOnUse);
         cardStateJson.addProperty("misc", misc);
         cardStateJson.addProperty("damage", damage);
         cardStateJson.addProperty("retain", retain);
@@ -356,5 +357,42 @@ public class CardState {
         }
 
         return null;
+    }
+
+    public static class CardFactories {
+        public final Function<AbstractCard, Optional<CardState>> factory;
+        public final Function<String, Optional<CardState>> jsonFactory;
+
+        public CardFactories(Function<AbstractCard, Optional<CardState>> factory, Function<String, Optional<CardState>> jsonFactory) {
+            this.factory = factory;
+            this.jsonFactory = jsonFactory;
+        }
+
+        public CardFactories(Function<AbstractCard, Optional<CardState>> factory) {
+            this.factory = factory;
+            this.jsonFactory = json -> Optional.of(new CardState(json));
+        }
+    }
+
+    public static CardState forCard(AbstractCard card) {
+        for (CardFactories factories : StateFactories.cardFactories) {
+            Optional<CardState> cardOptional = factories.factory.apply(card);
+            if (cardOptional.isPresent()) {
+                return cardOptional.get();
+            }
+        }
+
+        return new CardState(card);
+    }
+
+    public static CardState forString(String jsonString) {
+        for (CardFactories factories : StateFactories.cardFactories) {
+            Optional<CardState> cardOptional = factories.jsonFactory.apply(jsonString);
+            if (cardOptional.isPresent()) {
+                return cardOptional.get();
+            }
+        }
+
+        return new CardState(jsonString);
     }
 }

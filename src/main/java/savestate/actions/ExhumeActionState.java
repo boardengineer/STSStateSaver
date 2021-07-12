@@ -18,8 +18,9 @@ public class ExhumeActionState implements CurrentActionState {
         this.upgrade = ReflectionHacks.getPrivate(action, ExhumeAction.class, "upgrade");
 
         this.exhumes = new ArrayList<>();
-        ArrayList<AbstractCard> actionExhumes = ReflectionHacks.getPrivate(action, ExhumeAction.class, "exhumes");
-        actionExhumes.forEach(card -> exhumes.add(new CardState(card)));
+        ArrayList<AbstractCard> actionExhumes = ReflectionHacks
+                .getPrivate(action, ExhumeAction.class, "exhumes");
+        actionExhumes.forEach(card -> exhumes.add(CardState.forCard(card)));
     }
 
     @Override

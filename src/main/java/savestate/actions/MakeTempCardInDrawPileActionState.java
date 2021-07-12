@@ -20,7 +20,7 @@ public class MakeTempCardInDrawPileActionState implements ActionState {
     public MakeTempCardInDrawPileActionState(MakeTempCardInDrawPileAction action) {
         AbstractCard sourceCard = ReflectionHacks
                 .getPrivate(action, MakeTempCardInDrawPileAction.class, "cardToMake");
-        this.cardToMake = new CardState(sourceCard);
+        this.cardToMake = CardState.forCard(sourceCard);
         this.randomSpot = ReflectionHacks
                 .getPrivate(action, MakeTempCardInDrawPileAction.class, "randomSpot");
         this.autoPosition = ReflectionHacks

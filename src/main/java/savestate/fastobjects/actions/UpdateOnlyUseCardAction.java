@@ -5,6 +5,7 @@
 
 package savestate.fastobjects.actions;
 
+import basemod.BaseMod;
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
@@ -52,6 +53,8 @@ public class UpdateOnlyUseCardAction extends AbstractGameAction {
 
     public void update() {
         if (this.duration == 0.15F) {
+            BaseMod.publishOnCardUse(this.targetCard);
+
             // I hope this null isn't a problem
             AbstractDungeon.player.powers.stream()
                                          .filter(power -> !this.targetCard.dontTriggerOnUseCard)

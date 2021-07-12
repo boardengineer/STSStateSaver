@@ -19,7 +19,7 @@ public class StasisPowerState extends PowerState
 
         AbstractCard sourceCard = ReflectionHacks
                 .getPrivate(power, StasisPower.class, "card");
-        this.card = new CardState(sourceCard);
+        this.card = CardState.forCard(sourceCard);
         if (this.card == null) {
             throw new IllegalStateException("Bad stasis card");
         }
@@ -30,7 +30,7 @@ public class StasisPowerState extends PowerState
 
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
-        this.card = new CardState(parsed.get("card").getAsString());
+        this.card = CardState.forString(parsed.get("card").getAsString());
     }
 
     @Override

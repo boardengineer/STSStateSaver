@@ -407,14 +407,14 @@ public class PlayerState extends CreatureState {
 
     private static ArrayList<CardState> decodeCardList(String cardListString) {
         return Stream.of(cardListString.split(CARD_DELIMETER)).filter(s -> !s.isEmpty())
-                     .map(CardState::new).collect(Collectors.toCollection(ArrayList::new));
+                     .map(CardState::forString).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static ArrayList<CardState> toCardStateArray(ArrayList<AbstractCard> cards) {
         ArrayList<CardState> result = new ArrayList<>();
 
         for (AbstractCard card : cards) {
-            result.add(new CardState(card));
+            result.add(CardState.forCard(card));
         }
 
         return result;
@@ -482,7 +482,8 @@ public class PlayerState extends CreatureState {
             System.err.println(two.get("hand").getAsString());
         }
 
-        boolean stanceMatch = one.get("stance").getAsString().equals(two.get("stance").getAsString());
+        boolean stanceMatch = one.get("stance").getAsString()
+                                 .equals(two.get("stance").getAsString());
         if (!stanceMatch) {
             allMatch = false;
             System.err.println("player stance mismatch");

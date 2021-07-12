@@ -8,7 +8,9 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 public class DiscardActionState implements CurrentActionState {
     private final int amount;
 
-    public DiscardActionState(DiscardAction action) { amount = action.amount; }
+    public DiscardActionState(DiscardAction action) {
+        amount = action.amount;
+    }
 
     @Override
     public AbstractGameAction loadCurrentAction() {

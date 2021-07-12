@@ -15,13 +15,13 @@ public class UseCardActionState implements ActionState {
 
     public UseCardActionState(UseCardAction action) {
         AbstractCard card = ReflectionHacks.getPrivate(action, UseCardAction.class, "targetCard");
-        this.card = new CardState(card);
+        this.card = CardState.forCard(card);
     }
 
     public UseCardActionState(UpdateOnlyUseCardAction action) {
         AbstractCard card = ReflectionHacks
                 .getPrivate(action, UpdateOnlyUseCardAction.class, "targetCard");
-        this.card = new CardState(card);
+        this.card = CardState.forCard(card);
     }
 
     @Override

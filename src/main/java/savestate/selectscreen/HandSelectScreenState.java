@@ -85,11 +85,14 @@ public class HandSelectScreenState {
         AbstractDungeon.handCardSelectScreen.numSelected = numSelected;
 
         if (currentActionState != null) {
+            AbstractDungeon.actionManager.actions.clear();
+            actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
+                    .loadAction()));
+
             AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
             AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;
 
-            actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
-                    .loadAction()));
+
 
             if (AbstractDungeon.actionManager.actions.isEmpty()) {
                 throw new IllegalStateException("this too shouldn't happen");
