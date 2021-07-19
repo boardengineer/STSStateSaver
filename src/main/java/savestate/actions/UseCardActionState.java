@@ -12,16 +12,21 @@ import static savestate.SaveStateMod.shouldGoFast;
 
 public class UseCardActionState implements ActionState {
     private final CardState card;
+    private final boolean exhaustCard;
 
     public UseCardActionState(UseCardAction action) {
         AbstractCard card = ReflectionHacks.getPrivate(action, UseCardAction.class, "targetCard");
+
         this.card = CardState.forCard(card);
+        this.exhaustCard = action.exhaustCard;
     }
 
     public UseCardActionState(UpdateOnlyUseCardAction action) {
         AbstractCard card = ReflectionHacks
                 .getPrivate(action, UpdateOnlyUseCardAction.class, "targetCard");
+
         this.card = CardState.forCard(card);
+        this.exhaustCard = action.exhaustCard;
     }
 
     @Override
@@ -29,7 +34,11 @@ public class UseCardActionState implements ActionState {
         AbstractCard resultCard = card.loadCard();
 
         // TODO: at some point the target here will matter
-        return new UpdateOnlyUseCardAction(resultCard, null);
+        UpdateOnlyUseCardAction result = new UpdateOnlyUseCardAction(resultCard, null);
+
+        result.exhaustCard = exhaustCard;
+
+        return result;
     }
 
     @SpirePatch(clz = UseCardAction.class, method = "update")

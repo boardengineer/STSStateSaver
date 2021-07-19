@@ -264,7 +264,6 @@ public class SaveState {
         addRuntime("load total", System.currentTimeMillis() - startLoad);
         AbstractDungeon.player.isEndingTurn = false;
         AbstractDungeon.player.endTurnQueued = false;
-        AbstractDungeon.actionManager.phase = GameActionManager.Phase.WAITING_ON_USER;
         AbstractDungeon.overlayMenu.endTurnButton.enable();
 
         ReflectionHacks

@@ -6,6 +6,7 @@ import savestate.actions.ActionState;
 import savestate.actions.CurrentAction;
 import savestate.actions.CurrentActionState;
 import savestate.monsters.Monster;
+import savestate.monsters.MonsterState;
 import savestate.orbs.Orb;
 import savestate.powers.Power;
 import savestate.powers.PowerState;
@@ -22,7 +23,7 @@ import java.util.HashSet;
  */
 public class StateFactories {
     // TODO move inits to a main file
-    public static HashMap<String, Monster> monsterByIdMap = createMonsterMap();
+    public static HashMap<String, MonsterState.MonsterFactories> monsterByIdMap = createMonsterMap();
 
     // Power factories and a set of power names
     public static HashMap<String, PowerState.PowerFactories> powerByIdMap = createPowerMap();
@@ -35,10 +36,11 @@ public class StateFactories {
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
     public static HashMap<Class, Orb> orbByClassMap = createOrbMap();
 
-    private static HashMap<String, Monster> createMonsterMap() {
-        HashMap<String, Monster> monsterByIdmap = new HashMap<>();
+    private static HashMap<String, MonsterState.MonsterFactories> createMonsterMap() {
+        HashMap<String, MonsterState.MonsterFactories> monsterByIdmap = new HashMap<>();
         for (Monster monster : Monster.values()) {
-            monsterByIdmap.put(monster.monsterId, monster);
+            monsterByIdmap
+                    .put(monster.monsterId, new MonsterState.MonsterFactories(monster.factory, monster.jsonFactory));
         }
         return monsterByIdmap;
     }

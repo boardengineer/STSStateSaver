@@ -12,6 +12,7 @@ import com.megacrit.cardcrawl.monsters.EnemyMoveInfo;
 import savestate.*;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,8 +67,9 @@ public abstract class MonsterState extends CreatureState {
         this.intentOffsetX = monster.intentOffsetX;
         this.moveName = monster.moveName;
 
-        this.moveInfo = new EnemyMoveInfoState((EnemyMoveInfo) ReflectionHacks
-                .getPrivate(monster, AbstractMonster.class, "move"));
+        EnemyMoveInfo monsterMoveInfo = ReflectionHacks
+                .getPrivate(monster, AbstractMonster.class, "move");
+        this.moveInfo = monsterMoveInfo == null ? null : new EnemyMoveInfoState(monsterMoveInfo);
 
         this.damage = monster.damage.stream().map(DamageInfoState::new).map(damageInfoState -> {
             damageInfoState.owner = monster;
@@ -293,5 +295,15 @@ public abstract class MonsterState extends CreatureState {
         }
 
         return StateFactories.monsterByIdMap.get(id).jsonFactory.apply(jsonString);
+    }
+
+    public static class MonsterFactories {
+        public final Function<AbstractMonster, MonsterState> factory;
+        public final Function<String, MonsterState> jsonFactory;
+
+        public MonsterFactories(Function<AbstractMonster, MonsterState> factory, Function<String, MonsterState> jsonFactory) {
+            this.factory = factory;
+            this.jsonFactory = jsonFactory;
+        }
     }
 }

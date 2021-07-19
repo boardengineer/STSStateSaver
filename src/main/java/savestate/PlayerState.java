@@ -450,9 +450,10 @@ public class PlayerState extends CreatureState {
 
         boolean allMatch = true;
 
-        /*
+
         boolean discardMatch = one.get("discard_pile").getAsString()
                                   .equals(two.get("discard_pile").getAsString());
+        /*
         if (!discardMatch) {
             allMatch = false;
             System.err.println("player discard mismatch");
@@ -461,6 +462,7 @@ public class PlayerState extends CreatureState {
             System.err.println(two.get("discard_pile").getAsString());
         }
 
+        /*
         boolean drawMismatch = one.get("draw_pile").getAsString()
                                   .equals(two.get("draw_pile").getAsString());
         if (!drawMismatch) {

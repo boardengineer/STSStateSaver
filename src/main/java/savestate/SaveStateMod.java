@@ -46,9 +46,9 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
     @Override
     public void receivePostInitialize() {
-//        BaseMod.addTopPanelItem(new SaveStateTopPanel());
-//        BaseMod.addTopPanelItem(new LoadStateTopPanel());
-        BaseMod.addTopPanelItem(new TestThingPanel());
+        BaseMod.addTopPanelItem(new SaveStateTopPanel());
+        BaseMod.addTopPanelItem(new LoadStateTopPanel());
+//        BaseMod.addTopPanelItem(new TestThingPanel());
     }
 
     public class SaveStateTopPanel extends TopPanelItem {
@@ -91,7 +91,8 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
             SteamRemoteStorage remoteStorage = new SteamRemoteStorage(new SRCallback());
 
             try {
-                remoteStorage.fileWrite("testfile", ByteBuffer.allocateDirect(50).put("hello".getBytes()), 50);
+                remoteStorage.fileWrite("testfile", ByteBuffer.allocateDirect(50)
+                                                              .put("hello".getBytes()), 50);
             } catch (SteamException e) {
                 e.printStackTrace();
             }
@@ -99,8 +100,8 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
             ByteBuffer buffer = ByteBuffer.allocateDirect(50);
             try {
                 remoteStorage.fileRead("testfile", buffer, 50);
-                while(buffer.hasRemaining()) {
-                    System.err.println((char)buffer.get());
+                while (buffer.hasRemaining()) {
+                    System.err.println((char) buffer.get());
                 }
                 System.err.println("done reading");
             } catch (SteamException e) {
@@ -115,7 +116,7 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
     @Override
     public void receivePreUpdate() {
-        if(shouldResetDungeon) {
+        if (shouldResetDungeon) {
             shouldResetDungeon = false;
             new Exordium(AbstractDungeon.player, new ArrayList<>());
         }
@@ -131,6 +132,10 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
 
     public static void addRuntime(String name, long amount) {
+        if (runTimes == null) {
+            runTimes = new HashMap<>();
+        }
+
         if (!runTimes.containsKey(name)) {
             runTimes.put(name, amount);
         } else {

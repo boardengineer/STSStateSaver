@@ -20,7 +20,7 @@ public class GridCardSelectScreenState {
     private final ArrayList<ActionState> actionQueue;
 
     // TODO this will probably need to be turned into a State object
-    private final CardGroup targetGroup;
+    private final boolean isDiscard;
     private final ArrayList<SaveState.CardStateContainer> groupCards;
 
     private final boolean isDisabled;
@@ -44,7 +44,7 @@ public class GridCardSelectScreenState {
                 .forEach(card -> SaveState.CardStateContainer
                         .forCard(card, allCards));
 
-        this.targetGroup = AbstractDungeon.gridSelectScreen.targetGroup;
+        this.isDiscard = AbstractDungeon.gridSelectScreen.targetGroup.type == CardGroup.CardGroupType.DISCARD_PILE;
         this.groupCards = new ArrayList<>();
         AbstractDungeon.gridSelectScreen.targetGroup.group
                 .forEach(card -> groupCards
@@ -71,6 +71,8 @@ public class GridCardSelectScreenState {
     }
 
     public void loadGridSelectScreen() {
+        System.err.println("loading grid state");
+
         ArrayList<AbstractCard> allCards = new ArrayList<>();
 
         AbstractPlayer player = AbstractDungeon.player;
@@ -85,10 +87,14 @@ public class GridCardSelectScreenState {
         AbstractDungeon.gridSelectScreen.selectedCards = new ArrayList<>();
         selectedCards.forEach(cardStateContainer -> cardStateContainer.loadCard(allCards));
 
-
-        AbstractDungeon.gridSelectScreen.targetGroup = new CardGroup(CardGroup.CardGroupType.UNSPECIFIED);
-        this.groupCards.forEach(cardStateContainer -> AbstractDungeon.gridSelectScreen.targetGroup
-                .addToTop(cardStateContainer.loadCard(allCards)));
+        if (isDiscard) {
+            AbstractDungeon.gridSelectScreen.targetGroup = AbstractDungeon.player.discardPile;
+        } else {
+            AbstractDungeon.gridSelectScreen.targetGroup = new CardGroup(CardGroup.CardGroupType.UNSPECIFIED);
+            this.groupCards
+                    .forEach(cardStateContainer -> AbstractDungeon.gridSelectScreen.targetGroup
+                            .addToTop(cardStateContainer.loadCard(allCards)));
+        }
 
         AbstractDungeon.gridSelectScreen.confirmButton.isDisabled = this.isDisabled;
 
@@ -99,6 +105,7 @@ public class GridCardSelectScreenState {
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "numCards", numCards);
 
         if (currentActionState != null) {
+            System.err.println("loading grid state actions");
             AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
             AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;
 

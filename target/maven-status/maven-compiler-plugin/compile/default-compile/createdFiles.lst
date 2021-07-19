@@ -399,6 +399,7 @@ savestate\powers\PowerState$DummyPower.class
 savestate\powers\powerstates\silent\AfterImagePowerState.class
 savestate\monsters\exordium\AcidSlime_MState.class
 savestate\monsters\exordium\GremlinWarriorState.class
+savestate\monsters\MonsterState$MonsterFactories.class
 savestate\monsters\exordium\AcidSlime_MState$NoAnimationsPatch.class
 savestate\MapRoomNodeState$RoomType.class
 savestate\powers\powerstates\monsters\InvinciblePowerState.class
