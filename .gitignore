@@ -31,3 +31,5 @@ BattleAiMod.iml
 # maven
 target/
 dependency-reduced-pom.xml
+*.class
+*.jar

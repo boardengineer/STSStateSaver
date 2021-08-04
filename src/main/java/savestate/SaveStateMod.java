@@ -46,8 +46,8 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
     @Override
     public void receivePostInitialize() {
-        BaseMod.addTopPanelItem(new SaveStateTopPanel());
-        BaseMod.addTopPanelItem(new LoadStateTopPanel());
+//        BaseMod.addTopPanelItem(new SaveStateTopPanel());
+//        BaseMod.addTopPanelItem(new LoadStateTopPanel());
 //        BaseMod.addTopPanelItem(new TestThingPanel());
     }
 

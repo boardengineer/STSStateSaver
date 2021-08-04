@@ -71,8 +71,6 @@ public class GridCardSelectScreenState {
     }
 
     public void loadGridSelectScreen() {
-        System.err.println("loading grid state");
-
         ArrayList<AbstractCard> allCards = new ArrayList<>();
 
         AbstractPlayer player = AbstractDungeon.player;
@@ -105,7 +103,6 @@ public class GridCardSelectScreenState {
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "numCards", numCards);
 
         if (currentActionState != null) {
-            System.err.println("loading grid state actions");
             AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
             AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;
 
