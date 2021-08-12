@@ -18,6 +18,7 @@ savestate\monsters\exordium\HexaghostState$NoDisposeBodyPatch.class
 savestate\monsters\exordium\LooterState.class
 savestate\monsters\exordium\GremlinTsundereState$NoAnimationsPatch.class
 savestate\actions\ArmamentsActionState.class
+savestate\FileLoadPanel.class
 savestate\actions\DualWieldActionState$NoFxConstructorPatchOther.class
 savestate\monsters\city\TaskmasterState.class
 savestate\powers\powerstates\NoSkillsPowerState.class
@@ -261,6 +262,7 @@ savestate\actions\DualWieldActionState$NoDoubleDualWieldPatch.class
 savestate\monsters\exordium\SentryState$SpyOnMakeDazePatch.class
 savestate\relics\PocketwatchState.class
 savestate\powers\powerstates\monsters\ShiftingPowerState.class
+savestate\FileLoadPanel$LoadSelectedSaveFilePatch.class
 savestate\powers\powerstates\watcher\EstablishmentPowerState.class
 savestate\monsters\city\ChampState.class
 savestate\monsters\MonsterState.class
@@ -337,6 +339,7 @@ savestate\monsters\beyond\OrbWalkerState$YetNoAnimationsPatch.class
 savestate\relics\HoveringKiteState.class
 savestate\monsters\exordium\SpikeSlime_MState.class
 savestate\powers\Power.class
+savestate\FileLoadPanel$getCCGInstancePatch.class
 savestate\actions\NightmareActionState$NoDoubleExhaustActionPatch.class
 savestate\monsters\city\BanditPointyState.class
 savestate\powers\powerstates\common\StrengthPowerState.class

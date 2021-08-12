@@ -13,6 +13,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.dungeons.Exordium;
+import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 import com.megacrit.cardcrawl.integrations.steam.SRCallback;
 
@@ -22,6 +23,7 @@ import java.util.HashMap;
 
 @SpireInitializer
 public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscriber {
+
     /**
      * If true, states will be saved and loaded in ways that prioritize speed and function at the
      * cost of graphical elements.
@@ -49,6 +51,9 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 //        BaseMod.addTopPanelItem(new SaveStateTopPanel());
 //        BaseMod.addTopPanelItem(new LoadStateTopPanel());
 //        BaseMod.addTopPanelItem(new TestThingPanel());
+
+        BaseMod.registerModBadge(ImageMaster
+                .loadImage("Icon.png"), "SaveState Mod", "Board Engineer", null, new FileLoadPanel());
     }
 
     public class SaveStateTopPanel extends TopPanelItem {
@@ -80,7 +85,7 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
     }
 
     public class TestThingPanel extends TopPanelItem {
-        public static final String ID = "savestatemod:loadstate";
+        public static final String ID = "savestatemod:cloudsave";
 
         public TestThingPanel() {
             super(new Texture("loadstate.png"), ID);
