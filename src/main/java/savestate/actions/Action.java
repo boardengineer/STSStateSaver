@@ -7,8 +7,11 @@ import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
 import com.megacrit.cardcrawl.actions.unique.EstablishmentPowerAction;
 import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
 import com.megacrit.cardcrawl.actions.unique.RemoveDebuffsAction;
+import com.megacrit.cardcrawl.actions.utility.DiscardToHandAction;
 import com.megacrit.cardcrawl.actions.utility.NewQueueCardAction;
 import com.megacrit.cardcrawl.actions.utility.UseCardAction;
+import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction;
+import com.megacrit.cardcrawl.actions.watcher.PressEndTurnButtonAction;
 import savestate.fastobjects.actions.UpdateOnlyUseCardAction;
 
 import java.util.function.Function;
@@ -16,12 +19,14 @@ import java.util.function.Function;
 public enum Action {
     APPLY_POWER_ACTION(ApplyPowerAction.class, action -> new ApplyPowerActionState(action)),
     APPLY_POWER_TO_RANDOM_CREATURE_ACTION(ApplyPowerToRandomEnemyAction.class, action -> new ApplyPowerToRandomEnemyActionState(action)),
+    CHANGE_STANCE_ACTION(ChangeStanceAction.class, action -> new ChangeStanceActionState(action)),
     CHANGE_STATE_ACTION(ChangeStateAction.class, action -> new ChangeStateActionState(action)),
     CLEAR_CARD_QUEUE_ACTION(ClearCardQueueAction.class, action -> new ClearCardQueueActionState()),
     DAMAGE_ACTION(DamageAction.class, action -> new DamageActionState(action)),
     DAMAGE_ALL_ENEMIES_ACTION(DamageAllEnemiesAction.class, action -> new DamageAllEnemiesActionState(action)),
     DAMAGE_RANDOM_ENEMY_ACTION(DamageRandomEnemyAction.class, action -> new DamageRandomEnemyActionState(action)),
     DISCARD_AT_END_OF_TURN_ACTION(DiscardAtEndOfTurnAction.class, action -> new DiscardAtEndOfTurnActionState()),
+    DISCARD_TO_HAND_ACTION(DiscardToHandAction.class, action -> new DiscardToHandActionState(action)),
     DRAW_CARD_ACTION(DrawCardAction.class, action -> new DrawCardActionState(action)),
     ENABLE_END_TURN_BUTTON_ACTION(EnableEndTurnButtonAction.class, action -> new EnableEndTurnButtonActionState(action)),
     ENQUEUE_END_TURN_ACTION(EnqueueEndTurnAction.class, action -> new EnqueueEndTurnActionState()),
@@ -34,6 +39,7 @@ public enum Action {
     MAKE_TEMP_CARD_IN_DRAW_PILE_ACTION(MakeTempCardInDrawPileAction.class, action -> new MakeTempCardInDrawPileActionState(action)),
     MAKE_TEMP_CARD_IN_HAND_ACTION(MakeTempCardInHandAction.class, action -> new MakeTempCardInHandActionState(action)),
     NEW_QUEUE_CARD_ACTION(NewQueueCardAction.class, action -> new NewQueueCardActionState()),
+    PRESS_END_TURN_BUTTON_ACTION(PressEndTurnButtonAction.class, action -> new PressEndTurnButtonActionState()),
     REDUCE_POWER_ACTION(ReducePowerAction.class, action -> new ReducePowerActionState(action)),
     REMOVE_DEBUFFS_ACTION(RemoveDebuffsAction.class, action -> new RemoveDebuffsActionState(action)),
     REMOVE_SPECIFIC_POWER_ACTION(RemoveSpecificPowerAction.class, action -> new RemoveSpecificPowerActionState(action)),

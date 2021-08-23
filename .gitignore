@@ -35,3 +35,6 @@ dependency-reduced-pom.xml
 *.jar
 *.class
 *.jar
+*.lst
+*.lst
+*.class

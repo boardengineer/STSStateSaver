@@ -3,19 +3,19 @@ package savestate.actions;
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
-import com.megacrit.cardcrawl.actions.utility.ScryAction;
+import com.megacrit.cardcrawl.actions.unique.AttackFromDeckToHandAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
-public class ScryActionState implements CurrentActionState {
+public class AttackFromDeckToHandActionState implements CurrentActionState {
     private final int amount;
 
-    public ScryActionState(AbstractGameAction action) {
+    public AttackFromDeckToHandActionState(AbstractGameAction action) {
         this.amount = action.amount;
     }
 
     @Override
     public AbstractGameAction loadCurrentAction() {
-        ScryAction result = new ScryAction(amount);
+        AttackFromDeckToHandAction result = new AttackFromDeckToHandAction(amount);
 
         // This should make the action only trigger the second half of the update
         ReflectionHacks
@@ -25,12 +25,12 @@ public class ScryActionState implements CurrentActionState {
     }
 
     @SpirePatch(
-            clz = ScryAction.class,
+            clz = AttackFromDeckToHandAction.class,
             paramtypez = {},
             method = "update"
     )
-    public static class NoDoubleScryPatch {
-        public static void Postfix(ScryAction _instance) {
+    public static class NoDoubleExhaustActionPatch {
+        public static void Postfix(AttackFromDeckToHandAction _instance) {
             // Force the action to stay in the the manager until cards are selected
             if (AbstractDungeon.gridSelectScreen.selectedCards
                     .isEmpty() && AbstractDungeon.isScreenUp) {

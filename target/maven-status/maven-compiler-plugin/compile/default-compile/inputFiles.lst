@@ -97,6 +97,7 @@ C:\stuff\SaveState\src\main\java\savestate\actions\MakeTempCardInDrawPileActionS
 C:\stuff\SaveState\src\main\java\savestate\SaveStateMod.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ModeShiftPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\Monster.java
+C:\stuff\SaveState\src\main\java\savestate\actions\DiscardToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\OrbWalkerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\BarricadePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\CuriosityPowerState.java
@@ -116,11 +117,13 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\Explosive
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\CultistState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\HealerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\EquilibriumPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\SkillFromDeckToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\SpireGrowthState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\LoseHPActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\EvolvePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\GremlinTsundereState.java
 C:\stuff\SaveState\src\main\java\savestate\StateFactories.java
+C:\stuff\SaveState\src\main\java\savestate\actions\ChangeStanceActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\EnergizedBluePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\JawWormState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\CorruptionPowerState.java
@@ -142,6 +145,7 @@ C:\stuff\SaveState\src\main\java\savestate\actions\GainEnergyActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\TheGuardianState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\DamageAllEnemiesActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\SadisticPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\AttackFromDeckToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\RetainCardsActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\JuggernautPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\SaveState.java
@@ -162,6 +166,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\VulnerableP
 C:\stuff\SaveState\src\main\java\savestate\relics\Relic.java
 C:\stuff\SaveState\src\main\java\savestate\fastobjects\AnimationStateDataFast.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\StaticDischargePowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\ForethoughtActionState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\ApplyPowerActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\BackAttackPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\WeakenedPowerState.java
@@ -253,6 +258,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\PainfulSt
 C:\stuff\SaveState\src\main\java\savestate\actions\CurrentActionState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\OmniscienceActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\VigorPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\MeditateActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\SharpHidePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\DuplicationPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\CreatureState.java
@@ -286,6 +292,7 @@ C:\stuff\SaveState\src\main\java\savestate\orbs\LightningOrbState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\AfterImagePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\FungiBeastState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\BlockReturnPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\PressEndTurnButtonActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\GiantHeadState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\CurlUpPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\BetterDrawPileToHandActionState.java

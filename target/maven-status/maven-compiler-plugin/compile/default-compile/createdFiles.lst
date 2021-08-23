@@ -47,6 +47,7 @@ savestate\powers\powerstates\defect\LoopPowerState.class
 savestate\powers\powerstates\silent\ToolsOfTheTradePowerState.class
 savestate\monsters\city\HealerState.class
 savestate\powers\powerstates\watcher\LikeWaterPowerState.class
+savestate\actions\MeditateActionState$NoDoubleScryPatch.class
 savestate\powers\powerstates\common\VulnerablePowerState.class
 savestate\monsters\exordium\HexaghostState$NoBodyCreationAnimationsPatch.class
 savestate\monsters\exordium\SlaverRedState$NoAnimationsPatch.class
@@ -79,6 +80,7 @@ savestate\actions\SetMoveActionState.class
 savestate\monsters\city\SneckoState.class
 savestate\monsters\exordium\GremlinFatState$NoAnimationsPatch.class
 savestate\monsters\exordium\GremlinThiefState.class
+savestate\actions\PressEndTurnButtonActionState.class
 savestate\powers\powerstates\EnergyDownPowerState.class
 savestate\monsters\exordium\SentryState$SpyOnTakeTurnPatch.class
 savestate\monsters\city\TheCollectorState.class
@@ -89,6 +91,7 @@ savestate\CreatureState.class
 savestate\monsters\city\MuggerState$NoAnimationsPatch.class
 savestate\orbs\OrbState.class
 savestate\monsters\beyond\WrithingMassState.class
+savestate\actions\AttackFromDeckToHandActionState.class
 savestate\actions\BetterDrawPileToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\powers\powerstates\defect\EchoPowerState.class
 savestate\actions\CurrentActionState.class
@@ -147,6 +150,7 @@ savestate\monsters\beyond\AwakenedOneState.class
 savestate\powers\powerstates\monsters\HexPowerState.class
 savestate\powers\powerstates\defect\LockOnPowerState.class
 savestate\monsters\exordium\GremlinFatState.class
+savestate\actions\AttackFromDeckToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\powers\powerstates\common\SurroundedPowerState.class
 savestate\actions\RecycleActionState.class
 savestate\powers\powerstates\monsters\MinionPowerState.class
@@ -190,6 +194,8 @@ savestate\powers\powerstates\silent\AccuracyPowerState.class
 savestate\monsters\exordium\AcidSlime_SState$NoAnimationsPatch.class
 savestate\powers\powerstates\monsters\GenericStrengthUpPowerState.class
 savestate\powers\powerstates\watcher\BattleHymnPowerState.class
+savestate\actions\SkillFromDeckToHandActionState.class
+savestate\actions\MeditateActionState.class
 savestate\powers\powerstates\watcher\OmnisciencePowerState.class
 savestate\monsters\exordium\GremlinTsundereState.class
 savestate\monsters\exordium\SlaverBlueState.class
@@ -284,6 +290,7 @@ savestate\monsters\city\TorchHeadState.class
 savestate\actions\DamageActionState.class
 savestate\monsters\city\HealerState$NoAnimationsPatch.class
 savestate\monsters\exordium\GremlinWizardState$NoAnimationsPatch.class
+savestate\actions\DiscardToHandActionState.class
 savestate\powers\powerstates\defect\BiasPowerState.class
 savestate\powers\powerstates\watcher\MantraPowerState.class
 savestate\powers\powerstates\defect\ReboundPowerState.class
@@ -370,13 +377,16 @@ savestate\monsters\exordium\LouseNormalState$NoAnimationsPatch.class
 savestate\powers\powerstates\defect\RepairPowerState.class
 savestate\powers\powerstates\monsters\BackAttackPowerState.class
 savestate\monsters\exordium\LagavulinState$YetNoAnimationsPatch.class
+savestate\actions\ForethoughtActionState.class
 savestate\powers\powerstates\SplitPowerState.class
+savestate\actions\ChangeStanceActionState.class
 savestate\monsters\city\BanditBearState.class
 savestate\monsters\city\BanditBearState$NoAnimationsPatch.class
 savestate\powers\powerstates\watcher\WrathNextTurnPowerState.class
 savestate\powers\powerstates\monsters\ThieveryPowerState.class
 savestate\monsters\exordium\HexaghostState$NoUpdateBodyPatch.class
 savestate\powers\powerstates\GrowthPowerState.class
+savestate\actions\SkillFromDeckToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\monsters\city\BronzeOrbState$NoImgPatch.class
 savestate\EnemyMoveInfoState.class
 savestate\powers\powerstates\monsters\AngryPowerState.class

@@ -42,7 +42,8 @@ public class BetterDrawPileToHandActionState implements CurrentActionState {
     public static class NoDoubleExhaustActionPatch {
         public static void Postfix(BetterDrawPileToHandAction _instance) {
             // Force the action to stay in the the manager until cards are selected
-            if (!AbstractDungeon.handCardSelectScreen.wereCardsRetrieved && AbstractDungeon.isScreenUp) {
+            if (AbstractDungeon.gridSelectScreen.selectedCards
+                    .isEmpty() && AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;
             }
         }
