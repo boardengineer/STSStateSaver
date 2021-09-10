@@ -16,7 +16,8 @@ public class MeditateActionState implements CurrentActionState {
 
     @Override
     public AbstractGameAction loadCurrentAction() {
-        MeditateAction result = new MeditateAction(numberOfCards);
+        MeditateAction result = new MeditateAction(numberOfCards -
+                AbstractDungeon.gridSelectScreen.selectedCards.size());
 
         // This should make the action only trigger the second half of the update
         ReflectionHacks

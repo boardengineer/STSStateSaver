@@ -41,8 +41,8 @@ public class GridCardSelectScreenState {
 
         this.selectedCards = new ArrayList<>();
         AbstractDungeon.gridSelectScreen.selectedCards
-                .forEach(card -> SaveState.CardStateContainer
-                        .forCard(card, allCards));
+                .forEach(card -> this.selectedCards.add(SaveState.CardStateContainer
+                        .forCard(card, allCards)));
 
         this.isDiscard = AbstractDungeon.gridSelectScreen.targetGroup.type == CardGroup.CardGroupType.DISCARD_PILE;
         this.groupCards = new ArrayList<>();
@@ -83,7 +83,20 @@ public class GridCardSelectScreenState {
         allCards.addAll(player.limbo.group);
 
         AbstractDungeon.gridSelectScreen.selectedCards = new ArrayList<>();
-        selectedCards.forEach(cardStateContainer -> cardStateContainer.loadCard(allCards));
+        selectedCards.forEach(cardStateContainer -> AbstractDungeon.gridSelectScreen.selectedCards
+                .add(cardStateContainer.loadCard(allCards)));
+
+        if (currentActionState != null) {
+            AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
+            AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;
+
+            actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
+                    .loadAction()));
+
+            if (AbstractDungeon.actionManager.actions.isEmpty()) {
+                throw new IllegalStateException("this too shouldn't happen");
+            }
+        }
 
         if (isDiscard) {
             AbstractDungeon.gridSelectScreen.targetGroup = AbstractDungeon.player.discardPile;
@@ -101,17 +114,5 @@ public class GridCardSelectScreenState {
 
         ReflectionHacks
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "numCards", numCards);
-
-        if (currentActionState != null) {
-            AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
-            AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;
-
-            actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
-                    .loadAction()));
-
-            if (AbstractDungeon.actionManager.actions.isEmpty()) {
-                throw new IllegalStateException("this too shouldn't happen");
-            }
-        }
     }
 }

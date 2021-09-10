@@ -267,8 +267,6 @@ public class SaveState {
         AbstractDungeon.overlayMenu.endTurnButton.enable();
 
         ReflectionHacks
-                .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount", 0);
-        ReflectionHacks
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "hoveredCard", null);
         ReflectionHacks.setPrivateStatic(TheBombPower.class, "bombIdOffset", bombIdOffset);
     }
