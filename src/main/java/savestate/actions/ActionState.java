@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.actions.utility.TextAboveCreatureAction;
 import com.megacrit.cardcrawl.actions.utility.WaitAction;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.monsters.beyond.SpireGrowth;
 import savestate.StateFactories;
 
 import java.util.ArrayList;
@@ -33,6 +34,11 @@ public interface ActionState {
             }
 
             if (foundIndex == -1) {
+                // Hack for SpireGrowth
+                if (creature instanceof SpireGrowth) {
+                    return 0;
+                }
+
                 throw new IllegalStateException("No Target for " + creature + " " + AbstractDungeon
                         .getMonsters().monsters);
             } else {
