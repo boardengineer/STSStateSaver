@@ -42,8 +42,6 @@ public abstract class OrbState {
     }
 
     public static OrbState forJsonString(String jsonString) {
-        System.err.println("parsing orb...");
-
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         int lookupIndex = parsed.get("lookup_index").getAsInt();

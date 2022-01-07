@@ -123,7 +123,7 @@ public class UpdateOnlyUseCardAction extends AbstractGameAction {
                 if (spoonProc) {
                     AbstractDungeon.player.getRelic("Strange Spoon").flash();
                 }
-                this.targetCard.resetAttributes();
+//                this.targetCard.resetAttributes();
 
                 if (this.reboundCard) {
                     AbstractDungeon.player.hand.moveToDeck(this.targetCard, false);

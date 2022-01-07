@@ -48,7 +48,8 @@ public class UseCardActionState implements ActionState {
             if (shouldGoFast) {
                 AbstractCard card = ReflectionHacks
                         .getPrivate(action, UseCardAction.class, "targetCard");
-                card.resetAttributes();
+                // PASHA LOOK HERE
+//                card.resetAttributes();
             }
         }
     }

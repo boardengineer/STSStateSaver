@@ -7,7 +7,6 @@ import com.megacrit.cardcrawl.actions.utility.NewQueueCardAction;
 public class NewQueueCardActionState implements ActionState {
     @Override
     public AbstractGameAction loadAction() {
-        System.err.println("this is happening");
         return new NewQueueCardAction();
     }
 }

@@ -207,7 +207,7 @@ public class FileLoadPanel extends ModPanel implements DropdownMenuListener {
             if (FileLoadPanel.selectedFloor != null) {
                 String fileName = String
                         .format("savealls\\saves\\%s.autosave_%02d_%d", FileLoadPanel.selectedCharacter, FileLoadPanel.selectedFloor, FileLoadPanel.selectedSeed);
-
+                FileLoadPanel.selectedFloor = null;
                 return SpireReturn.Return(fileName);
             }
 

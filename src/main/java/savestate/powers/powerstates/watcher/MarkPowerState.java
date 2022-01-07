@@ -5,8 +5,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.watcher.MarkPower;
 
-public class MarkPowerState extends PowerState
-{
+public class MarkPowerState extends PowerState {
     public MarkPowerState(AbstractPower power) {
         super(power);
     }

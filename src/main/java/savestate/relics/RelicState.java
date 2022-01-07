@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.helpers.RelicLibrary;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
 import savestate.StateFactories;
-import savestate.fastobjects.NoLoggerMummifiedHand;
 
 import java.util.function.Function;
 
@@ -37,11 +36,7 @@ public class RelicState {
 
         long makeRelicCopyStartTime = System.currentTimeMillis();
 
-        if (relicId.equals("Mummified Hand")) {
-            result = new NoLoggerMummifiedHand();
-        } else {
-            result = RelicLibrary.getRelic(relicId).makeCopy();
-        }
+        result = RelicLibrary.getRelic(relicId).makeCopy();
 
         result.counter = counter;
         result.grayscale = grayscale;
