@@ -23,9 +23,16 @@ public class GridCardSelectScreenState {
     private final boolean isDiscard;
     private final ArrayList<SaveState.CardStateContainer> groupCards;
 
-    private final boolean isDisabled;
+    private final boolean isConfirmButtonDisabled;
     private final int cardSelectAmount;
     private final int numCards;
+    private final boolean anyNumber;
+    private final boolean forClarity;
+
+    private final boolean forUpgrade;
+    private final boolean forTransform;
+    private final boolean canCancel;
+    private final boolean forPurge;
 
     public GridCardSelectScreenState() {
         ArrayList<AbstractCard> allCards = new ArrayList<>();
@@ -39,31 +46,37 @@ public class GridCardSelectScreenState {
         allCards.addAll(player.exhaustPile.group);
         allCards.addAll(player.limbo.group);
 
+        GridCardSelectScreen screen = AbstractDungeon.gridSelectScreen;
         this.selectedCards = new ArrayList<>();
-        AbstractDungeon.gridSelectScreen.selectedCards
+        screen.selectedCards
                 .forEach(card -> this.selectedCards.add(SaveState.CardStateContainer
                         .forCard(card, allCards)));
 
-        this.isDiscard = AbstractDungeon.gridSelectScreen.targetGroup.type == CardGroup.CardGroupType.DISCARD_PILE;
+        this.isDiscard = screen.targetGroup.type == CardGroup.CardGroupType.DISCARD_PILE;
         this.groupCards = new ArrayList<>();
-        AbstractDungeon.gridSelectScreen.targetGroup.group
+        screen.targetGroup.group
                 .forEach(card -> groupCards
                         .add(SaveState.CardStateContainer.forCard(card, allCards)));
 
-        this.isDisabled = AbstractDungeon.gridSelectScreen.confirmButton.isDisabled;
+        this.isConfirmButtonDisabled = screen.confirmButton.isDisabled;
 
         this.cardSelectAmount = ReflectionHacks
-                .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
+                .getPrivate(screen, GridCardSelectScreen.class, "cardSelectAmount");
         this.numCards = ReflectionHacks
-                .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "numCards");
+                .getPrivate(screen, GridCardSelectScreen.class, "numCards");
+        this.forUpgrade = screen.forUpgrade;
+
+        this.forTransform = screen.forTransform;
+        this.anyNumber = screen.anyNumber;
+        this.forClarity = screen.forClarity;
+        this.forPurge = screen.forPurge;
+
+        this.canCancel = ReflectionHacks
+                .getPrivate(screen, GridCardSelectScreen.class, "canCancel");
 
         if (AbstractDungeon.actionManager.currentAction != null) {
             currentActionState = CurrentActionState.getCurrentActionState();
             actionQueue = ActionState.getActionQueueState();
-
-            if (actionQueue.isEmpty()) {
-                throw new IllegalStateException("The action queue shouldn't be empty in the middle of a selection screen");
-            }
         } else {
             currentActionState = null;
             actionQueue = null;
@@ -82,9 +95,14 @@ public class GridCardSelectScreenState {
         allCards.addAll(player.exhaustPile.group);
         allCards.addAll(player.limbo.group);
 
-        AbstractDungeon.gridSelectScreen.selectedCards = new ArrayList<>();
-        selectedCards.forEach(cardStateContainer -> AbstractDungeon.gridSelectScreen.selectedCards
-                .add(cardStateContainer.loadCard(allCards)));
+        GridCardSelectScreen screen = AbstractDungeon.gridSelectScreen;
+        screen.selectedCards = new ArrayList<>();
+        selectedCards.forEach(cardStateContainer -> {
+            AbstractCard card = cardStateContainer.loadCard(allCards);
+            screen.selectedCards
+                    .add(card);
+            card.isGlowing = true;
+        });
 
         if (currentActionState != null) {
             AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
@@ -92,27 +110,30 @@ public class GridCardSelectScreenState {
 
             actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
                     .loadAction()));
-
-            if (AbstractDungeon.actionManager.actions.isEmpty()) {
-                throw new IllegalStateException("this too shouldn't happen");
-            }
         }
 
         if (isDiscard) {
-            AbstractDungeon.gridSelectScreen.targetGroup = AbstractDungeon.player.discardPile;
+            screen.targetGroup = AbstractDungeon.player.discardPile;
         } else {
-            AbstractDungeon.gridSelectScreen.targetGroup = new CardGroup(CardGroup.CardGroupType.UNSPECIFIED);
+            screen.targetGroup = new CardGroup(CardGroup.CardGroupType.UNSPECIFIED);
             this.groupCards
-                    .forEach(cardStateContainer -> AbstractDungeon.gridSelectScreen.targetGroup
+                    .forEach(cardStateContainer -> screen.targetGroup
                             .addToTop(cardStateContainer.loadCard(allCards)));
         }
 
-        AbstractDungeon.gridSelectScreen.confirmButton.isDisabled = this.isDisabled;
+        screen.confirmButton.isDisabled = this.isConfirmButtonDisabled;
+        screen.forUpgrade = forUpgrade;
+        screen.forPurge = forPurge;
+        screen.forTransform = forTransform;
+        screen.anyNumber = anyNumber;
+        screen.forClarity = forClarity;
 
         ReflectionHacks
-                .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount", cardSelectAmount);
+                .setPrivate(screen, GridCardSelectScreen.class, "canCancel", canCancel);
 
         ReflectionHacks
-                .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "numCards", numCards);
+                .setPrivate(screen, GridCardSelectScreen.class, "cardSelectAmount", cardSelectAmount);
+
+        ReflectionHacks.setPrivate(screen, GridCardSelectScreen.class, "numCards", numCards);
     }
 }

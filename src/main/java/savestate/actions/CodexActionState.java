@@ -3,19 +3,28 @@ package savestate.actions;
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
-import com.megacrit.cardcrawl.actions.utility.ScryAction;
+
+import com.megacrit.cardcrawl.actions.unique.CodexAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
-public class ScryActionState implements CurrentActionState {
-    private final int amount;
+public class CodexActionState implements CurrentActionState {
+    private final boolean retrieveCard;
 
-    public ScryActionState(AbstractGameAction action) {
-        this.amount = action.amount;
+    public CodexActionState(AbstractGameAction action) {
+        this((CodexAction) action);
+    }
+
+    public CodexActionState(CodexAction action) {
+        retrieveCard = ReflectionHacks
+                .getPrivate(action, CodexAction.class, "retrieveCard");
     }
 
     @Override
     public AbstractGameAction loadCurrentAction() {
-        ScryAction result = new ScryAction(amount);
+        CodexAction result = new CodexAction();
+
+        ReflectionHacks
+                .setPrivate(result, CodexAction.class, "retrieveCard", retrieveCard);
 
         // This should make the action only trigger the second half of the update
         ReflectionHacks
@@ -25,12 +34,12 @@ public class ScryActionState implements CurrentActionState {
     }
 
     @SpirePatch(
-            clz = ScryAction.class,
+            clz = CodexAction.class,
             paramtypez = {},
             method = "update"
     )
-    public static class NoDoubleScryPatch {
-        public static void Postfix(ScryAction _instance) {
+    public static class NoDoubleTriggerActionPatch {
+        public static void Postfix(CodexAction _instance) {
             // Force the action to stay in the the manager until cards are selected
             if (AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;

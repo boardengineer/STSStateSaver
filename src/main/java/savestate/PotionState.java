@@ -75,7 +75,7 @@ public class PotionState {
         put(FruitJuice.POTION_ID, 30);
         put(GamblersBrew.POTION_ID, 500);
         put(GhostInAJar.POTION_ID, 80);
-        put(HeartOfIron.POTION_ID, 80);
+        put(HeartOfIron.POTION_ID, 48);
         put(LiquidBronze.POTION_ID, 20);
         put(LiquidMemories.POTION_ID, 30);
         put(PoisonPotion.POTION_ID, 20);
@@ -87,22 +87,16 @@ public class PotionState {
         put(SpeedPotion.POTION_ID, 75);
         put(StancePotion.POTION_ID, 0);
         put(SteroidPotion.POTION_ID, 21);
-        put(HeartOfIron.POTION_ID, 100);
         put(StrengthPotion.POTION_ID, 40);
         put(SwiftPotion.POTION_ID, 40);
         put(WeakenPotion.POTION_ID, 50);
     }};
 
     public static HashSet<String> UNPLAYABLE_POTIONS = new HashSet<String>() {{
-        add(AttackPotion.POTION_ID);
-        add(ColorlessPotion.POTION_ID);
         add(GamblersBrew.POTION_ID);
         add(LiquidMemories.POTION_ID);
-        add(PowerPotion.POTION_ID);
-        add(SkillPotion.POTION_ID);
         add(SmokeBomb.POTION_ID);
         add(Elixir.POTION_ID);
         add(CultistPotion.POTION_ID);
-        add(StancePotion.POTION_ID);
     }};
 }

@@ -4,6 +4,7 @@ import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.actions.GameActionManager;
@@ -12,10 +13,15 @@ import com.megacrit.cardcrawl.actions.unique.AddCardToDeckAction;
 import com.megacrit.cardcrawl.actions.watcher.LessonLearnedAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.powers.TheBombPower;
+import com.megacrit.cardcrawl.rooms.EmptyRoom;
 import com.megacrit.cardcrawl.screens.select.GridCardSelectScreen;
+import savestate.selectscreen.CardRewardScreenState;
 import savestate.selectscreen.GridCardSelectScreenState;
 import savestate.selectscreen.HandSelectScreenState;
 
@@ -42,23 +48,28 @@ public class SaveState {
     private final ArrayList<CardState> cardsPlayedThisTurnBackup;
 
     AbstractDungeon.CurrentScreen screen;
+    AbstractDungeon.CurrentScreen previousScreen;
 
     ListState listState;
     public PlayerState playerState;
     private HandSelectScreenState handSelectScreenState = null;
     private GridCardSelectScreenState gridCardSelectScreenState = null;
+    private CardRewardScreenState cardRewardScreenState = null;
     RngState rngState;
     private final int ascensionLevel;
     private final int mantraGained;
     public final int lessonLearnedCount;
     public final int parasiteCount;
 
+    private boolean endTurnQueued;
+    private boolean isEndingTurn;
+
     public MapRoomNodeState curMapNodeState;
 
     //TODO move this into something that always gets called
     private int gridCardSelectAmount = 0;
 
-    private int bombIdOffset;
+    private final int bombIdOffset;
 
     public SaveState() {
         if (AbstractDungeon.isScreenUp) {
@@ -69,11 +80,16 @@ public class SaveState {
             if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.GRID) {
                 gridCardSelectScreenState = new GridCardSelectScreenState();
             }
+
+            if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.CARD_REWARD) {
+                cardRewardScreenState = new CardRewardScreenState();
+            }
         }
 
         this.curMapNodeState = new MapRoomNodeState(AbstractDungeon.currMapNode);
         this.playerState = new PlayerState(AbstractDungeon.player);
         this.screen = AbstractDungeon.screen;
+        this.previousScreen = AbstractDungeon.previousScreen;
         this.rngState = new RngState();
         this.listState = new ListState();
         this.floorNum = AbstractDungeon.floorNum;
@@ -125,6 +141,9 @@ public class SaveState {
         this.drawnCards = new ArrayList<>();
         this.bombIdOffset = ReflectionHacks.getPrivateStatic(TheBombPower.class, "bombIdOffset");
 
+        this.endTurnQueued = AbstractDungeon.player.endTurnQueued;
+        this.isEndingTurn = AbstractDungeon.player.isEndingTurn;
+
         DrawCardAction.drawnCards.forEach(card -> this.drawnCards.add(allCards.indexOf(card)));
         this.gridCardSelectAmount = ReflectionHacks
                 .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
@@ -143,7 +162,9 @@ public class SaveState {
 
         this.screen = AbstractDungeon.CurrentScreen
                 .valueOf(parsed.get("screen_name").getAsString());
-        System.err.println(this.screen);
+        JsonElement previousScreenName = parsed.get("previous_screen_name");
+        this.previousScreen = previousScreenName.isJsonNull() ? null : AbstractDungeon.CurrentScreen
+                .valueOf(previousScreenName.getAsString());
         this.listState = new ListState(parsed.get("list_state").getAsString());
 
         System.err.println("parsing player....");
@@ -177,6 +198,10 @@ public class SaveState {
 
         long startLoad = System.currentTimeMillis();
 
+        if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.COMBAT_REWARD) {
+            AbstractDungeon.closeCurrentScreen();
+        }
+
         AbstractDungeon.actionManager.currentAction = null;
         AbstractDungeon.actionManager.actions.clear();
 
@@ -192,6 +217,8 @@ public class SaveState {
         AbstractDungeon.isScreenUp = isScreenUp;
         AbstractDungeon.screen = screen;
 
+        AbstractDungeon.previousScreen = previousScreen;
+
         listState.loadLists();
 
         AbstractDungeon.dungeonMapScreen.close();
@@ -201,10 +228,13 @@ public class SaveState {
         GameActionManager.totalDiscardedThisTurn = totalDiscardedThisTurn;
 
         AbstractDungeon.gridSelectScreen.selectedCards.clear();
+        AbstractDungeon.gridSelectScreen.confirmButton.hb.clicked = false;
         if (handSelectScreenState != null) {
             handSelectScreenState.loadHandSelectScreenState();
         } else if (gridCardSelectScreenState != null) {
             gridCardSelectScreenState.loadGridSelectScreen();
+        } else if (cardRewardScreenState != null) {
+            cardRewardScreenState.loadCardRewardScreen();
         }
 
         if (!shouldGoFast && !isScreenUp) {
@@ -266,9 +296,37 @@ public class SaveState {
         AbstractDungeon.player.endTurnQueued = false;
         AbstractDungeon.overlayMenu.endTurnButton.enable();
 
+        AbstractDungeon.player.endTurnQueued = endTurnQueued;
+        AbstractDungeon.player.isEndingTurn = isEndingTurn;
+
         ReflectionHacks
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "hoveredCard", null);
         ReflectionHacks.setPrivateStatic(TheBombPower.class, "bombIdOffset", bombIdOffset);
+    }
+
+    public void loadInitialState() {
+        if (shouldGoFast) {
+            System.err.println("Skipping Splash Screen for Char Select");
+
+            // Sets the current dungeon
+            Settings.seed = 123L;
+            AbstractDungeon.generateSeeds();
+            AbstractDungeon.screen = null;
+            AbstractDungeon.previousScreen = null;
+
+            // TODO this needs to be the actual character class or bad things happen
+            new Exordium(CardCrawlGame.characterManager
+                    .getCharacter(AbstractPlayer.PlayerClass.IRONCLAD), new ArrayList<>());
+
+            CardCrawlGame.dungeon.currMapNode.room = new EmptyRoom();
+
+            CardCrawlGame.mode = CardCrawlGame.GameMode.GAMEPLAY;
+
+            AbstractDungeon.gridSelectScreen = new GridCardSelectScreen();
+
+        }
+
+        loadState();
     }
 
     public int getPlayerHealth() {
@@ -283,11 +341,14 @@ public class SaveState {
         JsonObject saveStateJson = new JsonObject();
 
         saveStateJson.addProperty("floor_num", floorNum);
+
         saveStateJson.addProperty("previous_screen_up", previousScreenUp);
         saveStateJson.addProperty("my_turn", myTurn);
         saveStateJson.addProperty("turn", turn);
 
         saveStateJson.addProperty("screen_name", screen.name());
+        saveStateJson.addProperty("previous_screen_name", previousScreen != null ? previousScreen
+                .name() : null);
 
         saveStateJson.addProperty("list_state", listState.encode());
         saveStateJson.addProperty("player_state", playerState.encode());

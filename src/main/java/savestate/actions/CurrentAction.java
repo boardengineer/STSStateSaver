@@ -6,6 +6,8 @@ import com.megacrit.cardcrawl.actions.defect.RecycleAction;
 import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
 import com.megacrit.cardcrawl.actions.unique.*;
 import com.megacrit.cardcrawl.actions.utility.ScryAction;
+import com.megacrit.cardcrawl.actions.watcher.ChooseOneAction;
+import com.megacrit.cardcrawl.actions.watcher.ForeignInfluenceAction;
 import com.megacrit.cardcrawl.actions.watcher.MeditateAction;
 import com.megacrit.cardcrawl.actions.watcher.OmniscienceAction;
 
@@ -16,12 +18,15 @@ public enum CurrentAction {
     ATTACKS_FROM_DECK_TO_HAND_ACTION(AttackFromDeckToHandAction.class, action -> new AttackFromDeckToHandActionState(action)),
     BETTER_DISCARD_PILE_TO_HAND_ACTION(BetterDiscardPileToHandAction.class, action -> new BetterDiscardPileToHandActionState(action)),
     BETTER_DRAW_PILE_TO_HAND_ACTION(BetterDrawPileToHandAction.class, action -> new BetterDrawPileToHandActionState(action)),
+    CHOOSE_ONE_ACTION(ChooseOneAction.class, action -> new ChooseOneActionState(action)),
+    CODEX_ACTION(CodexAction.class, action -> new CodexActionState(action)),
     DISCARD_ACTION(DiscardAction.class, action -> new DiscardActionState((DiscardAction) action)),
     DISCARD_PILE_TO_TOP_OF_DECK_ACTION(DiscardPileToTopOfDeckAction.class, action -> new DiscardPileToTopOfDeckActionState(action)),
+    DICOVERY_ACTION(DiscoveryAction.class, action -> new DiscoveryActionState(action)),
     DUAL_WIELD_ACTION(DualWieldAction.class, action -> new DualWieldActionState(action)),
     EXHAUST_ACTION(ExhaustAction.class, action -> new ExhaustActionState(action)),
     EXHUME_ACTION(ExhumeAction.class, action -> new ExhumeActionState(action)),
-    // Forethought currently broken
+    FOREIGN_INFLUENCE_ACTION(ForeignInfluenceAction.class, action -> new ForeignInfluenceActionState(action)),
     FORETHOUGHT_ACTION(ForethoughtAction.class, action -> new ForethoughtActionState(action)),
     PUT_ON_DECK_ACTION(PutOnDeckAction.class, action -> new PutOnDeckActionState(action)),
     OMNISCIENCE_ACTION(OmniscienceAction.class, action -> new OmniscienceActionState(action)),

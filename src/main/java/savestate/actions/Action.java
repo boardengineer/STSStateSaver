@@ -8,10 +8,12 @@ import com.megacrit.cardcrawl.actions.unique.EstablishmentPowerAction;
 import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
 import com.megacrit.cardcrawl.actions.unique.RemoveDebuffsAction;
 import com.megacrit.cardcrawl.actions.utility.DiscardToHandAction;
+import com.megacrit.cardcrawl.actions.utility.HandCheckAction;
 import com.megacrit.cardcrawl.actions.utility.NewQueueCardAction;
 import com.megacrit.cardcrawl.actions.utility.UseCardAction;
 import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction;
 import com.megacrit.cardcrawl.actions.watcher.PressEndTurnButtonAction;
+import com.megacrit.cardcrawl.actions.watcher.TriggerMarksAction;
 import savestate.fastobjects.actions.UpdateOnlyUseCardAction;
 
 import java.util.function.Function;
@@ -34,6 +36,8 @@ public enum Action {
     ESTABLISHMENT_POWER_ACTION(EstablishmentPowerAction.class, action -> new EstablishmentPowerActionState(action)),
     GAIN_BLOCK_ACTION(GainBlockAction.class, action -> new GainBlockActionState(action)),
     GAIN_ENERGY_ACTION(GainEnergyAction.class, action -> new GainEnergyActionState(action)),
+    HAND_CHECK_ACTION(HandCheckAction.class, action -> new HandCheckActionState(action)),
+    HEAL_ACTION(HealAction.class, action -> new HealActionState(action)),
     LOSE_ENERGY_ACTION(LoseEnergyAction.class, action -> new LoseEnergyActionState(action)),
     LOSE_HP_ACTION(LoseHPAction.class, action -> new LoseHPActionState(action)),
     MAKE_TEMP_CARD_IN_DRAW_PILE_ACTION(MakeTempCardInDrawPileAction.class, action -> new MakeTempCardInDrawPileActionState(action)),
@@ -47,6 +51,8 @@ public enum Action {
     SET_DONT_TRIGGER_ACTION(SetDontTriggerAction.class, action -> new SetDontTriggerActionState(action)),
     SET_MOVE_ACTION(SetMoveAction.class, action -> new SetMoveActionState(action)),
     TRIGGER_END_OF_TURN_ORBS_ACTION(TriggerEndOfTurnOrbsAction.class, action -> new TriggerEndOfTurnOrbsActionState()),
+    TRIGGER_MARKS_ACTION(TriggerMarksAction.class, action -> new TriggerMarksActionState()),
+
     UPDATE_ONLY_USE_CARD_ACTION(UpdateOnlyUseCardAction.class, action -> new UseCardActionState((UpdateOnlyUseCardAction) action)),
     USE_CARD_ACTION(UseCardAction.class, action -> new UseCardActionState((UseCardAction) action));
 

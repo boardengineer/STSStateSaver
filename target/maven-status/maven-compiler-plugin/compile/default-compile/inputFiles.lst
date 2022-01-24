@@ -58,6 +58,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\DrawReductionPower
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\WraithFormPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\MetallicizePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\FadingPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\CodexActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\IntangiblePlayerPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\StasisPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\BeatOfDeathPowerState.java
@@ -119,6 +120,7 @@ C:\stuff\SaveState\src\main\java\savestate\monsters\city\HealerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\EquilibriumPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\SkillFromDeckToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\SpireGrowthState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\HealActionState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\LoseHPActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\EvolvePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\GremlinTsundereState.java
@@ -171,6 +173,7 @@ C:\stuff\SaveState\src\main\java\savestate\actions\ApplyPowerActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\BackAttackPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\WeakenedPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\SurroundedPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\ForeignInfluenceActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\DonuState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\FlightPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\Action.java
@@ -183,6 +186,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\PlatedArmor
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\AmplifyPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\watcher\OmegaPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\SetMoveActionState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\HandCheckActionState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\NecronomiconState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\TimeMazePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\LouseNormalState.java
@@ -238,6 +242,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\BiasPowerSt
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\NemesisState.java
 C:\stuff\SaveState\src\main\java\savestate\fastobjects\NoLoggerMummifiedHand.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\ByrdState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\ChooseOneActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\ConfusionPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\RegenPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\StrengthPowerState.java
@@ -251,8 +256,10 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\HelloPowerS
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\StrikeUpPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\MayhemPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\fastobjects\ScreenShakeFast.java
+C:\stuff\SaveState\src\main\java\savestate\actions\DiscoveryActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\SnakePlantState.java
 C:\stuff\SaveState\src\main\java\savestate\CardState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\TriggerMarksActionState.java
 C:\stuff\SaveState\src\main\java\savestate\PlayerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\PainfulStabsPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\CurrentActionState.java
@@ -270,6 +277,7 @@ C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\ReptomancerState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\ArtOfWarState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\SetDontTriggerActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\BanditLeaderState.java
+C:\stuff\SaveState\src\main\java\savestate\selectscreen\CardRewardScreenState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\BlurPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\EnableEndTurnButtonActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\SpikeSlime_MState.java
