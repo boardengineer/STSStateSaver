@@ -42,3 +42,6 @@ dependency-reduced-pom.xml
 *.class
 target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+target/SaveStateMod.jar
+*.class
+*.class

@@ -98,5 +98,6 @@ public class PotionState {
         add(SmokeBomb.POTION_ID);
         add(Elixir.POTION_ID);
         add(CultistPotion.POTION_ID);
+        add(StancePotion.POTION_ID);
     }};
 }
