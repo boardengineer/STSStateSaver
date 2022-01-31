@@ -108,8 +108,7 @@ public class MapRoomNodeState {
 
         this.phase = AbstractRoom.RoomPhase.valueOf(parsed.get("phase_name").getAsString());
 
-        // TODO
-        this.roomType = RoomType.MONSTER;
+        this.roomType = RoomType.valueOf(parsed.get("room_type").getAsString());
     }
 
     public MapRoomNode loadMapRoomNode(MapRoomNode mapRoomNode) {
@@ -223,6 +222,7 @@ public class MapRoomNodeState {
         mapRoomNodeStateJson.addProperty("reward_time", rewardTime);
         mapRoomNodeStateJson.addProperty("skip_monster_turn", skipMonsterTurn);
         mapRoomNodeStateJson.addProperty("wait_timer", waitTimer);
+        mapRoomNodeStateJson.addProperty("room_type", roomType.name());
 
         mapRoomNodeStateJson
                 .addProperty("monster_data", monsterData.stream().map(MonsterState::encode)

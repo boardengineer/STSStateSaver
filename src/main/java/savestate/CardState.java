@@ -236,7 +236,7 @@ public class CardState {
         cardStateJson.addProperty("cost", cost);
         cardStateJson.addProperty("cost_for_turn", costForTurn);
         cardStateJson.addProperty("upgraded", upgraded);
-        cardStateJson.addProperty("base_magic_number", magicNumber);
+        cardStateJson.addProperty("base_magic_number", baseMagicNumber);
 
         return cardStateJson.toString();
     }

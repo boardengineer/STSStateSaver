@@ -198,6 +198,11 @@ public class SaveState {
 
         long startLoad = System.currentTimeMillis();
 
+        // TODO: this is being cleared to prevent grid rewards from going back to a bad state,
+        // the combat reward state might need to be set properly if I want to export savestate mod
+        // as a fully functional state saver/recaller
+        AbstractDungeon.combatRewardScreen.rewards.clear();
+
         if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.COMBAT_REWARD) {
             AbstractDungeon.closeCurrentScreen();
         }

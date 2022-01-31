@@ -124,6 +124,7 @@ savestate\relics\OrichalcumState.class
 savestate\powers\powerstates\silent\EnvenomPowerState.class
 savestate\powers\powerstates\defect\StaticDischargePowerState.class
 savestate\actions\CodexActionState.class
+savestate\actions\UpgradeRandomCardActionState.class
 savestate\actions\RemoveSpecificPowerActionState.class
 savestate\monsters\city\SphericGuardianState.class
 savestate\monsters\beyond\DarklingState$YetNoAnimationsPatch.class
@@ -317,6 +318,7 @@ savestate\powers\powerstates\watcher\MentalFortressPowerState.class
 savestate\actions\UseCardActionState.class
 savestate\powers\powerstates\ironclad\EvolvePowerState.class
 savestate\actions\DamageRandomEnemyActionState.class
+savestate\actions\MonsterStartTurnActionState.class
 savestate\powers\powerstates\silent\CorpseExplosionPowerState.class
 savestate\powers\powerstates\watcher\StudyPowerState.class
 savestate\powers\powerstates\common\VigorPowerState.class
@@ -347,6 +349,7 @@ savestate\monsters\city\CenturionState$NoAnimationsPatch.class
 savestate\actions\GainBlockActionState.class
 savestate\monsters\exordium\GremlinWizardState.class
 savestate\monsters\beyond\DarklingState$SilentDamagePatch.class
+savestate\actions\EndTurnActionState.class
 savestate\powers\powerstates\watcher\NirvanaPowerState.class
 savestate\actions\ExhaustActionState.class
 savestate\monsters\city\TaskmasterState$NoAnimationsPatch.class

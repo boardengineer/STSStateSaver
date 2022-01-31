@@ -426,7 +426,7 @@ public class PlayerState extends CreatureState {
 //        playerStateJson.addProperty("draw_pile", encodeCardList(drawPile));
         playerStateJson.addProperty("hand", diffEncodeCardList(hand));
         playerStateJson.addProperty("discard_pile", diffEncodeCardList(discardPile));
-        playerStateJson.addProperty("draw_pile", encodeCardList(drawPile));
+        playerStateJson.addProperty("draw_pile", diffEncodeCardList(drawPile));
 
         playerStateJson.addProperty("energy_manager_energy", energyManagerEnergy);
         playerStateJson.addProperty("energy_manager_max_master", energyManagerMaxMaster);
@@ -462,7 +462,8 @@ public class PlayerState extends CreatureState {
             System.err.println(two.get("discard_pile").getAsString());
         }
 
-        /*
+        */
+
         boolean drawMismatch = one.get("draw_pile").getAsString()
                                   .equals(two.get("draw_pile").getAsString());
         if (!drawMismatch) {
@@ -473,9 +474,17 @@ public class PlayerState extends CreatureState {
             System.err.println(two.get("draw_pile").getAsString());
         }
 
-         */
 
         boolean handsMatch = one.get("hand").getAsString().equals(two.get("hand").getAsString());
+        if (!handsMatch) {
+            allMatch = false;
+            System.err.println("player hand mismatch");
+            System.err.println(one.get("hand").getAsString());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("hand").getAsString());
+        }
+
+        boolean decksMatch = one.get("hand").getAsString().equals(two.get("hand").getAsString());
         if (!handsMatch) {
             allMatch = false;
             System.err.println("player hand mismatch");

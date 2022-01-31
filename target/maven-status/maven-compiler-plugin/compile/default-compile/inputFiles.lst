@@ -54,6 +54,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\TimeWarpP
 C:\stuff\SaveState\src\main\java\savestate\monsters\ending\SpireSpearState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\RegenerateMonsterPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\GrowthPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\UpgradeRandomCardActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\DrawReductionPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\WraithFormPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\MetallicizePowerState.java

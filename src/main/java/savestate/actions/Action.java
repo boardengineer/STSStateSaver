@@ -31,6 +31,7 @@ public enum Action {
     DISCARD_TO_HAND_ACTION(DiscardToHandAction.class, action -> new DiscardToHandActionState(action)),
     DRAW_CARD_ACTION(DrawCardAction.class, action -> new DrawCardActionState(action)),
     ENABLE_END_TURN_BUTTON_ACTION(EnableEndTurnButtonAction.class, action -> new EnableEndTurnButtonActionState(action)),
+    END_TURN_ACTION(EndTurnAction.class, action -> new EndTurnActionState()),
     ENQUEUE_END_TURN_ACTION(EnqueueEndTurnAction.class, action -> new EnqueueEndTurnActionState()),
     ESCAPE_ACTION(EscapeAction.class, action -> new EscapeActionState(action)),
     ESTABLISHMENT_POWER_ACTION(EstablishmentPowerAction.class, action -> new EstablishmentPowerActionState(action)),
@@ -42,6 +43,7 @@ public enum Action {
     LOSE_HP_ACTION(LoseHPAction.class, action -> new LoseHPActionState(action)),
     MAKE_TEMP_CARD_IN_DRAW_PILE_ACTION(MakeTempCardInDrawPileAction.class, action -> new MakeTempCardInDrawPileActionState(action)),
     MAKE_TEMP_CARD_IN_HAND_ACTION(MakeTempCardInHandAction.class, action -> new MakeTempCardInHandActionState(action)),
+    MONSTER_START_TURN_ACTION(MonsterStartTurnAction.class, action -> new MonsterStartTurnActionState()),
     NEW_QUEUE_CARD_ACTION(NewQueueCardAction.class, action -> new NewQueueCardActionState()),
     PRESS_END_TURN_BUTTON_ACTION(PressEndTurnButtonAction.class, action -> new PressEndTurnButtonActionState()),
     REDUCE_POWER_ACTION(ReducePowerAction.class, action -> new ReducePowerActionState(action)),
@@ -52,8 +54,8 @@ public enum Action {
     SET_MOVE_ACTION(SetMoveAction.class, action -> new SetMoveActionState(action)),
     TRIGGER_END_OF_TURN_ORBS_ACTION(TriggerEndOfTurnOrbsAction.class, action -> new TriggerEndOfTurnOrbsActionState()),
     TRIGGER_MARKS_ACTION(TriggerMarksAction.class, action -> new TriggerMarksActionState()),
-
     UPDATE_ONLY_USE_CARD_ACTION(UpdateOnlyUseCardAction.class, action -> new UseCardActionState((UpdateOnlyUseCardAction) action)),
+    UPGRADE_RANDOM_CARD_ACTION(UpgradeRandomCardAction.class, action -> new UpgradeRandomCardActionState()),
     USE_CARD_ACTION(UseCardAction.class, action -> new UseCardActionState((UseCardAction) action));
 
     public Function<AbstractGameAction, ActionState> factory;
