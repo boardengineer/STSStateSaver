@@ -188,6 +188,11 @@ public class PlayerState extends CreatureState {
 
         addRuntime("player 0", System.currentTimeMillis() - startLoad);
 
+        // There are cases where the contents of the hand effect the creation of powers, we
+        // want to force the state instead; the other free calls may need to be moved up here as
+        // well.
+        CardState.freeCardList(player.hand.group);
+
         super.loadCreature(player);
 
         addRuntime("player 1", System.currentTimeMillis() - startLoad);
@@ -200,7 +205,7 @@ public class PlayerState extends CreatureState {
 
         CardState.freeCardList(player.masterDeck.group);
         CardState.freeCardList(player.drawPile.group);
-        CardState.freeCardList(player.hand.group);
+
         CardState.freeCardList(player.discardPile.group);
         CardState.freeCardList(player.exhaustPile.group);
         CardState.freeCardList(player.limbo.group);

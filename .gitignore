@@ -49,3 +49,5 @@ target/SaveStateMod.jar
 *.class
 *.class
 target/classes/savestate/MapRoomNodeState.class
+target/SaveStateMod.jar
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
