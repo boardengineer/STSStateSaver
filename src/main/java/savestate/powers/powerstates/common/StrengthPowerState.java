@@ -5,8 +5,7 @@ import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.StrengthPower;
 import savestate.powers.PowerState;
 
-public class StrengthPowerState extends PowerState
-{
+public class StrengthPowerState extends PowerState {
     public StrengthPowerState(AbstractPower power) {
         super(power);
     }

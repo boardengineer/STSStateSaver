@@ -85,6 +85,7 @@ public class PlayerState extends CreatureState {
 
         this.relics = player.relics.stream().map(RelicState::forRelic)
                                    .collect(Collectors.toCollection(ArrayList::new));
+
         this.orbs = player.orbs.stream().map(OrbState::forOrb)
                                .collect(Collectors.toCollection(ArrayList::new));
         this.orbsChanneledThisCombat = AbstractDungeon.actionManager.orbsChanneledThisCombat
@@ -160,6 +161,7 @@ public class PlayerState extends CreatureState {
                             .filter(s -> !s.isEmpty()).map(RelicState::forJsonString)
                             .collect(Collectors.toCollection(ArrayList::new));
 
+
         this.potions = new ArrayList<>();
         parsed.get("potions").getAsJsonArray().forEach(potionElement -> this.potions
                 .add(new PotionState(potionElement.getAsString())));
@@ -192,6 +194,16 @@ public class PlayerState extends CreatureState {
         // want to force the state instead; the other free calls may need to be moved up here as
         // well.
         CardState.freeCardList(player.hand.group);
+
+        player.relics = this.relics.stream().map(RelicState::loadRelic)
+                                   .collect(Collectors.toCollection(ArrayList::new));
+
+        if (!shouldGoFast) {
+            AbstractDungeon.topPanel.adjustRelicHbs();
+            for (int i = 0; i < player.relics.size(); i++) {
+                player.relics.get(i).instantObtain(player, i, false);
+            }
+        }
 
         super.loadCreature(player);
 
@@ -232,17 +244,6 @@ public class PlayerState extends CreatureState {
                                        .collect(Collectors.toCollection(ArrayList::new));
 
         addRuntime("player 21", System.currentTimeMillis() - startLoad);
-        player.relics = this.relics.stream().map(RelicState::loadRelic)
-                                   .collect(Collectors.toCollection(ArrayList::new));
-
-        addRuntime("player 3", System.currentTimeMillis() - startLoad);
-
-        if (!shouldGoFast) {
-            AbstractDungeon.topPanel.adjustRelicHbs();
-            for (int i = 0; i < player.relics.size(); i++) {
-                player.relics.get(i).instantObtain(player, i, false);
-            }
-        }
 
         player.potions = this.potions.stream().map(PotionState::loadPotion)
                                      .collect(Collectors.toCollection(ArrayList::new));
