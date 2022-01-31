@@ -26,6 +26,7 @@ import savestate.selectscreen.GridCardSelectScreenState;
 import savestate.selectscreen.HandSelectScreenState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static savestate.SaveStateMod.addRuntime;
 import static savestate.SaveStateMod.shouldGoFast;
@@ -65,6 +66,8 @@ public class SaveState {
     private boolean isEndingTurn;
 
     public MapRoomNodeState curMapNodeState;
+
+    public HashMap<String, StateElement> additionalElements = new HashMap<>();
 
     //TODO move this into something that always gets called
     private int gridCardSelectAmount = 0;
@@ -147,6 +150,10 @@ public class SaveState {
         DrawCardAction.drawnCards.forEach(card -> this.drawnCards.add(allCards.indexOf(card)));
         this.gridCardSelectAmount = ReflectionHacks
                 .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
+
+        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
+            additionalElements.put(entry.getKey(), entry.getValue().factory.get());
+        });
     }
 
     public SaveState(String jsonString) {
@@ -190,6 +197,11 @@ public class SaveState {
         this.cardsPlayedThisCombat = new ArrayList<>();
         this.gridSelectedCards = new ArrayList<>();
         this.drawnCards = new ArrayList<>();
+
+        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
+            additionalElements.put(entry.getKey(), entry.getValue().jsonFactory
+                    .apply(parsed.get(entry.getKey()).getAsString()));
+        });
     }
 
     public void loadState() {
@@ -307,6 +319,10 @@ public class SaveState {
         ReflectionHacks
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "hoveredCard", null);
         ReflectionHacks.setPrivateStatic(TheBombPower.class, "bombIdOffset", bombIdOffset);
+
+        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
+            additionalElements.get(entry.getKey()).restore();
+        });
     }
 
     public void loadInitialState() {
@@ -323,7 +339,7 @@ public class SaveState {
             new Exordium(CardCrawlGame.characterManager
                     .getCharacter(AbstractPlayer.PlayerClass.IRONCLAD), new ArrayList<>());
 
-            CardCrawlGame.dungeon.currMapNode.room = new EmptyRoom();
+            AbstractDungeon.currMapNode.room = new EmptyRoom();
 
             CardCrawlGame.mode = CardCrawlGame.GameMode.GAMEPLAY;
 
@@ -366,6 +382,11 @@ public class SaveState {
         saveStateJson.addProperty("mantra_gained", mantraGained);
 
         saveStateJson.addProperty("bomb_id_offset", bombIdOffset);
+
+        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
+            saveStateJson
+                    .addProperty(entry.getKey(), additionalElements.get(entry.getKey()).encode());
+        });
 
         System.err.println("completed encoding");
         return saveStateJson.toString();

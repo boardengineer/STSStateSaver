@@ -164,6 +164,7 @@ savestate\SaveState.class
 savestate\actions\HandCheckActionState.class
 savestate\SaveState$CountParasitesPatch.class
 savestate\monsters\exordium\HexaghostState$BurnIncreasePatch.class
+savestate\StateElement$ElementFactories.class
 savestate\relics\GamblingChipState.class
 savestate\powers\powerstates\monsters\SporeCloudPowerState.class
 savestate\actions\ActionState$ActionFactories.class
@@ -261,6 +262,7 @@ savestate\powers\powerstates\common\RegenPowerState.class
 savestate\SaveStateMod$RemoveUnpalayablePotionsPatch.class
 savestate\actions\ChooseOneActionState$NoDoubleTriggerActionPatch.class
 savestate\SaveStateMod$LoadStateTopPanel.class
+savestate\StateElement.class
 savestate\powers\powerstates\NextTurnBlockPowerState.class
 savestate\powers\powerstates\ironclad\DemonFormPowerState.class
 savestate\powers\powerstates\monsters\SharpHidePowerState.class

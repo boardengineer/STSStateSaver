@@ -30,6 +30,7 @@ public class StateFactories {
     public static HashSet<String> powerPrefixes = createPowerPrefixes();
 
     public static ArrayList<CardState.CardFactories> cardFactories = new ArrayList<>();
+    public static HashMap<String, StateElement.ElementFactories> elementFactories = new HashMap<>();
 
     public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();

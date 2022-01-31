@@ -20,6 +20,7 @@ import com.megacrit.cardcrawl.integrations.steam.SRCallback;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Function;
 
 @SpireInitializer
 public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscriber {
@@ -39,6 +40,9 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
     public static SaveState saveState;
 
     public static boolean shouldResetDungeon = false;
+
+    public static ArrayList<Function<Void, StateElement>> additionalStateCreators =
+            new ArrayList<>();
 
     public static void initialize() {
         BaseMod.subscribe(new SaveStateMod());

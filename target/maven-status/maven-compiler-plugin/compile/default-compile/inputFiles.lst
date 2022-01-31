@@ -264,6 +264,7 @@ C:\stuff\SaveState\src\main\java\savestate\actions\EndTurnActionState.java
 C:\stuff\SaveState\src\main\java\savestate\CardState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\TriggerMarksActionState.java
 C:\stuff\SaveState\src\main\java\savestate\PlayerState.java
+C:\stuff\SaveState\src\main\java\savestate\StateElement.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\PainfulStabsPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\CurrentActionState.java
 C:\stuff\SaveState\src\main\java\savestate\actions\OmniscienceActionState.java
