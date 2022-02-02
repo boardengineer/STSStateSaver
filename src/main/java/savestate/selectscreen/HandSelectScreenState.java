@@ -81,7 +81,8 @@ public class HandSelectScreenState {
                 .setPrivate(AbstractDungeon.handCardSelectScreen, HandCardSelectScreen.class, "forTransform", forTransform);
         ReflectionHacks
                 .setPrivate(AbstractDungeon.handCardSelectScreen, HandCardSelectScreen.class, "forUpgrade", forUpgrade);
-
+        ReflectionHacks
+                .setPrivate(AbstractDungeon.handCardSelectScreen, HandCardSelectScreen.class, "hand", AbstractDungeon.player.hand);
         AbstractDungeon.handCardSelectScreen.numSelected = numSelected;
 
         if (currentActionState != null) {
@@ -91,7 +92,6 @@ public class HandSelectScreenState {
 
             AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
             AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;
-
 
 
             if (AbstractDungeon.actionManager.actions.isEmpty()) {
