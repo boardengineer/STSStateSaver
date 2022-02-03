@@ -319,6 +319,7 @@ savestate\powers\powerstates\watcher\FreeAttackPowerState.class
 savestate\powers\powerstates\watcher\MentalFortressPowerState.class
 savestate\actions\UseCardActionState.class
 savestate\powers\powerstates\ironclad\EvolvePowerState.class
+savestate\powers\powerstates\monsters\StunMonsterPowerState.class
 savestate\actions\DamageRandomEnemyActionState.class
 savestate\actions\MonsterStartTurnActionState.class
 savestate\powers\powerstates\silent\CorpseExplosionPowerState.class

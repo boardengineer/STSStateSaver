@@ -1,5 +1,6 @@
 package savestate.powers;
 
+import com.evacipated.cardcrawl.mod.stslib.powers.StunMonsterPower;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import savestate.powers.powerstates.*;
 import savestate.powers.powerstates.common.*;
@@ -138,6 +139,7 @@ public enum Power {
     STRENGTH("Strength", power -> new StrengthPowerState(power)),
     STRIKE_UP("StrikeUp", power -> new StrikeUpPowerState(power)),
     STUDY("Study", power -> new StudyPowerState(power)),
+    STUN_MONSTER(StunMonsterPower.POWER_ID, power -> new StunMonsterPowerState(power), json -> new StunMonsterPowerState(json)),
     SURROUNDED("Surrounded", power -> new SurroundedPowerState(power)),
     THIEVERY("Thievery", power -> new ThieveryPowerState(power)),
     THE_BOMB("TheBomb", power -> new TheBombPowerState(power), json -> new TheBombPowerState(json)),
