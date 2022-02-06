@@ -55,3 +55,4 @@ SaveStateMod.iml
 *.class
 target/SaveStateMod.jar
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+*.class

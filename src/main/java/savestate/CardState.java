@@ -38,6 +38,7 @@ public class CardState {
     private final boolean isEthereal;
     private final boolean retain;
     private final boolean selfRetain;
+    private final boolean shuffleBackIntoDrawPile;
 
     private static HashMap<String, HashSet<AbstractCard>> freeCards;
 
@@ -99,6 +100,7 @@ public class CardState {
         this.timesUpgraded = card.timesUpgraded;
         this.dontTriggerOnUseCard = card.dontTriggerOnUseCard;
         this.isEthereal = card.isEthereal;
+        this.shuffleBackIntoDrawPile = card.shuffleBackIntoDrawPile;
     }
 
     public CardState(String jsonString) {
@@ -131,6 +133,7 @@ public class CardState {
         this.damage = parsed.get("damage").getAsInt();
         this.retain = parsed.get("retain").getAsBoolean();
         this.selfRetain = parsed.get("self_retain").getAsBoolean();
+        this.shuffleBackIntoDrawPile = parsed.get("shuffle_back_into_draw_pile").getAsBoolean();
 
         // TODO
         this.current_x = 0;
@@ -189,6 +192,7 @@ public class CardState {
         result.retain = retain;
         result.damage = damage;
         result.selfRetain = selfRetain;
+        result.shuffleBackIntoDrawPile = shuffleBackIntoDrawPile;
 
         return result;
     }
@@ -225,6 +229,7 @@ public class CardState {
         cardStateJson.addProperty("damage", damage);
         cardStateJson.addProperty("retain", retain);
         cardStateJson.addProperty("self_retain", selfRetain);
+        cardStateJson.addProperty("shuffle_back_into_draw_pile", shuffleBackIntoDrawPile);
 
         return cardStateJson.toString();
     }
