@@ -1,6 +1,7 @@
 package savestate;
 
 import basemod.ReflectionHacks;
+import com.evacipated.cardcrawl.mod.stslib.patches.core.AbstractCreature.TempHPField;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
@@ -36,6 +37,7 @@ public class PlayerState extends CreatureState {
     private final int masterHandSize;
     private final int potionSLots;
     private final int startingMaxHP;
+    private final int temporaryHp;
 
     private final int energyManagerEnergy;
     private final int energyManagerMaxMaster;
@@ -74,6 +76,8 @@ public class PlayerState extends CreatureState {
         this.gameHandSize = player.gameHandSize;
         this.masterHandSize = player.masterHandSize;
         this.startingMaxHP = player.startingMaxHP;
+
+        this.temporaryHp = TempHPField.tempHp.get(player);
 
         this.masterDeck = toCardStateArray(player.masterDeck.group);
         this.drawPile = toCardStateArray(player.drawPile.group);
@@ -135,6 +139,7 @@ public class PlayerState extends CreatureState {
         this.masterHandSize = parsed.get("master_hand_size").getAsInt();
         this.startingMaxHP = parsed.get("starting_max_hp").getAsInt();
         this.potionSLots = parsed.get("potion_slots").getAsInt();
+        this.temporaryHp = parsed.get("temporary_hp").getAsInt();
 
         this.energyManagerEnergy = parsed.get("energy_manager_energy").getAsInt();
         this.energyPanelTotalEnergy = parsed.get("energy_panel_total_energy").getAsInt();
@@ -287,6 +292,8 @@ public class PlayerState extends CreatureState {
         }
         addRuntime("player total", System.currentTimeMillis() - startLoad);
 
+        TempHPField.tempHp.set(player, temporaryHp);
+
         return player;
     }
 
@@ -381,6 +388,7 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("limbo", encodeCardList(limbo));
         playerStateJson.addProperty("potion_slots", potionSLots);
         playerStateJson.addProperty("stance", stance);
+        playerStateJson.addProperty("temporary_hp", temporaryHp);
 
         playerStateJson.addProperty("relics", relics.stream().map(RelicState::encode)
                                                     .collect(Collectors.joining(RELIC_DELIMETER)));

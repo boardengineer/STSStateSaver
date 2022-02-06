@@ -23,6 +23,7 @@ savestate\FileLoadPanel.class
 savestate\actions\DualWieldActionState$NoFxConstructorPatchOther.class
 savestate\monsters\city\TaskmasterState.class
 savestate\powers\powerstates\NoSkillsPowerState.class
+savestate\actions\DiscardPileToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\powers\powerstates\ModeShiftPowerState.class
 savestate\powers\powerstates\monsters\RegrowPowerState.class
 savestate\actions\OmniscienceActionState$NoOmniscienceActionPatch.class
@@ -135,6 +136,7 @@ savestate\monsters\exordium\SentryState$NoAnimationsPatch.class
 savestate\monsters\beyond\DonuState.class
 savestate\powers\powerstates\watcher\MasterRealityPowerState.class
 savestate\monsters\exordium\LouseDefensiveState$NoAnimationsPatch.class
+savestate\actions\DiscardPileToHandActionState.class
 savestate\fastobjects\NoLoggerMummifiedHand.class
 savestate\monsters\city\SnakePlantState$NoAnimationsPatch.class
 savestate\monsters\Monster.class

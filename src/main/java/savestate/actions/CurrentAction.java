@@ -2,6 +2,7 @@ package savestate.actions;
 
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.*;
+import com.megacrit.cardcrawl.actions.defect.DiscardPileToHandAction;
 import com.megacrit.cardcrawl.actions.defect.RecycleAction;
 import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
 import com.megacrit.cardcrawl.actions.unique.*;
@@ -21,6 +22,7 @@ public enum CurrentAction {
     CHOOSE_ONE_ACTION(ChooseOneAction.class, action -> new ChooseOneActionState(action)),
     CODEX_ACTION(CodexAction.class, action -> new CodexActionState(action)),
     DISCARD_ACTION(DiscardAction.class, action -> new DiscardActionState((DiscardAction) action)),
+    DISCARD_PILE_TO_HAND_ACTION(DiscardPileToHandAction.class, action -> new DiscardPileToHandActionState(action)),
     DISCARD_PILE_TO_TOP_OF_DECK_ACTION(DiscardPileToTopOfDeckAction.class, action -> new DiscardPileToTopOfDeckActionState(action)),
     DICOVERY_ACTION(DiscoveryAction.class, action -> new DiscoveryActionState(action)),
     DUAL_WIELD_ACTION(DualWieldAction.class, action -> new DualWieldActionState(action)),

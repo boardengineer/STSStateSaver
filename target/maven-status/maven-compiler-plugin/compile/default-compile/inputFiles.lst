@@ -166,6 +166,7 @@ C:\stuff\SaveState\src\main\java\savestate\actions\RemoveDebuffsActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\city\ShelledParasiteState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\exordium\GremlinWizardState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\VulnerablePowerState.java
+C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\StunMonsterPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\Relic.java
 C:\stuff\SaveState\src\main\java\savestate\fastobjects\AnimationStateDataFast.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\StaticDischargePowerState.java
@@ -180,6 +181,7 @@ C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\FlightPow
 C:\stuff\SaveState\src\main\java\savestate\actions\Action.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\AwakenedOneState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\TheBombPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\actions\DiscardPileToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\EnvenomPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\silent\ThousandCutsPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\relics\RelicState.java
