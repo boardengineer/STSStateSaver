@@ -1,6 +1,5 @@
 package savestate;
 
-import basemod.abstracts.AbstractCardModifier;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -10,7 +9,6 @@ import com.megacrit.cardcrawl.helpers.CardLibrary;
 import java.util.*;
 import java.util.function.Function;
 
-import static basemod.helpers.CardModifierManager.modifiers;
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class CardState {
@@ -19,9 +17,12 @@ public class CardState {
     private final int timesUpgraded;
     public final int baseDamage;
     private final int baseBlock;
-    private final int cost;
-    private final int damage;
+
     public final int misc;
+    public final int cost;
+
+    private final int damage;
+
     private final int costForTurn;
     private final int magicNumber;
     public final int baseMagicNumber;
@@ -56,9 +57,6 @@ public class CardState {
     private final float targetAngle;
     private final float drawScale;
     private final float targetDrawScale;
-
-    private static ArrayList<AbstractCardModifierState> cardModifiers;
-
 
     // private final HitboxState hb;
     public CardState(AbstractCard card) {
@@ -105,8 +103,6 @@ public class CardState {
         this.dontTriggerOnUseCard = card.dontTriggerOnUseCard;
         this.isEthereal = card.isEthereal;
         this.shuffleBackIntoDrawPile = card.shuffleBackIntoDrawPile;
-
-        ArrayList<AbstractCardModifier> modifiers = modifiers(card);
     }
 
     public CardState(String jsonString) {
