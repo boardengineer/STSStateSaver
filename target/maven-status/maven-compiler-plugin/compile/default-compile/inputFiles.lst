@@ -103,6 +103,7 @@ C:\stuff\SaveState\src\main\java\savestate\actions\DiscardToHandActionState.java
 C:\stuff\SaveState\src\main\java\savestate\monsters\beyond\OrbWalkerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\common\BarricadePowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\monsters\CuriosityPowerState.java
+C:\stuff\SaveState\src\main\java\savestate\AbstractCardModifierState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\ironclad\BerserkPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\defect\EchoPowerState.java
 C:\stuff\SaveState\src\main\java\savestate\powers\powerstates\watcher\LikeWaterPowerState.java

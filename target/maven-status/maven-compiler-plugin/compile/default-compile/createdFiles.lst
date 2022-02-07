@@ -158,6 +158,7 @@ savestate\monsters\beyond\AwakenedOneState.class
 savestate\powers\powerstates\monsters\HexPowerState.class
 savestate\powers\powerstates\defect\LockOnPowerState.class
 savestate\monsters\exordium\GremlinFatState.class
+savestate\AbstractCardModifierState.class
 savestate\actions\AttackFromDeckToHandActionState$NoDoubleExhaustActionPatch.class
 savestate\powers\powerstates\common\SurroundedPowerState.class
 savestate\actions\RecycleActionState.class

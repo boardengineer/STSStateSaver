@@ -478,15 +478,15 @@ public class PlayerState extends CreatureState {
 
         */
 
-        boolean drawMismatch = one.get("draw_pile").getAsString()
-                                  .equals(two.get("draw_pile").getAsString());
-        if (!drawMismatch) {
-            allMatch = false;
-            System.err.println("player draw mismatch");
-            System.err.println(one.get("draw_pile").getAsString());
-            System.err.println("-----------------------------------");
-            System.err.println(two.get("draw_pile").getAsString());
-        }
+//        boolean drawMismatch = one.get("draw_pile").getAsString()
+//                                  .equals(two.get("draw_pile").getAsString());
+//        if (!drawMismatch) {
+//            allMatch = false;
+//            System.err.println("player draw mismatch");
+//            System.err.println(one.get("draw_pile").getAsString());
+//            System.err.println("-----------------------------------");
+//            System.err.println(two.get("draw_pile").getAsString());
+//        }
 
 
         boolean handsMatch = one.get("hand").getAsString().equals(two.get("hand").getAsString());
