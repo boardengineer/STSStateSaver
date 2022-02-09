@@ -185,6 +185,7 @@ public class SaveState {
         this.isScreenUp = parsed.get("is_screen_up").getAsBoolean();
         this.ascensionLevel = parsed.get("ascension_level").getAsInt();
         this.bombIdOffset = parsed.get("bomb_id_offset").getAsInt();
+        this.totalDiscardedThisTurn = parsed.get("total_discarded_this_turn").getAsInt();
 
         // start counting from the json start
         this.lessonLearnedCount = 0;
@@ -382,6 +383,7 @@ public class SaveState {
         saveStateJson.addProperty("mantra_gained", mantraGained);
 
         saveStateJson.addProperty("bomb_id_offset", bombIdOffset);
+        saveStateJson.addProperty("total_discarded_this_turn", totalDiscardedThisTurn);
 
         StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
             saveStateJson
@@ -437,6 +439,7 @@ public class SaveState {
                 two.get("total_discarded_this_turn").getAsInt();
         if (!discardCountMatch) {
             allMatch = false;
+            System.err.println("total_discarded_this_turn state mismatch");
             System.err.println(one.get("total_discarded_this_turn").getAsInt());
             System.err.println("----------------------------------------------");
             System.err.println(two.get("total_discarded_this_turn").getAsInt());
