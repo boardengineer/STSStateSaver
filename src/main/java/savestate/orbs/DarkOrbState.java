@@ -5,11 +5,11 @@ import com.megacrit.cardcrawl.orbs.Dark;
 
 public class DarkOrbState extends OrbState {
     public DarkOrbState(AbstractOrb orb) {
-        super(orb, Orb.DARK.ordinal());
+        super(orb);
     }
 
     public DarkOrbState(String jsonString) {
-        super(jsonString, Orb.DARK.ordinal());
+        super(jsonString);
     }
 
     @Override

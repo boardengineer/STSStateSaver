@@ -5,23 +5,25 @@ import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import savestate.StateFactories;
 
-public abstract class OrbState {
-    public int evokeAmount = 0;
-    public int passiveAmount = 0;
-    public int lookupIndex;
+import java.util.function.Function;
 
-    public OrbState(AbstractOrb orb, int lookupIndex) {
+public abstract class OrbState {
+    public final int evokeAmount;
+    public final int passiveAmount;
+    public final String lookupKey;
+
+    public OrbState(AbstractOrb orb) {
         this.evokeAmount = orb.evokeAmount;
         this.passiveAmount = orb.passiveAmount;
-        this.lookupIndex = lookupIndex;
+        this.lookupKey = orb.getClass().getSimpleName();
     }
 
-    public OrbState(String jsonString, int lookupIndex) {
+    public OrbState(String jsonString) {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.evokeAmount = parsed.get("evoke_amount").getAsInt();
         this.passiveAmount = parsed.get("passive_amount").getAsInt();
-        this.lookupIndex = lookupIndex;
+        this.lookupKey = parsed.get("lookup_key").getAsString();
     }
 
     public String encode() {
@@ -29,7 +31,7 @@ public abstract class OrbState {
 
         result.addProperty("evoke_amount", evokeAmount);
         result.addProperty("passive_amount", passiveAmount);
-        result.addProperty("lookup_index", lookupIndex);
+        result.addProperty("lookup_key", lookupKey);
 
         return result.toString();
 
@@ -38,14 +40,24 @@ public abstract class OrbState {
     public abstract AbstractOrb loadOrb();
 
     public static OrbState forOrb(AbstractOrb orb) {
-        return StateFactories.orbByClassMap.get(orb.getClass()).factory.apply(orb);
+        return StateFactories.orbByClassMap.get(orb.getClass().getSimpleName()).factory.apply(orb);
     }
 
     public static OrbState forJsonString(String jsonString) {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
-        int lookupIndex = parsed.get("lookup_index").getAsInt();
+        String lookupKey = parsed.get("lookup_key").getAsString();
 
-        return Orb.values()[lookupIndex].jsonFactory.apply(jsonString);
+        return StateFactories.orbByClassMap.get(lookupKey).jsonFactory.apply(jsonString);
+    }
+
+    public static class OrbFactories {
+        public Function<AbstractOrb, OrbState> factory;
+        public Function<String, OrbState> jsonFactory;
+
+        public OrbFactories(Function<AbstractOrb, OrbState> factory, Function<String, OrbState> jsonFactory) {
+            this.factory = factory;
+            this.jsonFactory = jsonFactory;
+        }
     }
 }

@@ -16,11 +16,11 @@ import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.actionManager;
 
 public class FrostOrbState extends OrbState {
     public FrostOrbState(AbstractOrb orb) {
-        super(orb, Orb.FROST.ordinal());
+        super(orb);
     }
 
     public FrostOrbState(String jsonString) {
-        super(jsonString, Orb.FROST.ordinal());
+        super(jsonString);
     }
 
     @Override

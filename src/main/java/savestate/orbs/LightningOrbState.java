@@ -5,11 +5,11 @@ import com.megacrit.cardcrawl.orbs.Lightning;
 
 public class LightningOrbState extends OrbState {
     public LightningOrbState(AbstractOrb orb) {
-        super(orb, Orb.LIGHTNING.ordinal());
+        super(orb);
     }
 
     public LightningOrbState(String jsonString) {
-        super(jsonString, Orb.LIGHTNING.ordinal());
+        super(jsonString);
     }
 
     @Override

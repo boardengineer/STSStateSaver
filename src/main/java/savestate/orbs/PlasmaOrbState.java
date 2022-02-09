@@ -5,11 +5,11 @@ import com.megacrit.cardcrawl.orbs.Plasma;
 
 public class PlasmaOrbState extends OrbState {
     public PlasmaOrbState(AbstractOrb orb) {
-        super(orb, Orb.PLASMA.ordinal());
+        super(orb);
     }
 
     public PlasmaOrbState(String jsonString) {
-        super(jsonString, Orb.PLASMA.ordinal());
+        super(jsonString);
     }
 
     @Override

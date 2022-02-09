@@ -8,6 +8,7 @@ import savestate.actions.CurrentActionState;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
 import savestate.orbs.Orb;
+import savestate.orbs.OrbState;
 import savestate.powers.Power;
 import savestate.powers.PowerState;
 import savestate.relics.Relic;
@@ -35,7 +36,7 @@ public class StateFactories {
     public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
-    public static HashMap<Class, Orb> orbByClassMap = createOrbMap();
+    public static HashMap<String, OrbState.OrbFactories> orbByClassMap = createOrbMap();
 
     private static HashMap<String, MonsterState.MonsterFactories> createMonsterMap() {
         HashMap<String, MonsterState.MonsterFactories> monsterByIdmap = new HashMap<>();
@@ -90,11 +91,13 @@ public class StateFactories {
         return currentActionByClassMap;
     }
 
-    private static HashMap<Class, Orb> createOrbMap() {
-        HashMap<Class, Orb> orbByClassMap = new HashMap<>();
-        for (Orb orb : Orb.values()) {
-            orbByClassMap.put(orb.orbClass, orb);
+    private static HashMap<String, OrbState.OrbFactories> createOrbMap() {
+        HashMap<String, OrbState.OrbFactories> orbFactoryByClassMap = new HashMap<>();
+
+        for (Orb orbEnum : Orb.values()) {
+            orbFactoryByClassMap
+                    .put(orbEnum.orbClass.getSimpleName(), new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory));
         }
-        return orbByClassMap;
+        return orbFactoryByClassMap;
     }
 }
