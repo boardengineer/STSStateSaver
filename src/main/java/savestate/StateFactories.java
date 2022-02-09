@@ -37,6 +37,7 @@ public class StateFactories {
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
     public static HashMap<String, OrbState.OrbFactories> orbByClassMap = createOrbMap();
+    public static HashMap<String, AbstractCardModifierState.CardModifierStateFactories> cardModifierFactories = new HashMap<>();
 
     private static HashMap<String, MonsterState.MonsterFactories> createMonsterMap() {
         HashMap<String, MonsterState.MonsterFactories> monsterByIdmap = new HashMap<>();
@@ -96,7 +97,8 @@ public class StateFactories {
 
         for (Orb orbEnum : Orb.values()) {
             orbFactoryByClassMap
-                    .put(orbEnum.orbClass.getSimpleName(), new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory));
+                    .put(orbEnum.orbClass
+                            .getSimpleName(), new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory));
         }
         return orbFactoryByClassMap;
     }

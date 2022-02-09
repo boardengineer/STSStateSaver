@@ -1,5 +1,7 @@
 package savestate;
 
+import basemod.helpers.CardModifierManager;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -58,6 +60,8 @@ public class CardState {
     private final float drawScale;
     private final float targetDrawScale;
 
+    private final ArrayList<AbstractCardModifierState> cardModifiers;
+
     // private final HitboxState hb;
     public CardState(AbstractCard card) {
         long cardConstructorStartTime = System.currentTimeMillis();
@@ -103,6 +107,10 @@ public class CardState {
         this.dontTriggerOnUseCard = card.dontTriggerOnUseCard;
         this.isEthereal = card.isEthereal;
         this.shuffleBackIntoDrawPile = card.shuffleBackIntoDrawPile;
+
+        this.cardModifiers = new ArrayList<>();
+        CardModifierManager.modifiers(card).forEach(modifier -> cardModifiers
+                .add(AbstractCardModifierState.forModifier(modifier)));
     }
 
     public CardState(String jsonString) {
@@ -136,6 +144,10 @@ public class CardState {
         this.retain = parsed.get("retain").getAsBoolean();
         this.selfRetain = parsed.get("self_retain").getAsBoolean();
         this.shuffleBackIntoDrawPile = parsed.get("shuffle_back_into_draw_pile").getAsBoolean();
+
+        this.cardModifiers = new ArrayList<>();
+        parsed.get("modifiers").getAsJsonArray().forEach(jsonElement -> cardModifiers
+                .add(AbstractCardModifierState.forString(jsonElement.getAsString())));
 
         // TODO
         this.current_x = 0;
@@ -196,6 +208,10 @@ public class CardState {
         result.selfRetain = selfRetain;
         result.shuffleBackIntoDrawPile = shuffleBackIntoDrawPile;
 
+        for (AbstractCardModifierState modifierState : cardModifiers) {
+            CardModifierManager.addModifier(result, modifierState.loadModifier());
+        }
+
         return result;
     }
 
@@ -232,6 +248,12 @@ public class CardState {
         cardStateJson.addProperty("retain", retain);
         cardStateJson.addProperty("self_retain", selfRetain);
         cardStateJson.addProperty("shuffle_back_into_draw_pile", shuffleBackIntoDrawPile);
+
+        JsonArray modifierJsonArray = new JsonArray();
+        for (AbstractCardModifierState state : cardModifiers) {
+            modifierJsonArray.add(state.encode());
+        }
+        cardStateJson.add("modifiers", modifierJsonArray);
 
         return cardStateJson.toString();
     }
@@ -305,6 +327,9 @@ public class CardState {
     }
 
     private static AbstractCard getFreshCard(String key) {
+        if (CardLibrary.getCard(key) == null) {
+            System.err.println("can't find " + key);
+        }
         return CardLibrary.getCard(key).makeCopy();
     }
 
