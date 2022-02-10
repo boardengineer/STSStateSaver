@@ -455,6 +455,12 @@ public class PlayerState extends CreatureState {
         }
         playerStateJson.add("orbs_channeled_this_combat", orbChanneledThisCombatArray);
 
+        JsonArray orbArray = new JsonArray();
+        for (OrbState orb : orbs) {
+            orbArray.add(orb.encode());
+        }
+        playerStateJson.add("orbs", orbArray);
+
         return playerStateJson.toString();
     }
 
@@ -463,6 +469,17 @@ public class PlayerState extends CreatureState {
         JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
 
         boolean allMatch = true;
+
+        boolean orbsMatch = one.get("orbs").toString()
+                               .equals(two.get("orbs").toString());
+
+        if (!orbsMatch) {
+            allMatch = false;
+            System.err.println("player orbs mismatch");
+            System.err.println(one.get("orbs").toString());
+            System.err.println("-----------------------------------");
+            System.err.println(two.get("orbs").toString());
+        }
 
 
         boolean discardMatch = one.get("discard_pile").getAsString()

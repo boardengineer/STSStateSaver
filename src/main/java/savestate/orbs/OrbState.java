@@ -1,5 +1,6 @@
 package savestate.orbs;
 
+import basemod.ReflectionHacks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
@@ -10,11 +11,20 @@ import java.util.function.Function;
 public abstract class OrbState {
     public final int evokeAmount;
     public final int passiveAmount;
+
+    public final int baseEvokeAmount;
+    public final int basePassiveAmount;
+
     public final String lookupKey;
 
     public OrbState(AbstractOrb orb) {
         this.evokeAmount = orb.evokeAmount;
         this.passiveAmount = orb.passiveAmount;
+
+        this.baseEvokeAmount = ReflectionHacks
+                .getPrivate(orb, AbstractOrb.class, "baseEvokeAmount");
+        this.basePassiveAmount = ReflectionHacks
+                .getPrivate(orb, AbstractOrb.class, "basePassiveAmount");
         this.lookupKey = orb.getClass().getSimpleName();
     }
 
@@ -23,6 +33,10 @@ public abstract class OrbState {
 
         this.evokeAmount = parsed.get("evoke_amount").getAsInt();
         this.passiveAmount = parsed.get("passive_amount").getAsInt();
+
+        this.baseEvokeAmount = parsed.get("base_evoke_amount").getAsInt();
+        this.basePassiveAmount = parsed.get("base_passive_amount").getAsInt();
+
         this.lookupKey = parsed.get("lookup_key").getAsString();
     }
 
@@ -31,6 +45,10 @@ public abstract class OrbState {
 
         result.addProperty("evoke_amount", evokeAmount);
         result.addProperty("passive_amount", passiveAmount);
+
+        result.addProperty("base_evoke_amount", evokeAmount);
+        result.addProperty("base_passive_amount", passiveAmount);
+
         result.addProperty("lookup_key", lookupKey);
 
         return result.toString();
