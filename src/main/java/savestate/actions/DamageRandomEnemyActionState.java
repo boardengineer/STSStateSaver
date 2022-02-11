@@ -19,7 +19,7 @@ public class DamageRandomEnemyActionState implements ActionState {
         DamageInfo info = ReflectionHacks.getPrivate(action, DamageRandomEnemyAction.class, "info");
 
         this.ownerIndex = ActionState.indexForCreature(info.owner);
-        this.amount = action.amount;
+        this.amount = info.base;
         this.type = info.type;
     }
 

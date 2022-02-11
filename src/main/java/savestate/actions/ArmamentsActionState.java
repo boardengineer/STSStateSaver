@@ -52,7 +52,7 @@ public class ArmamentsActionState implements CurrentActionState {
     public static class NoDoubleArmamentsPatch {
         public static void Postfix(ArmamentsAction _instance) {
             // Force the action to stay in the the manager until cards are selected
-            if (!AbstractDungeon.handCardSelectScreen.wereCardsRetrieved && AbstractDungeon.isScreenUp) {
+            if (AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;
             }
         }
