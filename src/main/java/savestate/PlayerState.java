@@ -515,15 +515,6 @@ public class PlayerState extends CreatureState {
             System.err.println(two.get("hand").getAsString());
         }
 
-        boolean decksMatch = one.get("hand").getAsString().equals(two.get("hand").getAsString());
-        if (!handsMatch) {
-            allMatch = false;
-            System.err.println("player hand mismatch");
-            System.err.println(one.get("hand").getAsString());
-            System.err.println("-----------------------------------");
-            System.err.println(two.get("hand").getAsString());
-        }
-
         boolean stanceMatch = one.get("stance").getAsString()
                                  .equals(two.get("stance").getAsString());
         if (!stanceMatch) {

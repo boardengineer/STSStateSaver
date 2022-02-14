@@ -1,22 +1,26 @@
 package savestate.selectscreen;
 
 import basemod.ReflectionHacks;
-import savestate.actions.ActionState;
-import savestate.actions.CurrentActionState;
-import savestate.CardState;
-import savestate.PlayerState;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.GameActionManager;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.select.HandCardSelectScreen;
+import savestate.CardQueueItemState;
+import savestate.CardState;
+import savestate.PlayerState;
+import savestate.actions.ActionState;
+import savestate.actions.CurrentActionState;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class HandSelectScreenState {
     private final int numCardsToSelect;
+
     private final ArrayList<CardState> selectedCards;
     private final ArrayList<ActionState> actionQueue;
+    private final ArrayList<CardQueueItemState> cardQueueState;
+
     private final boolean wereCardsRetrieved;
     private final boolean canPickZero;
     private final boolean upTo;
@@ -51,12 +55,17 @@ public class HandSelectScreenState {
             currentActionState = CurrentActionState.getCurrentActionState();
             actionQueue = ActionState.getActionQueueState();
 
+            cardQueueState = new ArrayList<>();
+            AbstractDungeon.actionManager.cardQueue.forEach(cardQueueItem -> cardQueueState
+                    .add(new CardQueueItemState(cardQueueItem)));
+
             if (actionQueue.isEmpty()) {
                 throw new IllegalStateException("The action queue shouldn't be empty in the middle of a selection screen");
             }
         } else {
             currentActionState = null;
             actionQueue = null;
+            cardQueueState = null;
         }
 
     }
@@ -89,6 +98,10 @@ public class HandSelectScreenState {
             AbstractDungeon.actionManager.actions.clear();
             actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
                     .loadAction()));
+
+            AbstractDungeon.actionManager.cardQueue.clear();
+            cardQueueState.forEach(cardQueueItemState -> AbstractDungeon.actionManager.cardQueue
+                    .add(cardQueueItemState.loadItem()));
 
             AbstractDungeon.actionManager.currentAction = currentActionState.loadCurrentAction();
             AbstractDungeon.actionManager.phase = GameActionManager.Phase.EXECUTING_ACTIONS;

@@ -247,6 +247,9 @@ public class SaveState {
 
         AbstractDungeon.gridSelectScreen.selectedCards.clear();
         AbstractDungeon.gridSelectScreen.confirmButton.hb.clicked = false;
+
+        AbstractDungeon.actionManager.cardQueue.clear();
+
         if (handSelectScreenState != null) {
             handSelectScreenState.loadHandSelectScreenState();
         } else if (gridCardSelectScreenState != null) {
