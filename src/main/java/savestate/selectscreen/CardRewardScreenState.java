@@ -6,6 +6,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.screens.CardRewardScreen;
+import savestate.CardQueueItemState;
 import savestate.CardState;
 import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class CardRewardScreenState {
     private final CurrentActionState currentActionState;
     private final ArrayList<ActionState> actionQueue;
+    private final ArrayList<CardQueueItemState> cardQueueState;
 
     private final RewardItem rItem;
     private final boolean discovery;
@@ -49,9 +51,14 @@ public class CardRewardScreenState {
         if (AbstractDungeon.actionManager.currentAction != null) {
             currentActionState = CurrentActionState.getCurrentActionState();
             actionQueue = ActionState.getActionQueueState();
+
+            cardQueueState = new ArrayList<>();
+            AbstractDungeon.actionManager.cardQueue.forEach(cardQueueItem -> cardQueueState
+                    .add(new CardQueueItemState(cardQueueItem)));
         } else {
             currentActionState = null;
             actionQueue = null;
+            cardQueueState = null;
         }
     }
 
@@ -76,6 +83,10 @@ public class CardRewardScreenState {
 
             actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
                     .loadAction()));
+
+            AbstractDungeon.actionManager.cardQueue.clear();
+            cardQueueState.forEach(cardQueueItemState -> AbstractDungeon.actionManager.cardQueue
+                    .add(cardQueueItemState.loadItem()));
         }
 
         screen.rewardGroup.clear();
