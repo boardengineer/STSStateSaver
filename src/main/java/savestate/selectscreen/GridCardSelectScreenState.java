@@ -7,6 +7,7 @@ import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.select.GridCardSelectScreen;
+import savestate.CardQueueItemState;
 import savestate.SaveState;
 import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
@@ -22,6 +23,7 @@ public class GridCardSelectScreenState {
     // TODO this will probably need to be turned into a State object
     private final boolean isDiscard;
     private final ArrayList<SaveState.CardStateContainer> groupCards;
+    private final ArrayList<CardQueueItemState> cardQueueState;
 
     private final boolean isConfirmButtonDisabled;
     private final int cardSelectAmount;
@@ -77,9 +79,13 @@ public class GridCardSelectScreenState {
         if (AbstractDungeon.actionManager.currentAction != null) {
             currentActionState = CurrentActionState.getCurrentActionState();
             actionQueue = ActionState.getActionQueueState();
+            cardQueueState = new ArrayList<>();
+            AbstractDungeon.actionManager.cardQueue.forEach(cardQueueItem -> cardQueueState
+                    .add(new CardQueueItemState(cardQueueItem)));
         } else {
             currentActionState = null;
             actionQueue = null;
+            cardQueueState = null;
         }
     }
 
@@ -110,6 +116,9 @@ public class GridCardSelectScreenState {
 
             actionQueue.forEach(action -> AbstractDungeon.actionManager.actions.add(action
                     .loadAction()));
+            AbstractDungeon.actionManager.cardQueue.clear();
+            cardQueueState.forEach(cardQueueItemState -> AbstractDungeon.actionManager.cardQueue
+                    .add(cardQueueItemState.loadItem()));
         }
 
         if (isDiscard) {
