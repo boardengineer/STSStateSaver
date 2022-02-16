@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public interface ActionState {
     AbstractGameAction loadAction();
@@ -62,12 +63,12 @@ public interface ActionState {
         add(WaitAction.class);
     }};
 
-    static ArrayList<ActionState> getActionQueueState() {
-        ArrayList<ActionState> actionQueue = new ArrayList<>();
+    static ArrayList<ActionState> toActionStateArray(ArrayList<AbstractGameAction> actions) {
+        ArrayList<ActionState> result = new ArrayList<>();
 
-        for (AbstractGameAction action : AbstractDungeon.actionManager.actions) {
+        for (AbstractGameAction action : actions) {
             if (StateFactories.actionByClassMap.containsKey(action.getClass())) {
-                actionQueue.add(StateFactories.actionByClassMap.get(action.getClass()).factory
+                result.add(StateFactories.actionByClassMap.get(action.getClass()).factory
                         .apply(action));
             } else if (ActionState.IGNORED_ACTIONS.contains(action.getClass())) {
                 // These are visual effects that are not worth encoding
@@ -76,7 +77,16 @@ public interface ActionState {
             }
         }
 
-        return actionQueue;
+        return result;
+    }
+
+    static ArrayList<AbstractGameAction> toGameActions(ArrayList<ActionState> actionStates) {
+        return actionStates.stream().map(ActionState::loadAction)
+                           .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    static ArrayList<ActionState> getActionQueueState() {
+        return toActionStateArray(AbstractDungeon.actionManager.actions);
     }
 
     class ActionFactories {
