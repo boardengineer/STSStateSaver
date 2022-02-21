@@ -45,6 +45,7 @@ public enum Action {
     MAKE_TEMP_CARD_IN_HAND_ACTION(MakeTempCardInHandAction.class, action -> new MakeTempCardInHandActionState(action)),
     MONSTER_START_TURN_ACTION(MonsterStartTurnAction.class, action -> new MonsterStartTurnActionState()),
     NEW_QUEUE_CARD_ACTION(NewQueueCardAction.class, action -> new NewQueueCardActionState()),
+    OBTAIN_POTION_ACTION(ObtainPotionAction.class, action -> new ObtainPotionActionState(action)),
     PRESS_END_TURN_BUTTON_ACTION(PressEndTurnButtonAction.class, action -> new PressEndTurnButtonActionState()),
     REDUCE_POWER_ACTION(ReducePowerAction.class, action -> new ReducePowerActionState(action)),
     REMOVE_DEBUFFS_ACTION(RemoveDebuffsAction.class, action -> new RemoveDebuffsActionState(action)),
