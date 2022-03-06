@@ -2,30 +2,22 @@ package savestate;
 
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.mod.stslib.patches.core.AbstractCreature.TempHPField;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.megacrit.cardcrawl.actions.defect.ChannelAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
-import com.megacrit.cardcrawl.orbs.AbstractOrb;
-import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
 import com.megacrit.cardcrawl.stances.AbstractStance;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
-import savestate.relics.RelicState;
 import savestate.orbs.OrbState;
+import savestate.relics.RelicState;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static savestate.SaveStateMod.addRuntime;
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class PlayerState extends CreatureState {
@@ -61,6 +53,7 @@ public class PlayerState extends CreatureState {
     public final ArrayList<CardState> limbo;
 
     public int maxOrbs;
+    public int masterMaxOrbs;
 
     public ArrayList<OrbState> orbs;
     public ArrayList<OrbState> orbsChanneledThisCombat;
@@ -115,6 +108,7 @@ public class PlayerState extends CreatureState {
         this.inspectHb = player.inspectHb == null ? null : new HitboxState(player.inspectHb);
         this.damagedThisCombat = player.damagedThisCombat;
         this.maxOrbs = player.maxOrbs;
+        this.masterMaxOrbs = player.masterMaxOrbs;
         this.potionSLots = player.potionSlots;
         this.stance = player.stance.ID;
 
@@ -172,6 +166,7 @@ public class PlayerState extends CreatureState {
                 .add(new PotionState(potionElement.getAsString())));
 
         this.maxOrbs = parsed.get("max_orbs").getAsInt();
+        this.masterMaxOrbs = parsed.get("master_max_orbs").getAsInt();
 
         this.orbs = new ArrayList<>();
         parsed.get("orbs").getAsJsonArray().forEach(orbElement -> this.orbs
@@ -189,11 +184,7 @@ public class PlayerState extends CreatureState {
     }
 
     public AbstractPlayer loadPlayer() {
-        long startLoad = System.currentTimeMillis();
-
         AbstractPlayer player = CardCrawlGame.characterManager.getCharacter(chosenClass);
-
-        addRuntime("player 0", System.currentTimeMillis() - startLoad);
 
         // There are cases where the contents of the hand effect the creation of powers, we
         // want to force the state instead; the other free calls may need to be moved up here as
@@ -212,8 +203,6 @@ public class PlayerState extends CreatureState {
 
         super.loadCreature(player);
 
-        addRuntime("player 1", System.currentTimeMillis() - startLoad);
-
         player.chosenClass = this.chosenClass;
         player.gameHandSize = this.gameHandSize;
         player.masterHandSize = this.masterHandSize;
@@ -227,17 +216,15 @@ public class PlayerState extends CreatureState {
         CardState.freeCardList(player.exhaustPile.group);
         CardState.freeCardList(player.limbo.group);
 
-        addRuntime("player 2", System.currentTimeMillis() - startLoad);
-
         player.masterDeck.group = this.masterDeck.stream().map(CardState::loadCard)
                                                  .collect(Collectors.toCollection(ArrayList::new));
 
-        addRuntime("player 20", System.currentTimeMillis() - startLoad);
-
         player.drawPile.group = this.drawPile.stream().map(CardState::loadCard)
                                              .collect(Collectors.toCollection(ArrayList::new));
+
         player.hand.group = this.hand.stream().map(CardState::loadCard)
                                      .collect(Collectors.toCollection(ArrayList::new));
+
         player.discardPile.group = this.discardPile.stream().map(CardState::loadCard)
                                                    .collect(Collectors
                                                            .toCollection(ArrayList::new));
@@ -245,10 +232,9 @@ public class PlayerState extends CreatureState {
         player.exhaustPile.group = this.exhaustPile.stream().map(CardState::loadCard)
                                                    .collect(Collectors
                                                            .toCollection(ArrayList::new));
+
         player.limbo.group = this.limbo.stream().map(CardState::loadCard)
                                        .collect(Collectors.toCollection(ArrayList::new));
-
-        addRuntime("player 21", System.currentTimeMillis() - startLoad);
 
         player.potions = this.potions.stream().map(PotionState::loadPotion)
                                      .collect(Collectors.toCollection(ArrayList::new));
@@ -277,6 +263,7 @@ public class PlayerState extends CreatureState {
         player.damagedThisCombat = this.damagedThisCombat;
         player.title = this.title;
         player.maxOrbs = this.maxOrbs;
+        player.masterMaxOrbs = this.masterMaxOrbs;
 
         player.stance = AbstractStance.getStanceFromName(stance);
 
@@ -290,13 +277,11 @@ public class PlayerState extends CreatureState {
             }
             player.update();
         }
-        addRuntime("player total", System.currentTimeMillis() - startLoad);
-
         TempHPField.tempHp.set(player, temporaryHp);
 
         return player;
     }
-
+/*
     @SpirePatch(clz = ChannelAction.class, method = "update")
     public static class tsSpy2 {
         @SpirePrefixPatch
@@ -327,7 +312,7 @@ public class PlayerState extends CreatureState {
                 return SpireReturn.Continue();
             }
         }
-    }
+    }*/
 
     public int getDamagedThisCombat() {
         return damagedThisCombat;
@@ -393,6 +378,7 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("relics", relics.stream().map(RelicState::encode)
                                                     .collect(Collectors.joining(RELIC_DELIMETER)));
         playerStateJson.addProperty("max_orbs", maxOrbs);
+        playerStateJson.addProperty("master_max_orbs", masterMaxOrbs);
 
         JsonArray potionArray = new JsonArray();
         for (PotionState potion : potions) {
@@ -446,6 +432,7 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("energy_manager_max_master", energyManagerMaxMaster);
         playerStateJson.addProperty("energy_panel_total_energy", energyPanelTotalEnergy);
         playerStateJson.addProperty("stance", stance);
+        playerStateJson.addProperty("max_orbs", maxOrbs);
 
         playerStateJson.addProperty("creature", super.diffEncode());
 
@@ -469,6 +456,14 @@ public class PlayerState extends CreatureState {
         JsonObject two = new JsonParser().parse(diffString2).getAsJsonObject();
 
         boolean allMatch = true;
+
+        boolean maxOrbsMatch = one.get("max_orbs").toString()
+                                  .equals(two.get("max_orbs").toString());
+        if(!maxOrbsMatch) {
+            allMatch = false;
+            System.err.println(String.format("max orbs mismatch actual: %s expected: %s",
+                    one.get("max_orbs").toString(), two.get("max_orbs").toString()));
+        }
 
         boolean orbsMatch = one.get("orbs").toString()
                                .equals(two.get("orbs").toString());

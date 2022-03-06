@@ -327,10 +327,13 @@ public class CardState {
     }
 
     private static AbstractCard getFreshCard(String key) {
-        if (CardLibrary.getCard(key) == null) {
+        AbstractCard card = CardLibrary.getCard(key);
+
+        if (card == null) {
             System.err.println("can't find " + key);
         }
-        return CardLibrary.getCard(key).makeCopy();
+
+        return card.makeCopy();
     }
 
     public static int indexForCard(AbstractCard card) {
