@@ -15,6 +15,7 @@ import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -127,7 +128,16 @@ public class PlayerState extends CreatureState {
         AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
         SaveStateMod.shouldResetDungeon = true;
 
-        CardCrawlGame.dungeon.initializeCardPools();
+        boolean cardsInitialized = false;
+
+        while (!cardsInitialized) {
+            try {
+                CardCrawlGame.dungeon.initializeCardPools();
+                cardsInitialized = true;
+            } catch (ConcurrentModificationException e) {
+                e.printStackTrace();
+            }
+        }
 
         this.gameHandSize = parsed.get("game_hand_size").getAsInt();
         this.masterHandSize = parsed.get("master_hand_size").getAsInt();
@@ -459,7 +469,7 @@ public class PlayerState extends CreatureState {
 
         boolean maxOrbsMatch = one.get("max_orbs").toString()
                                   .equals(two.get("max_orbs").toString());
-        if(!maxOrbsMatch) {
+        if (!maxOrbsMatch) {
             allMatch = false;
             System.err.println(String.format("max orbs mismatch actual: %s expected: %s",
                     one.get("max_orbs").toString(), two.get("max_orbs").toString()));

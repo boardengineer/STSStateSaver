@@ -122,8 +122,13 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
     @Override
     public void receivePreUpdate() {
         if (shouldResetDungeon) {
-            shouldResetDungeon = false;
-            new Exordium(AbstractDungeon.player, new ArrayList<>());
+            try {
+                new Exordium(AbstractDungeon.player, new ArrayList<>());
+                shouldResetDungeon = false;
+            } catch (NullPointerException e) {
+                System.err.println("Error Resetting Dungeon");
+                e.printStackTrace();
+            }
         }
     }
 
