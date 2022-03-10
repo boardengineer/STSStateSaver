@@ -134,7 +134,8 @@ public class PlayerState extends CreatureState {
             try {
                 CardCrawlGame.dungeon.initializeCardPools();
                 cardsInitialized = true;
-            } catch (ConcurrentModificationException e) {
+            } catch (ConcurrentModificationException | NullPointerException | IndexOutOfBoundsException e) {
+                System.err.println("Exception trying to init card pools");
                 e.printStackTrace();
             }
         }
