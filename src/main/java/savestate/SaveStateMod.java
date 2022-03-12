@@ -15,6 +15,7 @@ import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -125,7 +126,7 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
             try {
                 new Exordium(AbstractDungeon.player, new ArrayList<>());
                 shouldResetDungeon = false;
-            } catch (NullPointerException e) {
+            } catch (NullPointerException | ConcurrentModificationException e) {
                 System.err.println("Error Resetting Dungeon");
                 e.printStackTrace();
             }

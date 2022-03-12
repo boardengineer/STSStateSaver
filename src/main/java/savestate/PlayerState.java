@@ -16,7 +16,6 @@ import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -137,7 +136,7 @@ public class PlayerState extends CreatureState {
             try {
                 CardCrawlGame.dungeon.initializeCardPools();
                 cardsInitialized = true;
-            } catch (ConcurrentModificationException | NullPointerException | IndexOutOfBoundsException e) {
+            } catch (RuntimeException e) {
                 System.err.println("Exception trying to init card pools");
                 e.printStackTrace();
             }
