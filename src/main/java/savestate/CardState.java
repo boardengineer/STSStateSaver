@@ -340,25 +340,30 @@ public class CardState {
         int testIndex = 0;
 
         for (AbstractCard candidate : AbstractDungeon.player.hand.group) {
-            if (candidate == candidate) {
+            if (card == candidate) {
                 return testIndex;
             }
             testIndex++;
         }
 
         for (AbstractCard candidate : AbstractDungeon.player.discardPile.group) {
-            if (candidate == candidate) {
+            if (card == candidate) {
                 return testIndex;
             }
             testIndex++;
         }
 
         for (AbstractCard candidate : AbstractDungeon.player.drawPile.group) {
-            if (candidate == candidate) {
+            if (card == candidate) {
                 return testIndex;
             }
             testIndex++;
         }
+
+        if (card == AbstractDungeon.player.cardInUse) {
+            return testIndex;
+        }
+        testIndex++;
 
         return -1;
     }
@@ -388,6 +393,12 @@ public class CardState {
             if (index == testIndex) {
                 return candidate;
             }
+            testIndex++;
+        }
+
+        if (index == testIndex) {
+            return AbstractDungeon.player.cardInUse;
+        } else {
             testIndex++;
         }
 

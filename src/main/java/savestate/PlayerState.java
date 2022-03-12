@@ -3,6 +3,7 @@ package savestate;
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.mod.stslib.patches.core.AbstractCreature.TempHPField;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -46,6 +47,8 @@ public class PlayerState extends CreatureState {
 
     private final boolean renderCorpse;
 
+    public final CardState cardInUse;
+
     public final ArrayList<CardState> masterDeck;
     public final ArrayList<CardState> drawPile;
     public final ArrayList<CardState> hand;
@@ -79,7 +82,7 @@ public class PlayerState extends CreatureState {
         this.discardPile = toCardStateArray(player.discardPile.group);
         this.exhaustPile = toCardStateArray(player.exhaustPile.group);
         this.limbo = toCardStateArray(player.limbo.group);
-
+        this.cardInUse = player.cardInUse == null ? null : new CardState(player.cardInUse);
 
         this.relics = player.relics.stream().map(RelicState::forRelic)
                                    .collect(Collectors.toCollection(ArrayList::new));
@@ -159,6 +162,9 @@ public class PlayerState extends CreatureState {
 
         this.title = parsed.get("title").getAsString();
 
+        this.cardInUse = parsed.get("card_in_use").isJsonNull() ? null : new CardState(parsed
+                .get("card_in_use").getAsString());
+
         this.masterDeck = decodeCardList(parsed.get("master_deck").getAsString());
         this.drawPile = decodeCardList(parsed.get("draw_pile").getAsString());
         this.hand = decodeCardList(parsed.get("hand").getAsString());
@@ -226,6 +232,8 @@ public class PlayerState extends CreatureState {
         CardState.freeCardList(player.discardPile.group);
         CardState.freeCardList(player.exhaustPile.group);
         CardState.freeCardList(player.limbo.group);
+
+        player.cardInUse = this.cardInUse == null ? null : this.cardInUse.loadCard();
 
         player.masterDeck.group = this.masterDeck.stream().map(CardState::loadCard)
                                                  .collect(Collectors.toCollection(ArrayList::new));
@@ -376,6 +384,9 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("damaged_this_combat", damagedThisCombat);
         playerStateJson.addProperty("title", title);
 
+        playerStateJson
+                .add("card_in_use", this.cardInUse != null ? new JsonParser().parse(this.cardInUse
+                        .encode()) : JsonNull.INSTANCE);
         playerStateJson.addProperty("master_deck", encodeCardList(masterDeck));
         playerStateJson.addProperty("draw_pile", encodeCardList(drawPile));
         playerStateJson.addProperty("hand", encodeCardList(hand));
