@@ -55,11 +55,7 @@ public class MapRoomNodeState {
         long startMonsterSave = System.currentTimeMillis();
 
         if (room.monsters != null) {
-            ArrayList<MonsterState> monsters = new ArrayList<>();
-            for (AbstractMonster monster : room.monsters.monsters) {
-                monsters.add(MonsterState.forMonster(monster));
-            }
-            this.monsterData = monsters;
+            this.monsterData = room.monsters.monsters.stream().map(MonsterState::forMonster).collect(Collectors.toCollection(ArrayList::new));
         }
 
         this.isBattleOver = room.isBattleOver;

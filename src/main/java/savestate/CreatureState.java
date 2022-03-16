@@ -63,7 +63,7 @@ public class CreatureState {
     public CreatureState(AbstractCreature creature) {
         this.name = creature.name;
         this.id = creature.id;
-        this.powers = creature.powers.stream().map(PowerState::forPower)
+        this.powers = creature.powers.parallelStream().map(PowerState::forPower)
                                      .collect(Collectors.toCollection(ArrayList::new));
         this.isPlayer = creature.isPlayer;
         this.isBloodied = creature.isBloodied;
@@ -151,7 +151,7 @@ public class CreatureState {
         creature.id = this.id;
         addRuntime("creature prepower", System.currentTimeMillis() - start);
 
-        creature.powers = this.powers.stream().map(powerState -> powerState.loadPower(creature))
+        creature.powers = this.powers.parallelStream().map(powerState -> powerState.loadPower(creature))
                                      .collect(Collectors.toCollection(ArrayList::new));
 
         addRuntime("creature 0", System.currentTimeMillis() - start);
@@ -235,7 +235,7 @@ public class CreatureState {
         creatureStateJson.addProperty("hb", hb.encode());
         creatureStateJson.addProperty("health_hb", healthHb.encode());
 
-        creatureStateJson.addProperty("powers", powers.stream().map(PowerState::encode)
+        creatureStateJson.addProperty("powers", powers.parallelStream().map(PowerState::encode)
                                                       .collect(Collectors
                                                               .joining(POWER_DELIMETER)));
 
@@ -248,7 +248,7 @@ public class CreatureState {
         creatureStateJson.addProperty("name", name);
         creatureStateJson.addProperty("current_health", currentHealth);
         creatureStateJson.addProperty("current_block", currentBlock);
-        creatureStateJson.addProperty("powers", powers.stream().map(PowerState::diffEncode)
+        creatureStateJson.addProperty("powers", powers.parallelStream().map(PowerState::diffEncode)
                                                       .collect(Collectors
                                                               .joining(POWER_DELIMETER)));
 

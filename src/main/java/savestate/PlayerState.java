@@ -128,6 +128,7 @@ public class PlayerState extends CreatureState {
 
         // TODO This should ideally happen during load but only once per run
         AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
+        SaveStateMod.shouldResetDungeon = true;
 
         boolean cardsInitialized = false;
 
@@ -140,7 +141,6 @@ public class PlayerState extends CreatureState {
                 e.printStackTrace();
             }
         }
-        SaveStateMod.shouldResetDungeon = true;
 
         this.gameHandSize = parsed.get("game_hand_size").getAsInt();
         this.masterHandSize = parsed.get("master_hand_size").getAsInt();
@@ -207,7 +207,7 @@ public class PlayerState extends CreatureState {
         // well.
         CardState.freeCardList(player.hand.group);
 
-        player.relics = this.relics.stream().map(RelicState::loadRelic)
+        player.relics = this.relics.parallelStream().map(RelicState::loadRelic)
                                    .collect(Collectors.toCollection(ArrayList::new));
 
         if (!shouldGoFast) {
@@ -234,27 +234,27 @@ public class PlayerState extends CreatureState {
 
         player.cardInUse = this.cardInUse == null ? null : this.cardInUse.loadCard();
 
-        player.masterDeck.group = this.masterDeck.stream().map(CardState::loadCard)
+        player.masterDeck.group = this.masterDeck.parallelStream().map(CardState::loadCard)
                                                  .collect(Collectors.toCollection(ArrayList::new));
 
-        player.drawPile.group = this.drawPile.stream().map(CardState::loadCard)
+        player.drawPile.group = this.drawPile.parallelStream().map(CardState::loadCard)
                                              .collect(Collectors.toCollection(ArrayList::new));
 
-        player.hand.group = this.hand.stream().map(CardState::loadCard)
+        player.hand.group = this.hand.parallelStream().map(CardState::loadCard)
                                      .collect(Collectors.toCollection(ArrayList::new));
 
-        player.discardPile.group = this.discardPile.stream().map(CardState::loadCard)
+        player.discardPile.group = this.discardPile.parallelStream().map(CardState::loadCard)
                                                    .collect(Collectors
                                                            .toCollection(ArrayList::new));
 
-        player.exhaustPile.group = this.exhaustPile.stream().map(CardState::loadCard)
+        player.exhaustPile.group = this.exhaustPile.parallelStream().map(CardState::loadCard)
                                                    .collect(Collectors
                                                            .toCollection(ArrayList::new));
 
-        player.limbo.group = this.limbo.stream().map(CardState::loadCard)
+        player.limbo.group = this.limbo.parallelStream().map(CardState::loadCard)
                                        .collect(Collectors.toCollection(ArrayList::new));
 
-        player.potions = this.potions.stream().map(PotionState::loadPotion)
+        player.potions = this.potions.parallelStream().map(PotionState::loadPotion)
                                      .collect(Collectors.toCollection(ArrayList::new));
 
 
@@ -262,11 +262,11 @@ public class PlayerState extends CreatureState {
             player.potions.get(i).setAsObtained(i);
         }
 
-        player.orbs = this.orbs.stream().map(OrbState::loadOrb)
+        player.orbs = this.orbs.parallelStream().map(OrbState::loadOrb)
                                .collect(Collectors.toCollection(ArrayList::new));
 
         AbstractDungeon.actionManager.orbsChanneledThisCombat = this.orbsChanneledThisCombat
-                .stream().map(OrbState::loadOrb)
+                .parallelStream().map(OrbState::loadOrb)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         player.energy.energy = this.energyManagerEnergy;
@@ -423,11 +423,11 @@ public class PlayerState extends CreatureState {
     }
 
     public static String encodeCardList(ArrayList<CardState> cardList) {
-        return cardList.stream().map(CardState::encode).collect(Collectors.joining(CARD_DELIMETER));
+        return cardList.parallelStream().map(CardState::encode).collect(Collectors.joining(CARD_DELIMETER));
     }
 
     private static ArrayList<CardState> decodeCardList(String cardListString) {
-        return Stream.of(cardListString.split(CARD_DELIMETER)).filter(s -> !s.isEmpty())
+        return Stream.of(cardListString.split(CARD_DELIMETER)).parallel().filter(s -> !s.isEmpty())
                      .map(CardState::forString).collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -562,7 +562,7 @@ public class PlayerState extends CreatureState {
     }
 
     public static String diffEncodeCardList(ArrayList<CardState> cardList) {
-        return cardList.stream().map(CardState::diffEncode)
+        return cardList.parallelStream().map(CardState::diffEncode)
                        .collect(Collectors.joining(CARD_DELIMETER));
     }
 }
