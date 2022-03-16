@@ -9,13 +9,10 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
-import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -122,15 +119,15 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
     @Override
     public void receivePreUpdate() {
-        if (shouldResetDungeon) {
-            try {
-                new Exordium(AbstractDungeon.player, new ArrayList<>());
-                shouldResetDungeon = false;
-            } catch (NullPointerException | ConcurrentModificationException e) {
-                System.err.println("Error Resetting Dungeon");
-                e.printStackTrace();
-            }
-        }
+//        if (shouldResetDungeon) {
+//            try {
+//                new Exordium(AbstractDungeon.player, new ArrayList<>());
+//                shouldResetDungeon = false;
+//            } catch (NullPointerException | ConcurrentModificationException | IndexOutOfBoundsException e) {
+//                System.err.println("Error Resetting Dungeon");
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @SpirePatch(clz = PotionHelper.class, method = "initialize")
