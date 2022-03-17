@@ -27,6 +27,7 @@ import savestate.selectscreen.HandSelectScreenState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static savestate.SaveStateMod.addRuntime;
 import static savestate.SaveStateMod.shouldGoFast;
@@ -116,30 +117,31 @@ public class SaveState {
         this.cardsPlayedThisTurn = new ArrayList<>();
         this.cardsPlayedThisTurnBackup = new ArrayList<>();
 
-        AbstractDungeon.actionManager.cardsPlayedThisTurn
-                .forEach(card -> {
-                    int index = allCards.indexOf(card);
-                    if (index == -1) {
-                        // Powers don't have indeces
-                        this.cardsPlayedThisTurnBackup.add(CardState.forCard(card));
-                    } else {
-                        this.cardsPlayedThisTurn.add(allCards.indexOf(card));
-                    }
-                });
+        for (AbstractCard abstractCard : AbstractDungeon.actionManager.cardsPlayedThisTurn) {
+            int index = allCards.indexOf(abstractCard);
+            if (index == -1) {
+                // Powers don't have indeces
+                this.cardsPlayedThisTurnBackup.add(CardState.forCard(abstractCard));
+            } else {
+                this.cardsPlayedThisTurn.add(allCards.indexOf(abstractCard));
+            }
+        }
 
         this.cardsPlayedThisCombat = new ArrayList<>();
         this.lessonLearnedCount = CountLessonLearnedHitsPatch.count;
         this.parasiteCount = CountParasitesPatch.count;
 
-        AbstractDungeon.actionManager.cardsPlayedThisCombat
-                .forEach(card -> this.cardsPlayedThisCombat
-                        .add(CardStateContainer.forCard(card, allCards)));
+        for (AbstractCard abstractCard : AbstractDungeon.actionManager.cardsPlayedThisCombat) {
+            this.cardsPlayedThisCombat
+                    .add(CardStateContainer.forCard(abstractCard, allCards));
+        }
 
         this.gridSelectedCards = new ArrayList<>();
 
-        AbstractDungeon.gridSelectScreen.selectedCards
-                .forEach(card -> this.gridSelectedCards
-                        .add(CardStateContainer.forCard(card, allCards)));
+        for (AbstractCard selectedCard : AbstractDungeon.gridSelectScreen.selectedCards) {
+            this.gridSelectedCards
+                    .add(CardStateContainer.forCard(selectedCard, allCards));
+        }
 
         this.drawnCards = new ArrayList<>();
         this.bombIdOffset = ReflectionHacks.getPrivateStatic(TheBombPower.class, "bombIdOffset");
@@ -147,13 +149,17 @@ public class SaveState {
         this.endTurnQueued = AbstractDungeon.player.endTurnQueued;
         this.isEndingTurn = AbstractDungeon.player.isEndingTurn;
 
-        DrawCardAction.drawnCards.forEach(card -> this.drawnCards.add(allCards.indexOf(card)));
+        for (AbstractCard card : DrawCardAction.drawnCards) {
+            this.drawnCards.add(allCards.indexOf(card));
+        }
         this.gridCardSelectAmount = ReflectionHacks
                 .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
 
-        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
-            additionalElements.put(entry.getKey(), entry.getValue().factory.get());
-        });
+        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories.entrySet()) {
+            final String key = entry.getKey();
+            final StateElement.ElementFactories value = entry.getValue();
+            additionalElements.put(key, value.factory.get());
+        }
     }
 
     public SaveState(String jsonString) {
@@ -199,10 +205,12 @@ public class SaveState {
         this.gridSelectedCards = new ArrayList<>();
         this.drawnCards = new ArrayList<>();
 
-        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
-            additionalElements.put(entry.getKey(), entry.getValue().jsonFactory
-                    .apply(parsed.get(entry.getKey()).getAsString()));
-        });
+        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories.entrySet()) {
+            String key = entry.getKey();
+            StateElement.ElementFactories value = entry.getValue();
+            additionalElements.put(key, value.jsonFactory
+                    .apply(parsed.get(key).getAsString()));
+        }
     }
 
     public void loadState() {
@@ -282,18 +290,24 @@ public class SaveState {
         CountLessonLearnedHitsPatch.count = lessonLearnedCount;
         CountParasitesPatch.count = parasiteCount;
 
-        this.cardsPlayedThisTurn.forEach(index -> AbstractDungeon.actionManager.cardsPlayedThisTurn
-                .add(allCards.get(index)));
-        this.cardsPlayedThisTurnBackup
-                .forEach(card -> AbstractDungeon.actionManager.cardsPlayedThisTurn
-                        .add(card.loadCard()));
+        for (Integer integer : this.cardsPlayedThisTurn) {
+            AbstractDungeon.actionManager.cardsPlayedThisTurn
+                    .add(allCards.get(integer));
+        }
+        for (CardState card : this.cardsPlayedThisTurnBackup) {
+            AbstractDungeon.actionManager.cardsPlayedThisTurn
+                    .add(card.loadCard());
+        }
 
-        this.cardsPlayedThisCombat
-                .forEach(container -> AbstractDungeon.actionManager.cardsPlayedThisCombat
-                        .add(container.loadCard(allCards)));
+        for (CardStateContainer cardStateContainer : this.cardsPlayedThisCombat) {
+            AbstractDungeon.actionManager.cardsPlayedThisCombat
+                    .add(cardStateContainer.loadCard(allCards));
+        }
         AbstractDungeon.gridSelectScreen.selectedCards.clear();
-        this.gridSelectedCards.forEach(container -> AbstractDungeon.gridSelectScreen.selectedCards
-                .add(container.loadCard(allCards)));
+        for (CardStateContainer container : this.gridSelectedCards) {
+            AbstractDungeon.gridSelectScreen.selectedCards
+                    .add(container.loadCard(allCards));
+        }
         addRuntime("load 3", System.currentTimeMillis() - startLoad);
 
         if (!this.gridSelectedCards.isEmpty()) {
@@ -303,11 +317,16 @@ public class SaveState {
         }
 
         DrawCardAction.drawnCards.clear();
-        this.drawnCards.stream().filter(index -> index != -1)
-                       .forEach(index -> DrawCardAction.drawnCards.add(allCards.get(index)));
+        for (Integer index : this.drawnCards) {
+            if (index != -1) {
+                DrawCardAction.drawnCards.add(allCards.get(index));
+            }
+        }
 
 
-        AbstractDungeon.getCurrRoom().monsters.monsters.forEach(AbstractMonster::applyPowers);
+        for (AbstractMonster monster : AbstractDungeon.getCurrRoom().monsters.monsters) {
+            monster.applyPowers();
+        }
         AbstractDungeon.player.hand.applyPowers();
 
         rngState.loadRng(floorNum);
@@ -324,9 +343,9 @@ public class SaveState {
                 .setPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "hoveredCard", null);
         ReflectionHacks.setPrivateStatic(TheBombPower.class, "bombIdOffset", bombIdOffset);
 
-        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
-            additionalElements.get(entry.getKey()).restore();
-        });
+        for (String key : StateFactories.elementFactories.keySet()) {
+            additionalElements.get(key).restore();
+        }
     }
 
     public void loadInitialState() {
@@ -388,10 +407,9 @@ public class SaveState {
         saveStateJson.addProperty("bomb_id_offset", bombIdOffset);
         saveStateJson.addProperty("total_discarded_this_turn", totalDiscardedThisTurn);
 
-        StateFactories.elementFactories.entrySet().stream().forEach(entry -> {
-            saveStateJson
-                    .addProperty(entry.getKey(), additionalElements.get(entry.getKey()).encode());
-        });
+        for (String key : StateFactories.elementFactories.keySet()) {
+            saveStateJson.addProperty(key, additionalElements.get(key).encode());
+        }
 
         System.err.println("completed encoding");
         return saveStateJson.toString();

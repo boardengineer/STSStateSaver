@@ -1,8 +1,6 @@
 package savestate;
 
 import basemod.ReflectionHacks;
-import savestate.monsters.MonsterState;
-import savestate.monsters.beyond.ReptomancerState;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.map.MapRoomNode;
@@ -15,9 +13,12 @@ import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoomBoss;
 import com.megacrit.cardcrawl.rooms.MonsterRoomElite;
+import savestate.monsters.MonsterState;
+import savestate.monsters.beyond.ReptomancerState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -132,11 +133,14 @@ public class MapRoomNodeState {
 
         mapRoomNode.getRoom().dispose();
 
-        long monsterLoadStart = System.currentTimeMillis();
 
         if (monsterData != null) {
-            room.monsters = new MonsterGroup(monsterData.stream().map(MonsterState::loadMonster)
-                                                        .toArray(AbstractMonster[]::new));
+            List<AbstractMonster> list = new ArrayList<>();
+            for (MonsterState monsterDatum : monsterData) {
+                AbstractMonster loadMonster = monsterDatum.loadMonster();
+                list.add(loadMonster);
+            }
+            room.monsters = new MonsterGroup(list.toArray(new AbstractMonster[0]));
         } else {
             room.monsters = null;
         }

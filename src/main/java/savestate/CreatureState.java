@@ -3,6 +3,7 @@ package savestate;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
+import com.megacrit.cardcrawl.powers.AbstractPower;
 import savestate.powers.PowerState;
 
 import java.util.ArrayList;
@@ -63,8 +64,12 @@ public class CreatureState {
     public CreatureState(AbstractCreature creature) {
         this.name = creature.name;
         this.id = creature.id;
-        this.powers = creature.powers.stream().map(PowerState::forPower)
-                                     .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<PowerState> powerStates = new ArrayList<>();
+        for (AbstractPower power : creature.powers) {
+            PowerState powerState = PowerState.forPower(power);
+            powerStates.add(powerState);
+        }
+        this.powers = powerStates;
         this.isPlayer = creature.isPlayer;
         this.isBloodied = creature.isBloodied;
         this.drawX = creature.drawX;
@@ -151,8 +156,12 @@ public class CreatureState {
         creature.id = this.id;
         addRuntime("creature prepower", System.currentTimeMillis() - start);
 
-        creature.powers = this.powers.stream().map(powerState -> powerState.loadPower(creature))
-                                     .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<AbstractPower> abstractPowers = new ArrayList<>(this.powers.size());
+        for (PowerState powerState : this.powers) {
+            AbstractPower abstractPower = powerState.loadPower(creature);
+            abstractPowers.add(abstractPower);
+        }
+        creature.powers = abstractPowers;
 
         addRuntime("creature 0", System.currentTimeMillis() - start);
 //        System.err.println(creature.powers);

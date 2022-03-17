@@ -143,8 +143,7 @@ public abstract class MonsterState extends CreatureState {
 
 
         ReflectionHacks.setPrivate(monster, AbstractMonster.class, "move", moveInfo.loadMoveInfo());
-        monster.moveHistory = this.moveHistory.stream()
-                                              .collect(Collectors.toCollection(ArrayList::new));
+        monster.moveHistory = new ArrayList<>(this.moveHistory);
 
         monster.nextMove = this.nextMove;
         monster.intentHb = this.intentHb.loadHitbox();
