@@ -280,7 +280,7 @@ public class CardState {
     }
 
     public static void freeCard(AbstractCard card) {
-        if (card == null || true) {
+        if (card == null) {
             return;
         }
 

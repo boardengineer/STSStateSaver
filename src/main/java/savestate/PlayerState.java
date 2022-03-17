@@ -2,20 +2,22 @@ package savestate;
 
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.mod.stslib.patches.core.AbstractCreature.TempHPField;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.orbs.AbstractOrb;
+import com.megacrit.cardcrawl.potions.AbstractPotion;
+import com.megacrit.cardcrawl.relics.AbstractRelic;
 import com.megacrit.cardcrawl.stances.AbstractStance;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
 import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -83,18 +85,32 @@ public class PlayerState extends CreatureState {
         this.limbo = toCardStateArray(player.limbo.group);
         this.cardInUse = player.cardInUse == null ? null : new CardState(player.cardInUse);
 
-        this.relics = player.relics.stream().map(RelicState::forRelic)
-                                   .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<RelicState> relicStates = new ArrayList<>(player.relics.size());
+        for (AbstractRelic relic : player.relics) {
+            RelicState relicState = RelicState.forRelic(relic);
+            relicStates.add(relicState);
+        }
+        this.relics = relicStates;
 
-        this.orbs = player.orbs.stream().map(OrbState::forOrb)
-                               .collect(Collectors.toCollection(ArrayList::new));
-        this.orbsChanneledThisCombat = AbstractDungeon.actionManager.orbsChanneledThisCombat
-                .stream()
-                .map(OrbState::forOrb)
-                .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<OrbState> orbStates = new ArrayList<>(player.orbs.size());
+        for (AbstractOrb orb : player.orbs) {
+            OrbState orbState = OrbState.forOrb(orb);
+            orbStates.add(orbState);
+        }
+        this.orbs = orbStates;
+        ArrayList<OrbState> result = new ArrayList<>(AbstractDungeon.actionManager.orbsChanneledThisCombat.size());
+        for (AbstractOrb abstractOrb : AbstractDungeon.actionManager.orbsChanneledThisCombat) {
+            OrbState orbState = OrbState.forOrb(abstractOrb);
+            result.add(orbState);
+        }
+        this.orbsChanneledThisCombat = result;
 
-        this.potions = player.potions.stream().map(PotionState::new)
-                                     .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<PotionState> potionStates = new ArrayList<>(player.potions.size());
+        for (AbstractPotion potion : player.potions) {
+            PotionState potionState = new PotionState(potion);
+            potionStates.add(potionState);
+        }
+        this.potions = potionStates;
 
         this.energyManagerEnergy = player.energy.energy;
         this.energyPanelTotalEnergy = EnergyPanel.totalCount;
@@ -128,7 +144,6 @@ public class PlayerState extends CreatureState {
 
         // TODO This should ideally happen during load but only once per run
         AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
-        SaveStateMod.shouldResetDungeon = true;
 
         boolean cardsInitialized = false;
 
@@ -141,6 +156,7 @@ public class PlayerState extends CreatureState {
                 e.printStackTrace();
             }
         }
+        SaveStateMod.shouldResetDungeon = true;
 
         this.gameHandSize = parsed.get("game_hand_size").getAsInt();
         this.masterHandSize = parsed.get("master_hand_size").getAsInt();
@@ -177,21 +193,29 @@ public class PlayerState extends CreatureState {
                             .collect(Collectors.toCollection(ArrayList::new));
 
 
-        this.potions = new ArrayList<>();
-        parsed.get("potions").getAsJsonArray().forEach(potionElement -> this.potions
-                .add(new PotionState(potionElement.getAsString())));
+        final JsonArray potionsAsJson = parsed.get("potions").getAsJsonArray();
+        this.potions = new ArrayList<>(potionsAsJson.size());
+        for (JsonElement potionElement : potionsAsJson) {
+            this.potions.add(new PotionState(potionElement.getAsString()));
+        }
 
         this.maxOrbs = parsed.get("max_orbs").getAsInt();
         this.masterMaxOrbs = parsed.get("master_max_orbs").getAsInt();
 
-        this.orbs = new ArrayList<>();
-        parsed.get("orbs").getAsJsonArray().forEach(orbElement -> this.orbs
-                .add(OrbState.forJsonString(orbElement.getAsString())));
 
-        this.orbsChanneledThisCombat = new ArrayList<>();
-        parsed.get("orbs_channeled_this_combat").getAsJsonArray()
-              .forEach(orbElement -> this.orbsChanneledThisCombat
-                      .add(OrbState.forJsonString(orbElement.getAsString())));
+        final JsonArray orbsAsJson = parsed.get("orbs").getAsJsonArray();
+        this.orbs = new ArrayList<>(orbsAsJson.size());
+        for (JsonElement orb : orbsAsJson) {
+            this.orbs.add(OrbState.forJsonString(orb.getAsString()));
+        }
+
+
+        final JsonArray orbsChanneledThisCombatAsJson = parsed.get("orbs_channeled_this_combat").getAsJsonArray();
+        this.orbsChanneledThisCombat = new ArrayList<>(orbsChanneledThisCombatAsJson.size());
+        for (JsonElement orbElement : orbsChanneledThisCombatAsJson) {
+            this.orbsChanneledThisCombat
+                    .add(OrbState.forJsonString(orbElement.getAsString()));
+        }
 
         this.stance = parsed.get("stance").getAsString();
 
@@ -207,8 +231,12 @@ public class PlayerState extends CreatureState {
         // well.
         CardState.freeCardList(player.hand.group);
 
-        player.relics = this.relics.parallelStream().map(RelicState::loadRelic)
-                                   .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<AbstractRelic> abstractRelics = new ArrayList<>(this.relics.size());
+        for (RelicState relic : this.relics) {
+            AbstractRelic loadRelic = relic.loadRelic();
+            abstractRelics.add(loadRelic);
+        }
+        player.relics = abstractRelics;
 
         if (!shouldGoFast) {
             AbstractDungeon.topPanel.adjustRelicHbs();
@@ -234,40 +262,72 @@ public class PlayerState extends CreatureState {
 
         player.cardInUse = this.cardInUse == null ? null : this.cardInUse.loadCard();
 
-        player.masterDeck.group = this.masterDeck.parallelStream().map(CardState::loadCard)
-                                                 .collect(Collectors.toCollection(ArrayList::new));
-
-        player.drawPile.group = this.drawPile.parallelStream().map(CardState::loadCard)
-                                             .collect(Collectors.toCollection(ArrayList::new));
-
-        player.hand.group = this.hand.parallelStream().map(CardState::loadCard)
-                                     .collect(Collectors.toCollection(ArrayList::new));
-
-        player.discardPile.group = this.discardPile.parallelStream().map(CardState::loadCard)
-                                                   .collect(Collectors
-                                                           .toCollection(ArrayList::new));
-
-        player.exhaustPile.group = this.exhaustPile.parallelStream().map(CardState::loadCard)
-                                                   .collect(Collectors
-                                                           .toCollection(ArrayList::new));
-
-        player.limbo.group = this.limbo.parallelStream().map(CardState::loadCard)
-                                       .collect(Collectors.toCollection(ArrayList::new));
-
-        player.potions = this.potions.parallelStream().map(PotionState::loadPotion)
-                                     .collect(Collectors.toCollection(ArrayList::new));
-
-
-        for (int i = 0; i < player.potions.size(); i++) {
-            player.potions.get(i).setAsObtained(i);
+        final ArrayList<AbstractCard> masterDeckCards = new ArrayList<>(this.masterDeck.size());
+        for (CardState cardState : this.masterDeck) {
+            AbstractCard loadCard = cardState.loadCard();
+            masterDeckCards.add(loadCard);
         }
+        player.masterDeck.group = masterDeckCards;
 
-        player.orbs = this.orbs.parallelStream().map(OrbState::loadOrb)
-                               .collect(Collectors.toCollection(ArrayList::new));
+        final ArrayList<AbstractCard> drawPileCards = new ArrayList<>(this.drawPile.size());
+        for (CardState cardState : this.drawPile) {
+            AbstractCard loadCard = cardState.loadCard();
+            drawPileCards.add(loadCard);
+        }
+        player.drawPile.group = drawPileCards;
 
-        AbstractDungeon.actionManager.orbsChanneledThisCombat = this.orbsChanneledThisCombat
-                .parallelStream().map(OrbState::loadOrb)
-                .collect(Collectors.toCollection(ArrayList::new));
+        final ArrayList<AbstractCard> handCards = new ArrayList<>(this.hand.size());
+        for (CardState cardState : this.hand) {
+            AbstractCard loadCard = cardState.loadCard();
+            handCards.add(loadCard);
+        }
+        player.hand.group = handCards;
+
+        final ArrayList<AbstractCard> discardCards = new ArrayList<>(this.discardPile.size());
+        for (CardState cardState : this.discardPile) {
+            AbstractCard loadCard = cardState.loadCard();
+            discardCards.add(loadCard);
+        }
+        player.discardPile.group = discardCards;
+
+        final ArrayList<AbstractCard> exhaustCards = new ArrayList<>(this.exhaustPile.size());
+        for (CardState cardState : this.exhaustPile) {
+            AbstractCard loadCard = cardState.loadCard();
+            exhaustCards.add(loadCard);
+        }
+        player.exhaustPile.group = exhaustCards;
+
+        final ArrayList<AbstractCard> limboCards = new ArrayList<>(this.limbo.size());
+        for (CardState cardState : this.limbo) {
+            AbstractCard loadCard = cardState.loadCard();
+            limboCards.add(loadCard);
+        }
+        player.limbo.group = limboCards;
+
+        final ArrayList<AbstractPotion> potions = new ArrayList<>(this.potions.size());
+        for (ListIterator<PotionState> it = this.potions.listIterator(); it.hasNext(); ) {
+            final int index = it.nextIndex();
+            final PotionState potion = it.next();
+            final AbstractPotion loadPotion = potion.loadPotion();
+            loadPotion.setAsObtained(index);
+            potions.add(loadPotion);
+        }
+        player.potions = potions;
+
+
+        final ArrayList<AbstractOrb> obs = new ArrayList<>(this.orbs.size());
+        for (OrbState orb : this.orbs) {
+            AbstractOrb loadOrb = orb.loadOrb();
+            obs.add(loadOrb);
+        }
+        player.orbs = obs;
+
+        ArrayList<AbstractOrb> channeledOrbs = new ArrayList<>(this.orbsChanneledThisCombat.size());
+        for (OrbState orbState : this.orbsChanneledThisCombat) {
+            AbstractOrb loadOrb = orbState.loadOrb();
+            channeledOrbs.add(loadOrb);
+        }
+        AbstractDungeon.actionManager.orbsChanneledThisCombat = channeledOrbs;
 
         player.energy.energy = this.energyManagerEnergy;
         player.energy.energyMaster = this.energyManagerMaxMaster;
@@ -396,8 +456,12 @@ public class PlayerState extends CreatureState {
         playerStateJson.addProperty("stance", stance);
         playerStateJson.addProperty("temporary_hp", temporaryHp);
 
-        playerStateJson.addProperty("relics", relics.stream().map(RelicState::encode)
-                                                    .collect(Collectors.joining(RELIC_DELIMETER)));
+        final StringJoiner relicStringJoiner = new StringJoiner(RELIC_DELIMETER);
+        for (final RelicState relic : relics) {
+            final String encodedRelic = relic.encode();
+            relicStringJoiner.add(encodedRelic);
+        }
+        playerStateJson.addProperty("relics", relicStringJoiner.toString());
         playerStateJson.addProperty("max_orbs", maxOrbs);
         playerStateJson.addProperty("master_max_orbs", masterMaxOrbs);
 
@@ -423,16 +487,21 @@ public class PlayerState extends CreatureState {
     }
 
     public static String encodeCardList(ArrayList<CardState> cardList) {
-        return cardList.parallelStream().map(CardState::encode).collect(Collectors.joining(CARD_DELIMETER));
+        StringJoiner cardJoiner = new StringJoiner(CARD_DELIMETER);
+        for (CardState cardState : cardList) {
+            String encode = cardState.encode();
+            cardJoiner.add(encode);
+        }
+        return cardJoiner.toString();
     }
 
     private static ArrayList<CardState> decodeCardList(String cardListString) {
-        return Stream.of(cardListString.split(CARD_DELIMETER)).parallel().filter(s -> !s.isEmpty())
+        return Stream.of(cardListString.split(CARD_DELIMETER)).filter(s -> !s.isEmpty())
                      .map(CardState::forString).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static ArrayList<CardState> toCardStateArray(ArrayList<AbstractCard> cards) {
-        ArrayList<CardState> result = new ArrayList<>();
+        ArrayList<CardState> result = new ArrayList<>(cards.size());
 
         for (AbstractCard card : cards) {
             result.add(CardState.forCard(card));
@@ -562,7 +631,11 @@ public class PlayerState extends CreatureState {
     }
 
     public static String diffEncodeCardList(ArrayList<CardState> cardList) {
-        return cardList.parallelStream().map(CardState::diffEncode)
-                       .collect(Collectors.joining(CARD_DELIMETER));
+        StringJoiner joiner = new StringJoiner(CARD_DELIMETER);
+        for (CardState cardState : cardList) {
+            String diffEncode = cardState.diffEncode();
+            joiner.add(diffEncode);
+        }
+        return joiner.toString();
     }
 }
