@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
+import com.megacrit.cardcrawl.helpers.PotionHelper;
 import com.megacrit.cardcrawl.stances.AbstractStance;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
 import savestate.orbs.OrbState;
@@ -150,6 +151,7 @@ public class PlayerState extends CreatureState {
         while (!cardsInitialized) {
             try {
                 CardCrawlGame.dungeon.initializeCardPools();
+                PotionHelper.initialize(chosenClass);
                 cardsInitialized = true;
             } catch (RuntimeException e) {
                 System.err.println("Exception trying to init card pools");
