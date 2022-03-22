@@ -1,5 +1,6 @@
 package savestate;
 
+import com.badlogic.gdx.math.RandomXS128;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.Settings;
@@ -34,23 +35,23 @@ public class RngState {
 
     public RngState() {
         seed = Settings.seed;
-        monsterRng = new Random(Settings.seed, AbstractDungeon.monsterRng.counter);
-        mapRng = new Random(Settings.seed, AbstractDungeon.mapRng.counter);
-        eventRng = new Random(Settings.seed, AbstractDungeon.eventRng.counter);
-        merchantRng = new Random(Settings.seed, AbstractDungeon.merchantRng.counter);
-        cardRng = new Random(Settings.seed, AbstractDungeon.cardRng.counter);
-        treasureRng = new Random(Settings.seed, AbstractDungeon.treasureRng.counter);
-        relicRng = new Random(Settings.seed, AbstractDungeon.relicRng.counter);
-        potionRng = new Random(Settings.seed, AbstractDungeon.potionRng.counter);
-        monsterHpRng = new Random(Settings.seed, AbstractDungeon.monsterHpRng.counter);
-        aiRng = new Random(Settings.seed, AbstractDungeon.aiRng.counter);
-        shuffleRng = new Random(Settings.seed, AbstractDungeon.shuffleRng.counter);
-        cardRandomRng = new Random(Settings.seed, AbstractDungeon.cardRandomRng.counter);
-        miscRng = new Random(Settings.seed, AbstractDungeon.miscRng.counter);
+        monsterRng = betterCopy(AbstractDungeon.monsterRng);
+        mapRng = betterCopy(AbstractDungeon.mapRng);
+        eventRng = betterCopy(AbstractDungeon.eventRng);
+        merchantRng = betterCopy(AbstractDungeon.merchantRng);
+        cardRng = betterCopy(AbstractDungeon.cardRng);
+        treasureRng = betterCopy(AbstractDungeon.treasureRng);
+        relicRng = betterCopy(AbstractDungeon.relicRng);
+        potionRng = betterCopy(AbstractDungeon.potionRng);
+        monsterHpRng = betterCopy(AbstractDungeon.monsterHpRng);
+        aiRng = betterCopy(AbstractDungeon.aiRng);
+        shuffleRng = betterCopy(AbstractDungeon.shuffleRng);
+        cardRandomRng = betterCopy(AbstractDungeon.cardRandomRng);
+        miscRng = betterCopy(AbstractDungeon.miscRng);
         eventHelperChances = EventHelper.getChances();
     }
 
-    public RngState(String jsonString) {
+    public RngState(String jsonString, int floorNum) {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         seed = parsed.get("seed").getAsLong();
@@ -62,11 +63,13 @@ public class RngState {
         treasureRng = new Random(seed, parsed.get("treasure_rng_counter").getAsInt());
         relicRng = new Random(seed, parsed.get("relic_rng_counter").getAsInt());
         potionRng = new Random(seed, parsed.get("potion_rng_counter").getAsInt());
-        monsterHpRng = new Random(seed, parsed.get("monster_hp_rng_counter").getAsInt());
-        aiRng = new Random(seed, parsed.get("ai_rng_counter").getAsInt());
-        shuffleRng = new Random(seed, parsed.get("shuffle_rng_counter").getAsInt());
-        cardRandomRng = new Random(seed, parsed.get("card_random_rng_counter").getAsInt());
-        miscRng = new Random(seed, parsed.get("misc_rng_counter").getAsInt());
+
+        monsterHpRng = new Random(seed + floorNum, parsed.get("monster_hp_rng_counter").getAsInt());
+        aiRng = new Random(seed + floorNum, parsed.get("ai_rng_counter").getAsInt());
+        shuffleRng = new Random(seed + floorNum, parsed.get("shuffle_rng_counter").getAsInt());
+        cardRandomRng = new Random(seed + floorNum, parsed.get("card_random_rng_counter")
+                                                          .getAsInt());
+        miscRng = new Random(seed + floorNum, parsed.get("misc_rng_counter").getAsInt());
 
         String helperString = parsed.get("event_helper_chances").getAsString();
         eventHelperChances = Stream.of(helperString.split(",")).map(Float::parseFloat)
@@ -75,24 +78,20 @@ public class RngState {
 
     public void loadRng(long floorNum) {
         Settings.seed = seed;
-        AbstractDungeon.monsterRng = new Random(Settings.seed, monsterRng.counter);
-        AbstractDungeon.mapRng = new Random(Settings.seed, mapRng.counter);
-        AbstractDungeon.eventRng = new Random(Settings.seed, eventRng.counter);
-        AbstractDungeon.merchantRng = new Random(Settings.seed, merchantRng.counter);
-        AbstractDungeon.cardRng = new Random(Settings.seed, cardRng.counter);
-        AbstractDungeon.treasureRng = new Random(Settings.seed, treasureRng.counter);
-        AbstractDungeon.relicRng = new Random(Settings.seed, relicRng.counter);
-        AbstractDungeon.potionRng = new Random(Settings.seed, potionRng.counter);
+        AbstractDungeon.monsterRng = betterCopy(monsterRng);
+        AbstractDungeon.mapRng = betterCopy(mapRng);
+        AbstractDungeon.eventRng = betterCopy(eventRng);
+        AbstractDungeon.merchantRng = betterCopy(merchantRng);
+        AbstractDungeon.cardRng = betterCopy(cardRng);
+        AbstractDungeon.treasureRng = betterCopy(treasureRng);
+        AbstractDungeon.relicRng = betterCopy(relicRng);
+        AbstractDungeon.potionRng = betterCopy(potionRng);
 
-        AbstractDungeon.monsterHpRng = new Random(Settings.seed
-                .longValue() + floorNum, monsterHpRng.counter);
-        AbstractDungeon.aiRng = new Random(Settings.seed.longValue() + floorNum, aiRng.counter);
-        AbstractDungeon.shuffleRng = new Random(Settings.seed
-                .longValue() + floorNum, shuffleRng.counter);
-        AbstractDungeon.cardRandomRng = new Random(Settings.seed
-                .longValue() + floorNum, cardRandomRng.counter);
-        AbstractDungeon.miscRng = new Random(Settings.seed.longValue() + floorNum, miscRng.counter);
-
+        AbstractDungeon.monsterHpRng = betterCopy(monsterHpRng);
+        AbstractDungeon.aiRng = betterCopy(aiRng);
+        AbstractDungeon.shuffleRng = betterCopy(shuffleRng);
+        AbstractDungeon.cardRandomRng = betterCopy(cardRandomRng);
+        AbstractDungeon.miscRng = betterCopy(miscRng);
 
         EventHelper.setChances(eventHelperChances);
     }
@@ -123,4 +122,14 @@ public class RngState {
         return rngStateJson.toString();
     }
 
+    /**
+     * A copy of Random.copy but uses new Random(long) instead of new Random() which clicks
+     * the counter a bunch of times for no reason.
+     */
+    public static Random betterCopy(Random toCopy) {
+        Random result = new Random(1L);
+        result.random = new RandomXS128(toCopy.random.getState(0), toCopy.random.getState(1));
+        result.counter = toCopy.counter;
+        return result;
+    }
 }

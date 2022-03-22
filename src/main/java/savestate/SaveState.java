@@ -183,7 +183,7 @@ public class SaveState {
         System.err.println("parsing player....");
 
         this.playerState = new PlayerState(parsed.get("player_state").getAsString());
-        this.rngState = new RngState(parsed.get("rng_state").getAsString());
+        this.rngState = new RngState(parsed.get("rng_state").getAsString(), floorNum);
 
         System.err.println("parsing room....");
 

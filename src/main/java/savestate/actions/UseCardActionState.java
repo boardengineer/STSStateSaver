@@ -1,14 +1,10 @@
 package savestate.actions;
 
 import basemod.ReflectionHacks;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
-import savestate.fastobjects.actions.UpdateOnlyUseCardAction;
-import savestate.CardState;
 import com.megacrit.cardcrawl.actions.utility.UseCardAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
-
-import static savestate.SaveStateMod.shouldGoFast;
+import savestate.CardState;
+import savestate.fastobjects.actions.UpdateOnlyUseCardAction;
 
 public class UseCardActionState implements ActionState {
     private final CardState card;
@@ -39,18 +35,5 @@ public class UseCardActionState implements ActionState {
         result.exhaustCard = exhaustCard;
 
         return result;
-    }
-
-    @SpirePatch(clz = UseCardAction.class, method = "update")
-    public static class ResetOnUse {
-        @SpirePostfixPatch
-        public static void maybeReset(UseCardAction action) {
-            if (shouldGoFast) {
-                AbstractCard card = ReflectionHacks
-                        .getPrivate(action, UseCardAction.class, "targetCard");
-                // PASHA LOOK HERE
-//                card.resetAttributes();
-            }
-        }
     }
 }
