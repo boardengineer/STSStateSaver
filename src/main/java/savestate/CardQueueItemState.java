@@ -16,7 +16,7 @@ public class CardQueueItemState {
     public final boolean isEndTurnAutoPlay;
 
     public CardQueueItemState(CardQueueItem cardQueueItem) {
-        this.card = new CardState(cardQueueItem.card);
+        this.card = cardQueueItem.card == null ? null : new CardState(cardQueueItem.card);
         this.monsterIndex = cardQueueItem.monster == null ? Optional.empty() : Optional
                 .of(ActionState.indexForCreature(cardQueueItem.monster));
         this.energyOnUse = cardQueueItem.energyOnUse;
@@ -27,7 +27,8 @@ public class CardQueueItemState {
     }
 
     public CardQueueItem loadItem() {
-        return new CardQueueItem(card.loadCard(), (AbstractMonster) (monsterIndex
+        return new CardQueueItem(card == null ? null : card
+                .loadCard(), (AbstractMonster) (monsterIndex
                 .isPresent() ? ActionState
                 .creatureForIndex(monsterIndex
                         .get()) : null), energyOnUse, ignoreEnergyTotal, autoplayCard);
