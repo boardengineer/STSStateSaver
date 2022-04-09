@@ -47,6 +47,7 @@ public enum Action {
     NEW_QUEUE_CARD_ACTION(NewQueueCardAction.class, action -> new NewQueueCardActionState()),
     OBTAIN_POTION_ACTION(ObtainPotionAction.class, action -> new ObtainPotionActionState(action)),
     PRESS_END_TURN_BUTTON_ACTION(PressEndTurnButtonAction.class, action -> new PressEndTurnButtonActionState()),
+    PLAY_TOP_CARD_ACTION(PlayTopCardAction.class, action -> new PlayTopCardActionState(action)),
     REDUCE_POWER_ACTION(ReducePowerAction.class, action -> new ReducePowerActionState(action)),
     REMOVE_DEBUFFS_ACTION(RemoveDebuffsAction.class, action -> new RemoveDebuffsActionState(action)),
     REMOVE_SPECIFIC_POWER_ACTION(RemoveSpecificPowerAction.class, action -> new RemoveSpecificPowerActionState(action)),

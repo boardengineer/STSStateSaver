@@ -20,11 +20,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface ActionState {
+    int PLAYER_INDEX = -1;
+    int NULL_INDEX = -2;
+
     AbstractGameAction loadAction();
 
     static int indexForCreature(AbstractCreature creature) {
+        if (creature == null) {
+            return NULL_INDEX;
+        }
+
         if (creature.isPlayer) {
-            return -1;
+            return PLAYER_INDEX;
         } else {
             int foundIndex = -1;
             for (int i = 0; i < AbstractDungeon.getMonsters().monsters.size(); i++) {
@@ -49,7 +56,11 @@ public interface ActionState {
     }
 
     static AbstractCreature creatureForIndex(int index) {
-        return index == -1 ? AbstractDungeon.player : AbstractDungeon
+        if (index == NULL_INDEX) {
+            return null;
+        }
+
+        return index == PLAYER_INDEX ? AbstractDungeon.player : AbstractDungeon
                 .getMonsters().monsters.get(index);
     }
 
