@@ -6,7 +6,7 @@ import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.utility.ScryAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
-public class ScryActionState implements CurrentActionState {
+public class ScryActionState implements CurrentActionState, ActionState {
     private final int amount;
 
     public ScryActionState(AbstractGameAction action) {
@@ -24,6 +24,11 @@ public class ScryActionState implements CurrentActionState {
         return result;
     }
 
+    @Override
+    public AbstractGameAction loadAction() {
+        return new ScryAction(amount);
+    }
+
     @SpirePatch(
             clz = ScryAction.class,
             paramtypez = {},
@@ -37,4 +42,5 @@ public class ScryActionState implements CurrentActionState {
             }
         }
     }
+
 }

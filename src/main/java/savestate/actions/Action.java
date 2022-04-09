@@ -7,10 +7,7 @@ import com.megacrit.cardcrawl.actions.defect.TriggerEndOfTurnOrbsAction;
 import com.megacrit.cardcrawl.actions.unique.EstablishmentPowerAction;
 import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
 import com.megacrit.cardcrawl.actions.unique.RemoveDebuffsAction;
-import com.megacrit.cardcrawl.actions.utility.DiscardToHandAction;
-import com.megacrit.cardcrawl.actions.utility.HandCheckAction;
-import com.megacrit.cardcrawl.actions.utility.NewQueueCardAction;
-import com.megacrit.cardcrawl.actions.utility.UseCardAction;
+import com.megacrit.cardcrawl.actions.utility.*;
 import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction;
 import com.megacrit.cardcrawl.actions.watcher.PressEndTurnButtonAction;
 import com.megacrit.cardcrawl.actions.watcher.TriggerMarksAction;
@@ -52,6 +49,7 @@ public enum Action {
     REMOVE_DEBUFFS_ACTION(RemoveDebuffsAction.class, action -> new RemoveDebuffsActionState(action)),
     REMOVE_SPECIFIC_POWER_ACTION(RemoveSpecificPowerAction.class, action -> new RemoveSpecificPowerActionState(action)),
     ROLL_MOVE_ACTION(RollMoveAction.class, action -> new RollMoveActionState(action)),
+    SCRY_ACTION(ScryAction.class, action -> new ScryActionState(action)),
     SET_DONT_TRIGGER_ACTION(SetDontTriggerAction.class, action -> new SetDontTriggerActionState(action)),
     SET_MOVE_ACTION(SetMoveAction.class, action -> new SetMoveActionState(action)),
     TRIGGER_END_OF_TURN_ORBS_ACTION(TriggerEndOfTurnOrbsAction.class, action -> new TriggerEndOfTurnOrbsActionState()),
