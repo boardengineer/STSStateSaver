@@ -1,6 +1,7 @@
 package savestate.monsters.exordium;
 
 import basemod.ReflectionHacks;
+import basemod.patches.com.megacrit.cardcrawl.core.EnergyManager.PostEnergyRechargeHook;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
@@ -123,6 +124,7 @@ public class SentryState extends MonsterState {
                     EnergyPanel.setEnergy(_instance.energy);
                 }
 
+                PostEnergyRechargeHook.Insert(_instance);
                 return SpireReturn.Return(null);
             }
             return SpireReturn.Continue();
