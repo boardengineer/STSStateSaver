@@ -284,6 +284,8 @@ public class CardState {
             return;
         }
 
+        CardModifierManager.removeAllModifiers(card, true);
+
         if (freeCards == null) {
             freeCards = new HashMap<>();
         }
