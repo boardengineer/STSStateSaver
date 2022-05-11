@@ -24,6 +24,7 @@ public enum Action {
     DAMAGE_ACTION(DamageAction.class, action -> new DamageActionState(action)),
     DAMAGE_ALL_ENEMIES_ACTION(DamageAllEnemiesAction.class, action -> new DamageAllEnemiesActionState(action)),
     DAMAGE_RANDOM_ENEMY_ACTION(DamageRandomEnemyAction.class, action -> new DamageRandomEnemyActionState(action)),
+    DISCARD_ACTION(DiscardAction.class, action -> new DiscardActionState(action)),
     DISCARD_AT_END_OF_TURN_ACTION(DiscardAtEndOfTurnAction.class, action -> new DiscardAtEndOfTurnActionState()),
     DISCARD_TO_HAND_ACTION(DiscardToHandAction.class, action -> new DiscardToHandActionState(action)),
     DRAW_CARD_ACTION(DrawCardAction.class, action -> new DrawCardActionState(action)),
