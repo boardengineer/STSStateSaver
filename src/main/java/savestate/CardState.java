@@ -284,7 +284,7 @@ public class CardState {
             return;
         }
 
-        CardModifierManager.removeAllModifiers(card, true);
+        CardModifierManager.modifiers(card).clear();
 
         if (freeCards == null) {
             freeCards = new HashMap<>();
@@ -367,6 +367,14 @@ public class CardState {
         }
         testIndex++;
 
+
+        for (AbstractCard candidate : AbstractDungeon.player.exhaustPile.group) {
+            if (card == candidate) {
+                return testIndex;
+            }
+            testIndex++;
+        }
+
         return -1;
     }
 
@@ -401,6 +409,13 @@ public class CardState {
         if (index == testIndex) {
             return AbstractDungeon.player.cardInUse;
         } else {
+            testIndex++;
+        }
+
+        for (AbstractCard candidate : AbstractDungeon.player.exhaustPile.group) {
+            if (index == testIndex) {
+                return candidate;
+            }
             testIndex++;
         }
 
