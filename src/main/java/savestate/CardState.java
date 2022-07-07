@@ -146,8 +146,14 @@ public class CardState {
         this.shuffleBackIntoDrawPile = parsed.get("shuffle_back_into_draw_pile").getAsBoolean();
 
         this.cardModifiers = new ArrayList<>();
-        parsed.get("modifiers").getAsJsonArray().forEach(jsonElement -> cardModifiers
-                .add(AbstractCardModifierState.forString(jsonElement.getAsString())));
+        parsed.get("modifiers").getAsJsonArray().forEach(jsonElement -> {
+            AbstractCardModifierState modState = AbstractCardModifierState
+                    .forString(jsonElement.getAsString());
+            if (modState != null) {
+                cardModifiers
+                        .add(AbstractCardModifierState.forString(jsonElement.getAsString()));
+            }
+        });
 
         // TODO
         this.current_x = 0;

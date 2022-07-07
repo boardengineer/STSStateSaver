@@ -11,6 +11,8 @@ import java.util.function.Function;
 import static savestate.SaveStateMod.addRuntime;
 
 public class PowerState {
+    public static boolean IGNORE_MISSING_POWERS = false;
+
     public final String powerId;
     public final int amount;
     protected JsonObject jObject = null;
@@ -93,7 +95,11 @@ public class PowerState {
         String id = parsed.get("power_id").getAsString();
 
         if (!StateFactories.powerByIdMap.containsKey(id)) {
-            throw new IllegalStateException("No Power State for " + id);
+            if (IGNORE_MISSING_POWERS) {
+                return null;
+            } else {
+                throw new IllegalStateException("No Power State for " + id);
+            }
         }
         return StateFactories.powerByIdMap.get(id).jsonFactory.apply(jsonString);
     }

@@ -7,6 +7,8 @@ import com.google.gson.JsonParser;
 import java.util.function.Function;
 
 public abstract class AbstractCardModifierState {
+    public static boolean IGNORE_MISSING_MODIFIER = false;
+
     String identifier;
 
     public AbstractCardModifierState(AbstractCardModifier modifier) {
@@ -37,6 +39,13 @@ public abstract class AbstractCardModifierState {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         String identifier = parsed.get("identifier").getAsString();
+
+        if (!StateFactories.cardModifierFactories.containsKey(identifier)) {
+            if (IGNORE_MISSING_MODIFIER) {
+                return null;
+            }
+        }
+
         return StateFactories.cardModifierFactories.get(identifier).jsonFactory.apply(jsonString);
     }
 

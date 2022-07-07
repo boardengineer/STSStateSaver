@@ -34,7 +34,7 @@ import static savestate.SaveStateMod.shouldGoFast;
 
 public class SaveState {
     private final boolean isScreenUp;
-    int floorNum;
+    public int floorNum;
     boolean previousScreenUp;
     boolean myTurn = false;
     public int turn;
@@ -57,7 +57,7 @@ public class SaveState {
     private HandSelectScreenState handSelectScreenState = null;
     private GridCardSelectScreenState gridCardSelectScreenState = null;
     private CardRewardScreenState cardRewardScreenState = null;
-    RngState rngState;
+    public RngState rngState;
     private final int ascensionLevel;
     private final int mantraGained;
     public final int lessonLearnedCount;
@@ -163,8 +163,6 @@ public class SaveState {
     }
 
     public SaveState(String jsonString) {
-        System.err.println("beginning parse....");
-
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.floorNum = parsed.get("floor_num").getAsInt();
@@ -180,12 +178,8 @@ public class SaveState {
                 .valueOf(previousScreenName.getAsString());
         this.listState = new ListState(parsed.get("list_state").getAsString());
 
-        System.err.println("parsing player....");
-
         this.playerState = new PlayerState(parsed.get("player_state").getAsString());
         this.rngState = new RngState(parsed.get("rng_state").getAsString(), floorNum);
-
-        System.err.println("parsing room....");
 
         this.curMapNodeState = new MapRoomNodeState(parsed.get("cur_map_node_state").getAsString());
         this.isScreenUp = parsed.get("is_screen_up").getAsBoolean();
@@ -211,6 +205,10 @@ public class SaveState {
             additionalElements.put(key, value.jsonFactory
                     .apply(parsed.get(key).getAsString()));
         }
+    }
+
+    public void initPlayerAndCardPool() {
+        playerState.initPlayerAndCardPool();
     }
 
     public void loadState() {

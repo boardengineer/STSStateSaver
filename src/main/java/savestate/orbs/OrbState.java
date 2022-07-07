@@ -9,6 +9,8 @@ import savestate.StateFactories;
 import java.util.function.Function;
 
 public abstract class OrbState {
+    public static boolean IGNORE_MISSING_ORBS = false;
+
     public final int evokeAmount;
     public final int passiveAmount;
 
@@ -65,6 +67,14 @@ public abstract class OrbState {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         String lookupKey = parsed.get("lookup_key").getAsString();
+
+        if (!StateFactories.orbByClassMap.containsKey(lookupKey)) {
+            if (IGNORE_MISSING_ORBS) {
+                return null;
+            } else {
+                throw new IllegalArgumentException("Missing state factory for orb " + lookupKey);
+            }
+        }
 
         return StateFactories.orbByClassMap.get(lookupKey).jsonFactory.apply(jsonString);
     }

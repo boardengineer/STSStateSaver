@@ -116,8 +116,17 @@ public abstract class MonsterState extends CreatureState {
                 .filter(s -> !s.isEmpty()).map(Byte::parseByte)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        offsetX = (drawX - (float) Settings.WIDTH * 0.75F) / Settings.xScale;
-        offsetY = (drawY - AbstractDungeon.floorY) / Settings.yScale;
+        float tempX = 0;
+        float tempY = 0;
+
+        try {
+            tempX = (drawX - (float) Settings.WIDTH * 0.75F) / Settings.xScale;
+            tempY = (drawY - AbstractDungeon.floorY) / Settings.yScale;
+        } catch (ExceptionInInitializerError | NoClassDefFoundError e) {
+
+        }
+        offsetX = tempX;
+        offsetY = tempY;
     }
 
     public abstract AbstractMonster loadMonster();

@@ -25,10 +25,12 @@ import java.util.stream.Stream;
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class PlayerState extends CreatureState {
+    public static boolean IGNORE_MISSING_CLASSES = false;
+
     private static final String CARD_DELIMETER = ";;;";
     private static final String RELIC_DELIMETER = "!;!";
 
-    private final AbstractPlayer.PlayerClass chosenClass;
+    public final AbstractPlayer.PlayerClass chosenClass;
     private final int gameHandSize;
     private final int masterHandSize;
     private final int potionSLots;
@@ -99,7 +101,8 @@ public class PlayerState extends CreatureState {
             orbStates.add(orbState);
         }
         this.orbs = orbStates;
-        ArrayList<OrbState> result = new ArrayList<>(AbstractDungeon.actionManager.orbsChanneledThisCombat.size());
+        ArrayList<OrbState> result = new ArrayList<>(AbstractDungeon.actionManager.orbsChanneledThisCombat
+                .size());
         for (AbstractOrb abstractOrb : AbstractDungeon.actionManager.orbsChanneledThisCombat) {
             OrbState orbState = OrbState.forOrb(abstractOrb);
             result.add(orbState);
@@ -140,25 +143,18 @@ public class PlayerState extends CreatureState {
 
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
-        this.chosenClass = AbstractPlayer.PlayerClass
-                .valueOf(parsed.get("chosen_class_name").getAsString());
+        AbstractPlayer.PlayerClass tempClass = AbstractPlayer.PlayerClass.IRONCLAD;
 
-        // TODO This should ideally happen during load but only once per run
-        AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
-
-        boolean cardsInitialized = false;
-
-        while (!cardsInitialized) {
-            try {
-                CardCrawlGame.dungeon.initializeCardPools();
-                PotionHelper.initialize(chosenClass);
-                cardsInitialized = true;
-            } catch (RuntimeException e) {
-                System.err.println("Exception trying to init card pools");
-                e.printStackTrace();
+        try {
+            tempClass = AbstractPlayer.PlayerClass
+                    .valueOf(parsed.get("chosen_class_name").getAsString());
+        } catch (IllegalArgumentException e) {
+            if (!IGNORE_MISSING_CLASSES) {
+                throw e;
             }
         }
-        SaveStateMod.shouldResetDungeon = true;
+
+        this.chosenClass = tempClass;
 
         this.gameHandSize = parsed.get("game_hand_size").getAsInt();
         this.masterHandSize = parsed.get("master_hand_size").getAsInt();
@@ -208,11 +204,15 @@ public class PlayerState extends CreatureState {
         final JsonArray orbsAsJson = parsed.get("orbs").getAsJsonArray();
         this.orbs = new ArrayList<>(orbsAsJson.size());
         for (JsonElement orb : orbsAsJson) {
-            this.orbs.add(OrbState.forJsonString(orb.getAsString()));
+            OrbState orbState = OrbState.forJsonString(orb.getAsString());
+            if (orbState != null) {
+                this.orbs.add(orbState);
+            }
         }
 
 
-        final JsonArray orbsChanneledThisCombatAsJson = parsed.get("orbs_channeled_this_combat").getAsJsonArray();
+        final JsonArray orbsChanneledThisCombatAsJson = parsed.get("orbs_channeled_this_combat")
+                                                              .getAsJsonArray();
         this.orbsChanneledThisCombat = new ArrayList<>(orbsChanneledThisCombatAsJson.size());
         for (JsonElement orbElement : orbsChanneledThisCombatAsJson) {
             this.orbsChanneledThisCombat
@@ -223,6 +223,25 @@ public class PlayerState extends CreatureState {
 
         //TODO
         this.renderCorpse = false;
+    }
+
+    public void initPlayerAndCardPool() {
+        // TODO This should ideally happen during load but only once per run
+        AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
+
+        boolean cardsInitialized = false;
+
+        while (!cardsInitialized) {
+            try {
+                CardCrawlGame.dungeon.initializeCardPools();
+                PotionHelper.initialize(chosenClass);
+                cardsInitialized = true;
+            } catch (RuntimeException e) {
+                System.err.println("Exception trying to init card pools");
+                e.printStackTrace();
+            }
+        }
+        SaveStateMod.shouldResetDungeon = true;
     }
 
     public AbstractPlayer loadPlayer() {
@@ -497,9 +516,24 @@ public class PlayerState extends CreatureState {
         return cardJoiner.toString();
     }
 
+    public static String encodeCardListV2(ArrayList<CardState> cardList) {
+        JsonArray resultArray = new JsonArray();
+        cardList.forEach(card -> resultArray.add(card.encode()));
+        return resultArray.toString();
+    }
+
     private static ArrayList<CardState> decodeCardList(String cardListString) {
         return Stream.of(cardListString.split(CARD_DELIMETER)).filter(s -> !s.isEmpty())
                      .map(CardState::forString).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private static ArrayList<CardState> decodeCardListV2(String cardListString) {
+        ArrayList<CardState> result = new ArrayList<>();
+
+        JsonArray cardArray = new JsonParser().parse(cardListString).getAsJsonArray();
+        cardArray.forEach(ele -> result.add(CardState.forString(ele.getAsString())));
+
+        return result;
     }
 
     public static ArrayList<CardState> toCardStateArray(ArrayList<AbstractCard> cards) {

@@ -29,7 +29,7 @@ public class RngState {
     private final Random shuffleRng;
     private final Random cardRandomRng;
     private final Random miscRng;
-    private final long seed;
+    public final long seed;
 
     private final ArrayList<Float> eventHelperChances;
 

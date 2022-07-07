@@ -146,6 +146,7 @@ public class CreatureState {
         this.powers = Stream.of(parsed.get("powers").getAsString().split(POWER_DELIMETER))
                             .filter(s -> !s.isEmpty())
                             .map(PowerState::forJsonString)
+                            .filter(powerState -> powerState != null)
                             .collect(Collectors.toCollection(ArrayList::new));
     }
 
