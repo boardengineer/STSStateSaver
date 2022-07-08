@@ -7,16 +7,17 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.helpers.PotionHelper;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
-import com.megacrit.cardcrawl.helpers.PotionHelper;
 import com.megacrit.cardcrawl.stances.AbstractStance;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
 import savestate.orbs.OrbState;
 import savestate.relics.RelicState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -53,12 +54,12 @@ public class PlayerState extends CreatureState {
 
     public final CardState cardInUse;
 
-    public final ArrayList<CardState> masterDeck;
-    public final ArrayList<CardState> drawPile;
-    public final ArrayList<CardState> hand;
-    public final ArrayList<CardState> discardPile;
-    public final ArrayList<CardState> exhaustPile;
-    public final ArrayList<CardState> limbo;
+    public final CardState[] masterDeck;
+    public final CardState[] drawPile;
+    public final CardState[] hand;
+    public final CardState[] discardPile;
+    public final CardState[] exhaustPile;
+    public final CardState[] limbo;
 
     public int maxOrbs;
     public int masterMaxOrbs;
@@ -252,6 +253,7 @@ public class PlayerState extends CreatureState {
         // well.
         CardState.freeCardList(player.hand.group);
 
+        RelicState.freeRelicList(player.relics);
         ArrayList<AbstractRelic> abstractRelics = new ArrayList<>(this.relics.size());
         for (RelicState relic : this.relics) {
             AbstractRelic loadRelic = relic.loadRelic();
@@ -283,42 +285,42 @@ public class PlayerState extends CreatureState {
 
         player.cardInUse = this.cardInUse == null ? null : this.cardInUse.loadCard();
 
-        final ArrayList<AbstractCard> masterDeckCards = new ArrayList<>(this.masterDeck.size());
+        final ArrayList<AbstractCard> masterDeckCards = new ArrayList<>(this.masterDeck.length);
         for (CardState cardState : this.masterDeck) {
             AbstractCard loadCard = cardState.loadCard();
             masterDeckCards.add(loadCard);
         }
         player.masterDeck.group = masterDeckCards;
 
-        final ArrayList<AbstractCard> drawPileCards = new ArrayList<>(this.drawPile.size());
+        final ArrayList<AbstractCard> drawPileCards = new ArrayList<>(this.drawPile.length);
         for (CardState cardState : this.drawPile) {
             AbstractCard loadCard = cardState.loadCard();
             drawPileCards.add(loadCard);
         }
         player.drawPile.group = drawPileCards;
 
-        final ArrayList<AbstractCard> handCards = new ArrayList<>(this.hand.size());
+        final ArrayList<AbstractCard> handCards = new ArrayList<>(this.hand.length);
         for (CardState cardState : this.hand) {
             AbstractCard loadCard = cardState.loadCard();
             handCards.add(loadCard);
         }
         player.hand.group = handCards;
 
-        final ArrayList<AbstractCard> discardCards = new ArrayList<>(this.discardPile.size());
+        final ArrayList<AbstractCard> discardCards = new ArrayList<>(this.discardPile.length);
         for (CardState cardState : this.discardPile) {
             AbstractCard loadCard = cardState.loadCard();
             discardCards.add(loadCard);
         }
         player.discardPile.group = discardCards;
 
-        final ArrayList<AbstractCard> exhaustCards = new ArrayList<>(this.exhaustPile.size());
+        final ArrayList<AbstractCard> exhaustCards = new ArrayList<>(this.exhaustPile.length);
         for (CardState cardState : this.exhaustPile) {
             AbstractCard loadCard = cardState.loadCard();
             exhaustCards.add(loadCard);
         }
         player.exhaustPile.group = exhaustCards;
 
-        final ArrayList<AbstractCard> limboCards = new ArrayList<>(this.limbo.size());
+        final ArrayList<AbstractCard> limboCards = new ArrayList<>(this.limbo.length);
         for (CardState cardState : this.limbo) {
             AbstractCard loadCard = cardState.loadCard();
             limboCards.add(loadCard);
@@ -418,9 +420,11 @@ public class PlayerState extends CreatureState {
     }
 
     public String getHandString() {
-        return String.format("hand:%s discard:%s", hand.stream().map(CardState::getName).sorted()
-                                                       .collect(Collectors.joining(" ")),
-                discardPile.stream().map(CardState::getName).collect(Collectors.joining(" ")));
+        return String
+                .format("hand:%s discard:%s", Arrays.stream(hand).map(CardState::getName).sorted()
+                                                    .collect(Collectors.joining(" ")),
+                        Arrays.stream(discardPile).map(CardState::getName)
+                              .collect(Collectors.joining(" ")));
     }
 
     public int getNumSlimes() {
@@ -433,14 +437,14 @@ public class PlayerState extends CreatureState {
 
 
     public int getNumInstance(String cardId) {
-        long numInstances = discardPile.stream().filter(card -> card.getName().equals(cardId))
-                                       .count();
+        long numInstances = Arrays.stream(discardPile).filter(card -> card.getName().equals(cardId))
+                                  .count();
 
-        numInstances += hand.stream().filter(card -> card.getName().equals(cardId))
-                            .count();
+        numInstances += Arrays.stream(hand).filter(card -> card.getName().equals(cardId))
+                              .count();
 
-        numInstances += drawPile.stream().filter(card -> card.getName().equals(cardId))
-                                .count();
+        numInstances += Arrays.stream(drawPile).filter(card -> card.getName().equals(cardId))
+                              .count();
 
         return (int) numInstances;
     }
@@ -507,7 +511,7 @@ public class PlayerState extends CreatureState {
         return playerStateJson.toString();
     }
 
-    public static String encodeCardList(ArrayList<CardState> cardList) {
+    public static String encodeCardList(CardState[] cardList) {
         StringJoiner cardJoiner = new StringJoiner(CARD_DELIMETER);
         for (CardState cardState : cardList) {
             String encode = cardState.encode();
@@ -522,9 +526,10 @@ public class PlayerState extends CreatureState {
         return resultArray.toString();
     }
 
-    private static ArrayList<CardState> decodeCardList(String cardListString) {
-        return Stream.of(cardListString.split(CARD_DELIMETER)).filter(s -> !s.isEmpty())
-                     .map(CardState::forString).collect(Collectors.toCollection(ArrayList::new));
+    private static CardState[] decodeCardList(String cardListString) {
+        return Stream.of(cardListString.split(CARD_DELIMETER))
+                     .filter(s -> !s.isEmpty())
+                     .map(CardState::forString).toArray(CardState[]::new);
     }
 
     private static ArrayList<CardState> decodeCardListV2(String cardListString) {
@@ -536,14 +541,8 @@ public class PlayerState extends CreatureState {
         return result;
     }
 
-    public static ArrayList<CardState> toCardStateArray(ArrayList<AbstractCard> cards) {
-        ArrayList<CardState> result = new ArrayList<>(cards.size());
-
-        for (AbstractCard card : cards) {
-            result.add(CardState.forCard(card));
-        }
-
-        return result;
+    public static CardState[] toCardStateArray(ArrayList<AbstractCard> cards) {
+        return cards.stream().map(CardState::forCard).toArray(CardState[]::new);
     }
 
     public String diffEncode() {
@@ -666,7 +665,7 @@ public class PlayerState extends CreatureState {
         return allMatch;
     }
 
-    public static String diffEncodeCardList(ArrayList<CardState> cardList) {
+    public static String diffEncodeCardList(CardState[] cardList) {
         StringJoiner joiner = new StringJoiner(CARD_DELIMETER);
         for (CardState cardState : cardList) {
             String diffEncode = cardState.diffEncode();

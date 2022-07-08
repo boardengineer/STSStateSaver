@@ -1,19 +1,20 @@
 package savestate.actions;
 
 import basemod.ReflectionHacks;
-import savestate.CardState;
-import savestate.PlayerState;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.unique.ArmamentsAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import savestate.CardState;
+import savestate.PlayerState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class ArmamentsActionState implements CurrentActionState {
-    private final ArrayList<CardState> cannotUpgrade;
+    private final CardState[] cannotUpgrade;
     private final boolean upgraded;
 
     public ArmamentsActionState(AbstractGameAction action) {
@@ -34,10 +35,11 @@ public class ArmamentsActionState implements CurrentActionState {
         ArmamentsAction result = new ArmamentsAction(upgraded);
 
         ReflectionHacks
-                .setPrivate(result, ArmamentsAction.class, "cannotUpgrade", cannotUpgrade.stream()
-                                                                                         .map(CardState::loadCard)
-                                                                                         .collect(Collectors
-                                                                                                 .toCollection(ArrayList::new)));
+                .setPrivate(result, ArmamentsAction.class, "cannotUpgrade",
+                        Arrays.stream(cannotUpgrade)
+                        .map(CardState::loadCard)
+                        .collect(Collectors
+                                .toCollection(ArrayList::new)));
         ReflectionHacks
                 .setPrivate(result, AbstractGameAction.class, "duration", 0);
 

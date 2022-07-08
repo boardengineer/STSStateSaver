@@ -1,5 +1,6 @@
 package savestate;
 
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.powers.TheBombPower;
 import savestate.actions.Action;
 import savestate.actions.ActionState;
@@ -17,6 +18,7 @@ import savestate.relics.RelicState;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.Function;
 
 /**
  * This class contains maps to state factories.  Modded content can be included in the state saver
@@ -31,6 +33,15 @@ public class StateFactories {
     public static HashSet<String> powerPrefixes = createPowerPrefixes();
 
     public static ArrayList<CardState.CardFactories> cardFactories = new ArrayList<>();
+
+    public static HashMap<Class<? extends AbstractCard>, CardState.CardFactories> cardFactoriesByType = new HashMap<>();
+
+    // DO NOT POPULATE MANUALLY
+    public static HashMap<Class<? extends AbstractCard>, Function<AbstractCard, CardState>> dynamicCardFactoriesByType = new HashMap<>();
+
+    public static HashMap<String, CardState.CardFactories> cardFactoriesByTypeName = new HashMap<>();
+    public static HashMap<String, CardState.CardFactories> cardFactoriesByCardId = new HashMap<>();
+
     public static HashMap<String, StateElement.ElementFactories> elementFactories = new HashMap<>();
 
     public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();

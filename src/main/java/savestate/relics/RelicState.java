@@ -7,13 +7,75 @@ import com.megacrit.cardcrawl.helpers.RelicLibrary;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
 import savestate.StateFactories;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+
+import static savestate.SaveStateMod.shouldGoFast;
 
 public class RelicState {
     public final String relicId;
     public final int counter;
     private final boolean grayscale;
     private final boolean pulse;
+
+    private static HashMap<String, LinkedList<AbstractRelic>> freeRelics;
+
+    public static void resetFreeRelics() {
+        freeRelics = new HashMap<>();
+    }
+
+    public static void freeRelicList(List<AbstractRelic> relics) {
+        relics.forEach(RelicState::freeRelic);
+    }
+
+    public static void freeRelic(AbstractRelic relic) {
+        if (relic == null) {
+            return;
+        }
+
+        if (freeRelics == null) {
+            freeRelics = new HashMap<>();
+        }
+
+        if (!freeRelics.containsKey(relic.relicId)) {
+            freeRelics.put(relic.relicId, new LinkedList<>());
+        }
+
+        LinkedList<AbstractRelic> set = freeRelics.get(relic.relicId);
+        if (set.size() > 100) {
+            return;
+        }
+
+        set.add(relic);
+    }
+
+    private static Optional<AbstractRelic> getCachedRelic(String key) {
+        if (freeRelics == null || !freeRelics.containsKey(key) || freeRelics.get(key).isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(freeRelics.get(key).poll());
+    }
+
+    public static AbstractRelic getRelic(String key) {
+        Optional<AbstractRelic> resultOptional = getCachedRelic(key);
+
+        AbstractRelic result;
+        if (resultOptional.isPresent() && shouldGoFast) {
+            result = resultOptional.get();
+        } else {
+            result = getFreshRelic(key);
+        }
+
+        return result;
+    }
+
+    private static AbstractRelic getFreshRelic(String key) {
+        return RelicLibrary.getRelic(key).makeCopy();
+    }
 
     public RelicState(AbstractRelic relic) {
         this.relicId = relic.relicId;
@@ -34,9 +96,7 @@ public class RelicState {
     public AbstractRelic loadRelic() {
         AbstractRelic result;
 
-        long makeRelicCopyStartTime = System.currentTimeMillis();
-
-        result = RelicLibrary.getRelic(relicId).makeCopy();
+        result = getRelic(relicId);
 
         result.counter = counter;
         result.grayscale = grayscale;

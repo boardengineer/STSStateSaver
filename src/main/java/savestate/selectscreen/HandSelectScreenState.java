@@ -12,12 +12,13 @@ import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class HandSelectScreenState {
     private final int numCardsToSelect;
 
-    private final ArrayList<CardState> selectedCards;
+    private final CardState[] selectedCards;
     private final ArrayList<ActionState> actionQueue;
     private final ArrayList<CardQueueItemState> cardQueueState;
 
@@ -73,10 +74,10 @@ public class HandSelectScreenState {
     public void loadHandSelectScreenState() {
         AbstractDungeon.handCardSelectScreen.button.isDisabled = isDisabled;
 
-        AbstractDungeon.handCardSelectScreen.selectedCards.group = this.selectedCards.stream()
-                                                                                     .map(CardState::loadCard)
-                                                                                     .collect(Collectors
-                                                                                             .toCollection(ArrayList::new));
+        AbstractDungeon.handCardSelectScreen.selectedCards.group = Arrays.stream(selectedCards)
+                                                                         .map(CardState::loadCard)
+                                                                         .collect(Collectors
+                                                                                 .toCollection(ArrayList::new));
 
         AbstractDungeon.handCardSelectScreen.numSelected = numSelected;
         AbstractDungeon.handCardSelectScreen.numCardsToSelect = numCardsToSelect;

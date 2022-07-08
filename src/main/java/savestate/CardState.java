@@ -15,6 +15,8 @@ import java.util.function.Function;
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class CardState {
+    public static boolean IGNORE_MOD_SUBTYPES = false;
+
     public final String cardId;
     public final boolean upgraded;
     private final int timesUpgraded;
@@ -305,7 +307,7 @@ public class CardState {
         }
 
         LinkedList<AbstractCard> set = freeCards.get(key);
-        if (set.size() > 1000) {
+        if (set.size() > 100) {
             return;
         }
 
@@ -428,36 +430,59 @@ public class CardState {
     }
 
     public static class CardFactories {
-        public final Function<AbstractCard, Optional<CardState>> factory;
-        public final Function<String, Optional<CardState>> jsonFactory;
+        public final Function<AbstractCard, CardState> factory;
+        public final Function<String, CardState> jsonFactory;
 
-        public CardFactories(Function<AbstractCard, Optional<CardState>> factory, Function<String, Optional<CardState>> jsonFactory) {
+        public CardFactories(Function<AbstractCard, CardState> factory, Function<String, CardState> jsonFactory) {
             this.factory = factory;
             this.jsonFactory = jsonFactory;
         }
 
-        public CardFactories(Function<AbstractCard, Optional<CardState>> factory) {
+        public CardFactories(Function<AbstractCard, CardState> factory) {
             this.factory = factory;
-            this.jsonFactory = json -> Optional.of(new CardState(json));
+            this.jsonFactory = json -> new CardState(json);
         }
     }
 
     public static CardState forCard(AbstractCard card) {
-        for (CardFactories factories : StateFactories.cardFactories) {
-            Optional<CardState> cardOptional = factories.factory.apply(card);
-            if (cardOptional.isPresent()) {
-                return cardOptional.get();
-            }
+        Class clazz = card.getClass();
+
+        if (StateFactories.dynamicCardFactoriesByType.containsKey(clazz)) {
+            return StateFactories.dynamicCardFactoriesByType.get(clazz).apply(card);
         }
 
-        return new CardState(card);
+        Function<AbstractCard, CardState> factory = null;
+        while (clazz != AbstractCard.class) {
+            if (StateFactories.cardFactoriesByType.containsKey(clazz)) {
+                factory = StateFactories.cardFactoriesByType.get(clazz).factory;
+                break;
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        if (factory == null) {
+            factory = tempCard -> new CardState(tempCard);
+        }
+
+        StateFactories.dynamicCardFactoriesByType.put(card.getClass(), factory);
+
+        return factory.apply(card);
     }
 
     public static CardState forString(String jsonString) {
-        for (CardFactories factories : StateFactories.cardFactories) {
-            Optional<CardState> cardOptional = factories.jsonFactory.apply(jsonString);
-            if (cardOptional.isPresent()) {
-                return cardOptional.get();
+        JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
+
+        if (!IGNORE_MOD_SUBTYPES) {
+            if (parsed.has("type")) {
+                return StateFactories.cardFactoriesByTypeName
+                        .get(parsed.get("type").getAsString()).jsonFactory
+                        .apply(jsonString);
+            }
+
+            if (StateFactories.cardFactoriesByCardId.containsKey(parsed.get("card_id"))) {
+                return StateFactories.cardFactoriesByCardId.get(parsed.get("card_id")).jsonFactory
+                        .apply(jsonString);
             }
         }
 

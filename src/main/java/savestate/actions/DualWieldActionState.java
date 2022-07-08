@@ -1,8 +1,6 @@
 package savestate.actions;
 
 import basemod.ReflectionHacks;
-import savestate.CardState;
-import savestate.PlayerState;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.unique.DualWieldAction;
@@ -10,14 +8,17 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import savestate.CardState;
+import savestate.PlayerState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static savestate.SaveStateMod.shouldGoFast;
 
 public class DualWieldActionState implements CurrentActionState {
-    private final ArrayList<CardState> cannotDuplicate;
+    private final CardState[] cannotDuplicate;
     private final int dupeAmount;
 
     public DualWieldActionState(AbstractGameAction action) {
@@ -38,8 +39,8 @@ public class DualWieldActionState implements CurrentActionState {
         DualWieldAction result = new DualWieldAction(AbstractDungeon.player, dupeAmount);
 
         ReflectionHacks
-                .setPrivate(result, DualWieldAction.class, "cannotDuplicate", cannotDuplicate
-                        .stream()
+                .setPrivate(result, DualWieldAction.class, "cannotDuplicate", Arrays
+                        .stream(cannotDuplicate)
                         .map(CardState::loadCard)
                         .collect(Collectors
                                 .toCollection(ArrayList::new)));
