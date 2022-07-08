@@ -36,7 +36,15 @@ public class StateFactories {
     public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
-    public static HashMap<String, OrbState.OrbFactories> orbByClassMap = createOrbMap();
+    public static HashMap<Class, OrbState.OrbFactories> orbByClassMap = createOrbMap();
+    public static HashMap<String, Class> orbClassByName = createOrbClassNameMap();
+
+    private static HashMap<String, Class> createOrbClassNameMap() {
+        HashMap<String, Class> result = new HashMap<>();
+        orbByClassMap.keySet().forEach(clazz -> result.put(clazz.getSimpleName(), clazz));
+        return result;
+    }
+
     public static HashMap<String, AbstractCardModifierState.CardModifierStateFactories> cardModifierFactories = new HashMap<>();
 
     private static HashMap<String, MonsterState.MonsterFactories> createMonsterMap() {
@@ -92,13 +100,12 @@ public class StateFactories {
         return currentActionByClassMap;
     }
 
-    private static HashMap<String, OrbState.OrbFactories> createOrbMap() {
-        HashMap<String, OrbState.OrbFactories> orbFactoryByClassMap = new HashMap<>();
+    private static HashMap<Class, OrbState.OrbFactories> createOrbMap() {
+        HashMap<Class, OrbState.OrbFactories> orbFactoryByClassMap = new HashMap<>();
 
         for (Orb orbEnum : Orb.values()) {
             orbFactoryByClassMap
-                    .put(orbEnum.orbClass
-                            .getSimpleName(), new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory));
+                    .put(orbEnum.orbClass, new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory));
         }
         return orbFactoryByClassMap;
     }

@@ -2,6 +2,7 @@ package savestate;
 
 import basemod.helpers.CardModifierManager;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -30,7 +31,7 @@ public class CardState {
     public final int baseMagicNumber;
     private final int block;
     private final boolean freeToPlayOnce;
-    private final String name;
+    public final String name;
 
     private final boolean inBottleTornado;
     private final boolean inBottleLightning;
@@ -45,7 +46,7 @@ public class CardState {
     private final boolean selfRetain;
     private final boolean shuffleBackIntoDrawPile;
 
-    private static HashMap<String, HashSet<AbstractCard>> freeCards;
+    private static HashMap<String, LinkedList<AbstractCard>> freeCards;
 
     private final UUID uuid;
 
@@ -126,7 +127,8 @@ public class CardState {
         this.inBottleTornado = parsed.get("in_bottle_tornado").getAsBoolean();
         this.inBottleFlame = parsed.get("in_bottle_flame").getAsBoolean();
 
-        this.name = parsed.get("name").getAsString();
+        JsonElement nameElement = parsed.get("name");
+        this.name = nameElement.isJsonNull() ? null : nameElement.getAsString();
         this.uuid = UUID.fromString(parsed.get("uuid").getAsString());
         this.freeToPlayOnce = parsed.get("free_to_play_once").getAsBoolean();
         this.isCostModifiedForTurn = parsed.get("is_cost_modified_for_turn").getAsBoolean();
@@ -299,14 +301,15 @@ public class CardState {
         String key = card.cardID;
 
         if (!freeCards.containsKey(key)) {
-            freeCards.put(key, new HashSet<>());
+            freeCards.put(key, new LinkedList<>());
         }
 
-        if (freeCards.get(key).size() > 1000) {
+        LinkedList<AbstractCard> set = freeCards.get(key);
+        if (set.size() > 1000) {
             return;
         }
 
-        freeCards.get(key).add(card);
+        set.add(card);
     }
 
     public static AbstractCard getCard(String key) {
@@ -327,11 +330,7 @@ public class CardState {
             return Optional.empty();
         }
 
-        Iterator<AbstractCard> iterator = freeCards.get(key).iterator();
-        AbstractCard result = iterator.next();
-        iterator.remove();
-
-        return Optional.of(result);
+        return Optional.of(freeCards.get(key).poll());
     }
 
     private static AbstractCard getFreshCard(String key) {

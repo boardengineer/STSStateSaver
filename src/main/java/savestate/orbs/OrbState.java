@@ -17,8 +17,6 @@ public abstract class OrbState {
     public final int baseEvokeAmount;
     public final int basePassiveAmount;
 
-    public final String lookupKey;
-
     public OrbState(AbstractOrb orb) {
         this.evokeAmount = orb.evokeAmount;
         this.passiveAmount = orb.passiveAmount;
@@ -27,7 +25,6 @@ public abstract class OrbState {
                 .getPrivate(orb, AbstractOrb.class, "baseEvokeAmount");
         this.basePassiveAmount = ReflectionHacks
                 .getPrivate(orb, AbstractOrb.class, "basePassiveAmount");
-        this.lookupKey = orb.getClass().getSimpleName();
     }
 
     public OrbState(String jsonString) {
@@ -38,8 +35,6 @@ public abstract class OrbState {
 
         this.baseEvokeAmount = parsed.get("base_evoke_amount").getAsInt();
         this.basePassiveAmount = parsed.get("base_passive_amount").getAsInt();
-
-        this.lookupKey = parsed.get("lookup_key").getAsString();
     }
 
     public String encode() {
@@ -51,7 +46,7 @@ public abstract class OrbState {
         result.addProperty("base_evoke_amount", evokeAmount);
         result.addProperty("base_passive_amount", passiveAmount);
 
-        result.addProperty("lookup_key", lookupKey);
+        result.addProperty("lookup_key", getClass().getSimpleName());
 
         return result.toString();
 
@@ -60,7 +55,7 @@ public abstract class OrbState {
     public abstract AbstractOrb loadOrb();
 
     public static OrbState forOrb(AbstractOrb orb) {
-        return StateFactories.orbByClassMap.get(orb.getClass().getSimpleName()).factory.apply(orb);
+        return StateFactories.orbByClassMap.get(orb.getClass()).factory.apply(orb);
     }
 
     public static OrbState forJsonString(String jsonString) {
@@ -68,7 +63,8 @@ public abstract class OrbState {
 
         String lookupKey = parsed.get("lookup_key").getAsString();
 
-        if (!StateFactories.orbByClassMap.containsKey(lookupKey)) {
+        if (!StateFactories.orbClassByName.containsKey(lookupKey) || !StateFactories.orbByClassMap
+                .containsKey(StateFactories.orbClassByName.get(lookupKey))) {
             if (IGNORE_MISSING_ORBS) {
                 return null;
             } else {
@@ -76,7 +72,8 @@ public abstract class OrbState {
             }
         }
 
-        return StateFactories.orbByClassMap.get(lookupKey).jsonFactory.apply(jsonString);
+        return StateFactories.orbByClassMap
+                .get(StateFactories.orbClassByName.get(lookupKey)).jsonFactory.apply(jsonString);
     }
 
     public static class OrbFactories {
