@@ -46,7 +46,7 @@ public abstract class OrbState {
         result.addProperty("base_evoke_amount", evokeAmount);
         result.addProperty("base_passive_amount", passiveAmount);
 
-        result.addProperty("lookup_key", getClass().getSimpleName());
+        result.addProperty("lookup_key", loadOrb().getClass().getSimpleName());
 
         return result.toString();
 

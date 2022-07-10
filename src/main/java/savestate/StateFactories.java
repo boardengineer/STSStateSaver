@@ -1,6 +1,7 @@
 package savestate;
 
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.powers.TheBombPower;
 import savestate.actions.Action;
 import savestate.actions.ActionState;
@@ -47,11 +48,11 @@ public class StateFactories {
     public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
-    public static HashMap<Class, OrbState.OrbFactories> orbByClassMap = createOrbMap();
-    public static HashMap<String, Class> orbClassByName = createOrbClassNameMap();
+    public static HashMap<Class<? extends AbstractOrb>, OrbState.OrbFactories> orbByClassMap = createOrbMap();
+    public static HashMap<String, Class<? extends AbstractOrb>> orbClassByName = createOrbClassNameMap();
 
-    private static HashMap<String, Class> createOrbClassNameMap() {
-        HashMap<String, Class> result = new HashMap<>();
+    private static HashMap<String, Class<? extends AbstractOrb>> createOrbClassNameMap() {
+        HashMap<String, Class<? extends AbstractOrb>> result = new HashMap<>();
         orbByClassMap.keySet().forEach(clazz -> result.put(clazz.getSimpleName(), clazz));
         return result;
     }
@@ -111,8 +112,8 @@ public class StateFactories {
         return currentActionByClassMap;
     }
 
-    private static HashMap<Class, OrbState.OrbFactories> createOrbMap() {
-        HashMap<Class, OrbState.OrbFactories> orbFactoryByClassMap = new HashMap<>();
+    private static HashMap<Class<? extends AbstractOrb>, OrbState.OrbFactories> createOrbMap() {
+        HashMap<Class<? extends AbstractOrb>, OrbState.OrbFactories> orbFactoryByClassMap = new HashMap<>();
 
         for (Orb orbEnum : Orb.values()) {
             orbFactoryByClassMap
