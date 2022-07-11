@@ -47,6 +47,7 @@ public class CardState {
     private final boolean retain;
     private final boolean selfRetain;
     private final boolean shuffleBackIntoDrawPile;
+    private final int targetEnumOrdinal;
 
     private static HashMap<String, LinkedList<AbstractCard>> freeCards;
 
@@ -110,6 +111,7 @@ public class CardState {
         this.dontTriggerOnUseCard = card.dontTriggerOnUseCard;
         this.isEthereal = card.isEthereal;
         this.shuffleBackIntoDrawPile = card.shuffleBackIntoDrawPile;
+        this.targetEnumOrdinal = card.target.ordinal();
 
         this.cardModifiers = new ArrayList<>();
         CardModifierManager.modifiers(card).forEach(modifier -> cardModifiers
@@ -148,6 +150,7 @@ public class CardState {
         this.retain = parsed.get("retain").getAsBoolean();
         this.selfRetain = parsed.get("self_retain").getAsBoolean();
         this.shuffleBackIntoDrawPile = parsed.get("shuffle_back_into_draw_pile").getAsBoolean();
+        this.targetEnumOrdinal = parsed.get("target_enum_ordinal").getAsInt();
 
         this.cardModifiers = new ArrayList<>();
         parsed.get("modifiers").getAsJsonArray().forEach(jsonElement -> {
@@ -217,6 +220,7 @@ public class CardState {
         result.damage = damage;
         result.selfRetain = selfRetain;
         result.shuffleBackIntoDrawPile = shuffleBackIntoDrawPile;
+        result.target = AbstractCard.CardTarget.values()[targetEnumOrdinal];
 
         for (AbstractCardModifierState modifierState : cardModifiers) {
             CardModifierManager.addModifier(result, modifierState.loadModifier());
@@ -258,6 +262,7 @@ public class CardState {
         cardStateJson.addProperty("retain", retain);
         cardStateJson.addProperty("self_retain", selfRetain);
         cardStateJson.addProperty("shuffle_back_into_draw_pile", shuffleBackIntoDrawPile);
+        cardStateJson.addProperty("target_enum_ordinal", targetEnumOrdinal);
 
         JsonArray modifierJsonArray = new JsonArray();
         for (AbstractCardModifierState state : cardModifiers) {
