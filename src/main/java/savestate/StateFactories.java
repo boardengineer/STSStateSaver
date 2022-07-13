@@ -2,6 +2,8 @@ package savestate;
 
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
+import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
+import com.megacrit.cardcrawl.orbs.Lightning;
 import com.megacrit.cardcrawl.powers.TheBombPower;
 import savestate.actions.Action;
 import savestate.actions.ActionState;
@@ -45,6 +47,9 @@ public class StateFactories {
 
     public static HashMap<String, StateElement.ElementFactories> elementFactories = new HashMap<>();
 
+    public static HashMap<String, Integer> cardIdToIndexMap = new HashMap<>();
+    public static String[] cardIds;
+
     public static HashMap<String, RelicState.RelicFactories> relicByIdMap = createRelicMap();
     public static HashMap<Class, ActionState.ActionFactories> actionByClassMap = createActionMap();
     public static HashMap<Class, CurrentActionState.CurrentActionFactories> currentActionByClassMap = createCurrentActionMap();
@@ -54,6 +59,11 @@ public class StateFactories {
     private static HashMap<String, Class<? extends AbstractOrb>> createOrbClassNameMap() {
         HashMap<String, Class<? extends AbstractOrb>> result = new HashMap<>();
         orbByClassMap.keySet().forEach(clazz -> result.put(clazz.getSimpleName(), clazz));
+
+        // Hacky fix for intermediate format
+        result.put("LightningOrbState", Lightning.class);
+        result.put("EmptyOrbSlotState", EmptyOrbSlot.class);
+
         return result;
     }
 

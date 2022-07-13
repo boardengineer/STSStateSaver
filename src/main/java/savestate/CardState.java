@@ -1,5 +1,6 @@
 package savestate;
 
+import basemod.abstracts.AbstractCardModifier;
 import basemod.helpers.CardModifierManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,8 +17,9 @@ import static savestate.SaveStateMod.shouldGoFast;
 
 public class CardState {
     public static boolean IGNORE_MOD_SUBTYPES = false;
+    private static HashMap<String, LinkedList<AbstractCard>> freeCards;
 
-    public final String cardId;
+    public final int cardIdIndex;
     public final boolean upgraded;
     private final int timesUpgraded;
     public final int baseDamage;
@@ -33,7 +35,6 @@ public class CardState {
     public final int baseMagicNumber;
     private final int block;
     private final boolean freeToPlayOnce;
-    public final String name;
 
     private final boolean inBottleTornado;
     private final boolean inBottleLightning;
@@ -49,20 +50,7 @@ public class CardState {
     private final boolean shuffleBackIntoDrawPile;
     private final int targetEnumOrdinal;
 
-    private static HashMap<String, LinkedList<AbstractCard>> freeCards;
-
     private final UUID uuid;
-
-    // Everything works without these, there is just s wonky 'draw' animation that can be avoided
-    // by setting all the physical properties right away
-    private final float current_x;
-    private final float current_y;
-    private final float target_x;
-    private final float target_y;
-    private final float angle;
-    private final float targetAngle;
-    private final float drawScale;
-    private final float targetDrawScale;
 
     private final ArrayList<AbstractCardModifierState> cardModifiers;
 
@@ -70,7 +58,7 @@ public class CardState {
     public CardState(AbstractCard card) {
         long cardConstructorStartTime = System.currentTimeMillis();
 
-        this.cardId = card.cardID;
+        this.cardIdIndex = StateFactories.cardIdToIndexMap.get(card.cardID);
         this.block = card.block;
         this.upgraded = card.upgraded;
         this.baseDamage = card.baseDamage;
@@ -87,7 +75,6 @@ public class CardState {
         this.freeToPlayOnce = card.freeToPlayOnce;
         this.baseBlock = card.baseBlock;
 
-        this.name = card.name;
         this.uuid = card.uuid;
         this.isCostModifiedForTurn = card.isCostModifiedForTurn;
         this.isCostModified = card.isCostModified;
@@ -95,33 +82,29 @@ public class CardState {
         this.baseMagicNumber = card.baseMagicNumber;
         this.selfRetain = card.selfRetain;
 
-        this.current_x = card.current_x;
-        this.current_y = card.current_y;
-
-        this.target_x = card.target_x;
-        this.target_y = card.target_y;
-
-        this.angle = card.angle;
         this.misc = card.misc;
-        this.targetAngle = card.targetAngle;
 
-        this.drawScale = card.drawScale;
-        this.targetDrawScale = card.targetDrawScale;
         this.timesUpgraded = card.timesUpgraded;
         this.dontTriggerOnUseCard = card.dontTriggerOnUseCard;
         this.isEthereal = card.isEthereal;
         this.shuffleBackIntoDrawPile = card.shuffleBackIntoDrawPile;
         this.targetEnumOrdinal = card.target.ordinal();
 
-        this.cardModifiers = new ArrayList<>();
-        CardModifierManager.modifiers(card).forEach(modifier -> cardModifiers
-                .add(AbstractCardModifierState.forModifier(modifier)));
+        ArrayList<AbstractCardModifier> mods = CardModifierManager.modifiers(card);
+
+        if (mods.isEmpty()) {
+            this.cardModifiers = null;
+        } else {
+            this.cardModifiers = new ArrayList<>();
+            CardModifierManager.modifiers(card).forEach(modifier -> cardModifiers
+                    .add(AbstractCardModifierState.forModifier(modifier)));
+        }
     }
 
     public CardState(String jsonString) {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
-        this.cardId = parsed.get("card_id").getAsString();
+        this.cardIdIndex = StateFactories.cardIdToIndexMap.get(parsed.get("card_id").getAsString());
         this.upgraded = parsed.get("upgraded").getAsBoolean();
         this.baseDamage = parsed.get("base_damage").getAsInt();
         this.cost = parsed.get("cost").getAsInt();
@@ -132,7 +115,6 @@ public class CardState {
         this.inBottleFlame = parsed.get("in_bottle_flame").getAsBoolean();
 
         JsonElement nameElement = parsed.get("name");
-        this.name = nameElement.isJsonNull() ? null : nameElement.getAsString();
         this.uuid = UUID.fromString(parsed.get("uuid").getAsString());
         this.freeToPlayOnce = parsed.get("free_to_play_once").getAsBoolean();
         this.isCostModifiedForTurn = parsed.get("is_cost_modified_for_turn").getAsBoolean();
@@ -150,48 +132,34 @@ public class CardState {
         this.retain = parsed.get("retain").getAsBoolean();
         this.selfRetain = parsed.get("self_retain").getAsBoolean();
         this.shuffleBackIntoDrawPile = parsed.get("shuffle_back_into_draw_pile").getAsBoolean();
-        this.targetEnumOrdinal = parsed.get("target_enum_ordinal").getAsInt();
+        if (parsed.has("target_enum_ordinal")) {
+            this.targetEnumOrdinal = parsed.get("target_enum_ordinal").getAsInt();
+        } else {
+            this.targetEnumOrdinal = -1;
+        }
 
-        this.cardModifiers = new ArrayList<>();
-        parsed.get("modifiers").getAsJsonArray().forEach(jsonElement -> {
-            AbstractCardModifierState modState = AbstractCardModifierState
-                    .forString(jsonElement.getAsString());
-            if (modState != null) {
-                cardModifiers
-                        .add(AbstractCardModifierState.forString(jsonElement.getAsString()));
-            }
-        });
+        JsonElement modsElement = parsed.get("modifiers");
+        if (modsElement.isJsonNull()) {
+            this.cardModifiers = null;
+        } else {
+            this.cardModifiers = new ArrayList<>();
+            parsed.get("modifiers").getAsJsonArray().forEach(jsonElement -> {
+                AbstractCardModifierState modState = AbstractCardModifierState
+                        .forString(jsonElement.getAsString());
+                if (modState != null) {
+                    cardModifiers
+                            .add(AbstractCardModifierState.forString(jsonElement.getAsString()));
+                }
+            });
+        }
 
-        // TODO
-        this.current_x = 0;
-        this.current_y = 0;
-
-        this.target_x = 0;
-        this.target_y = 0;
-
-        this.angle = 0;
-        this.targetAngle = 0;
-
-        this.drawScale = 1.0F;
-        this.targetDrawScale = 1.0F;
         this.dontTriggerOnUseCard = false;
     }
 
     public AbstractCard loadCard() {
-        AbstractCard result = getCard(cardId);
+        AbstractCard result = getCard(StateFactories.cardIds[cardIdIndex]);
 
         result.upgraded = upgraded;
-        result.current_x = current_x;
-        result.current_y = current_y;
-
-        result.target_x = target_x;
-        result.target_y = target_y;
-
-        result.angle = angle;
-        result.targetAngle = targetAngle;
-
-        result.drawScale = drawScale;
-        result.targetDrawScale = targetDrawScale;
 
         result.baseDamage = baseDamage;
         result.cost = cost;
@@ -200,7 +168,6 @@ public class CardState {
         result.inBottleLightning = inBottleLightning;
         result.inBottleFlame = inBottleFlame;
         result.inBottleTornado = inBottleTornado;
-        result.name = name;
 
         result.uuid = uuid;
         result.freeToPlayOnce = freeToPlayOnce;
@@ -220,23 +187,27 @@ public class CardState {
         result.damage = damage;
         result.selfRetain = selfRetain;
         result.shuffleBackIntoDrawPile = shuffleBackIntoDrawPile;
-        result.target = AbstractCard.CardTarget.values()[targetEnumOrdinal];
+        if (targetEnumOrdinal >= 0) {
+            result.target = AbstractCard.CardTarget.values()[targetEnumOrdinal];
+        }
 
-        for (AbstractCardModifierState modifierState : cardModifiers) {
-            CardModifierManager.addModifier(result, modifierState.loadModifier());
+        if (cardModifiers != null) {
+            for (AbstractCardModifierState modifierState : cardModifiers) {
+                CardModifierManager.addModifier(result, modifierState.loadModifier());
+            }
         }
 
         return result;
     }
 
     public String getName() {
-        return cardId;
+        return StateFactories.cardIds[cardIdIndex];
     }
 
     public String encode() {
         JsonObject cardStateJson = new JsonObject();
 
-        cardStateJson.addProperty("card_id", cardId);
+        cardStateJson.addProperty("card_id", StateFactories.cardIds[cardIdIndex]);
         cardStateJson.addProperty("upgraded", upgraded);
         cardStateJson.addProperty("base_damage", baseDamage);
         cardStateJson.addProperty("cost", cost);
@@ -244,7 +215,6 @@ public class CardState {
         cardStateJson.addProperty("in_bottle_lightning", inBottleLightning);
         cardStateJson.addProperty("in_bottle_flame", inBottleFlame);
         cardStateJson.addProperty("in_bottle_tornado", inBottleTornado);
-        cardStateJson.addProperty("name", name);
         cardStateJson.addProperty("free_to_play_once", freeToPlayOnce);
         cardStateJson.addProperty("uuid", uuid.toString());
         cardStateJson.addProperty("is_cost_modified_for_turn", isCostModifiedForTurn);
@@ -264,11 +234,15 @@ public class CardState {
         cardStateJson.addProperty("shuffle_back_into_draw_pile", shuffleBackIntoDrawPile);
         cardStateJson.addProperty("target_enum_ordinal", targetEnumOrdinal);
 
-        JsonArray modifierJsonArray = new JsonArray();
-        for (AbstractCardModifierState state : cardModifiers) {
-            modifierJsonArray.add(state.encode());
+        if (cardModifiers == null) {
+            cardStateJson.add("modifiers", null);
+        } else {
+            JsonArray modifierJsonArray = new JsonArray();
+            for (AbstractCardModifierState state : cardModifiers) {
+                modifierJsonArray.add(state.encode());
+            }
+            cardStateJson.add("modifiers", modifierJsonArray);
         }
-        cardStateJson.add("modifiers", modifierJsonArray);
 
         return cardStateJson.toString();
     }
@@ -276,7 +250,7 @@ public class CardState {
     public String diffEncode() {
         JsonObject cardStateJson = new JsonObject();
 
-        cardStateJson.addProperty("card_id", cardId);
+        cardStateJson.addProperty("card_id", StateFactories.cardIds[cardIdIndex]);
         cardStateJson.addProperty("cost", cost);
         cardStateJson.addProperty("cost_for_turn", costForTurn);
         cardStateJson.addProperty("upgraded", upgraded);

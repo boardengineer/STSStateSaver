@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 
@@ -52,6 +54,15 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
         BaseMod.registerModBadge(ImageMaster
                 .loadImage("Icon.png"), "SaveState Mod", "Board Engineer", null, new FileLoadPanel());
+
+        HashMap<String, AbstractCard> cards = CardLibrary.cards;
+        StateFactories.cardIds = new String[cards.size()];
+        int index = 0;
+        for (String cardId : cards.keySet()) {
+            StateFactories.cardIds[index] = cardId;
+            StateFactories.cardIdToIndexMap.put(cardId, index);
+            index++;
+        }
     }
 
     public class SaveStateTopPanel extends TopPanelItem {

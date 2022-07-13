@@ -68,7 +68,8 @@ public abstract class OrbState {
             if (IGNORE_MISSING_ORBS) {
                 return null;
             } else {
-                throw new IllegalArgumentException("Missing state factory for orb " + lookupKey);
+                throw new IllegalArgumentException("Missing state factory for orb " + lookupKey + " possible keys " + StateFactories.orbClassByName
+                        .keySet());
             }
         }
 

@@ -52,7 +52,7 @@ public class SaveState {
     AbstractDungeon.CurrentScreen screen;
     AbstractDungeon.CurrentScreen previousScreen;
 
-    ListState listState;
+//    ListState listState;
     public PlayerState playerState;
     private HandSelectScreenState handSelectScreenState = null;
     private GridCardSelectScreenState gridCardSelectScreenState = null;
@@ -95,7 +95,7 @@ public class SaveState {
         this.screen = AbstractDungeon.screen;
         this.previousScreen = AbstractDungeon.previousScreen;
         this.rngState = new RngState();
-        this.listState = new ListState();
+//        this.listState = new ListState();
         this.floorNum = AbstractDungeon.floorNum;
         this.turn = GameActionManager.turn;
         this.isScreenUp = AbstractDungeon.isScreenUp;
@@ -176,7 +176,7 @@ public class SaveState {
         JsonElement previousScreenName = parsed.get("previous_screen_name");
         this.previousScreen = previousScreenName.isJsonNull() ? null : AbstractDungeon.CurrentScreen
                 .valueOf(previousScreenName.getAsString());
-        this.listState = new ListState(parsed.get("list_state").getAsString());
+//        this.listState = new ListState(parsed.get("list_state").getAsString());
 
         this.playerState = new PlayerState(parsed.get("player_state").getAsString());
         this.rngState = new RngState(parsed.get("rng_state").getAsString(), floorNum);
@@ -243,7 +243,7 @@ public class SaveState {
 
         AbstractDungeon.previousScreen = previousScreen;
 
-        listState.loadLists();
+//        listState.loadLists();
 
         AbstractDungeon.dungeonMapScreen.close();
         AbstractDungeon.floorNum = floorNum;
@@ -392,7 +392,7 @@ public class SaveState {
         saveStateJson.addProperty("previous_screen_name", previousScreen != null ? previousScreen
                 .name() : null);
 
-        saveStateJson.addProperty("list_state", listState.encode());
+//        saveStateJson.addProperty("list_state", listState.encode());
         saveStateJson.addProperty("player_state", playerState.encode());
         saveStateJson.addProperty("rng_state", rngState.encode());
 
