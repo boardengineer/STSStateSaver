@@ -227,7 +227,6 @@ public class PlayerState extends CreatureState {
     }
 
     public void initPlayerAndCardPool() {
-        // TODO This should ideally happen during load but only once per run
         AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
 
         boolean cardsInitialized = false;

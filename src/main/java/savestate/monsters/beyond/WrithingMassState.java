@@ -1,18 +1,22 @@
 package savestate.monsters.beyond;
 
 import basemod.ReflectionHacks;
-import savestate.fastobjects.AnimationStateFast;
-import savestate.monsters.Monster;
-import savestate.monsters.MonsterState;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.megacrit.cardcrawl.actions.AbstractGameAction;
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.beyond.WrithingMass;
+import savestate.fastobjects.AnimationStateFast;
+import savestate.monsters.Monster;
+import savestate.monsters.MonsterState;
 
 import static savestate.SaveStateMod.shouldGoFast;
 
@@ -62,6 +66,39 @@ public class WrithingMassState extends MonsterState {
         monsterStateJson.addProperty("used_mega_debuff", usedMegaDebuff);
 
         return monsterStateJson.toString();
+    }
+
+    @SpirePatch(clz = WrithingMass.class, method = "takeTurn")
+    public static class NoObtainEffectsPatch {
+        @SpirePrefixPatch
+        public static SpireReturn betterObtain(WrithingMass mass) {
+            if (shouldGoFast) {
+                if (mass.nextMove == 4) {
+                    AbstractDungeon.actionManager.addToBottom(new BetterAddCardToDeckAction(CardLibrary.getCard("Parasite").makeCopy()));
+                    return SpireReturn.Return(null);
+                }
+            }
+
+            return SpireReturn.Continue();
+        }
+
+    }
+
+    public static class BetterAddCardToDeckAction extends AbstractGameAction {
+        AbstractCard cardToObtain;
+
+        public BetterAddCardToDeckAction(AbstractCard card) {
+            this.cardToObtain = card;
+            this.duration = 0.01F;
+        }
+
+        public void update() {
+            AbstractDungeon.player.relics.forEach(relic -> {
+                relic.onObtainCard(cardToObtain);
+                relic.onMasterDeckChange();
+            });
+            this.isDone = true;
+        }
     }
 
     @SpirePatch(
