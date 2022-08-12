@@ -1,6 +1,7 @@
 package savestate.monsters.beyond;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -24,6 +25,12 @@ public class SpireGrowthState extends MonsterState {
 
     public SpireGrowthState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.SPIRE_GROWTH.ordinal();
+    }
+
+    public SpireGrowthState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.SPIRE_GROWTH.ordinal();
     }

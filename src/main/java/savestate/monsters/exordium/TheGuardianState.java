@@ -55,6 +55,18 @@ public class TheGuardianState extends MonsterState {
         monsterTypeNumber = Monster.THE_GUARDIAN.ordinal();
     }
 
+    public TheGuardianState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.dmgThreshold = monsterJson.get("dmg_threshold").getAsInt();
+        this.dmgThresholdIncrease = monsterJson.get("dmg_threshold_increase").getAsInt();
+        this.dmgTaken = monsterJson.get("dmg_taken").getAsInt();
+        this.isOpen = monsterJson.get("is_open").getAsBoolean();
+        this.closeUpTriggered = monsterJson.get("close_up_triggered").getAsBoolean();
+
+        monsterTypeNumber = Monster.THE_GUARDIAN.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         TheGuardian monster = new TheGuardian();
@@ -86,6 +98,19 @@ public class TheGuardianState extends MonsterState {
         monsterStateJson.addProperty("close_up_triggered", closeUpTriggered);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("dmg_threshold", dmgThreshold);
+        result.addProperty("dmg_threshold_increase", dmgThresholdIncrease);
+        result.addProperty("dmg_taken", dmgTaken);
+        result.addProperty("is_open", isOpen);
+        result.addProperty("close_up_triggered", closeUpTriggered);
+
+        return result;
     }
 
     @SpirePatch(

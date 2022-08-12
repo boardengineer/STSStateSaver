@@ -37,7 +37,19 @@ public abstract class OrbState {
         this.basePassiveAmount = parsed.get("base_passive_amount").getAsInt();
     }
 
+    public OrbState(JsonObject orbJson) {
+        this.evokeAmount = orbJson.get("evoke_amount").getAsInt();
+        this.passiveAmount = orbJson.get("passive_amount").getAsInt();
+
+        this.baseEvokeAmount = orbJson.get("base_evoke_amount").getAsInt();
+        this.basePassiveAmount = orbJson.get("base_passive_amount").getAsInt();
+    }
+
     public String encode() {
+        return jsonEncode().toString();
+    }
+
+    public JsonObject jsonEncode() {
         JsonObject result = new JsonObject();
 
         result.addProperty("evoke_amount", evokeAmount);
@@ -48,8 +60,7 @@ public abstract class OrbState {
 
         result.addProperty("lookup_key", loadOrb().getClass().getSimpleName());
 
-        return result.toString();
-
+        return result;
     }
 
     public abstract AbstractOrb loadOrb();
@@ -77,13 +88,37 @@ public abstract class OrbState {
                 .get(StateFactories.orbClassByName.get(lookupKey)).jsonFactory.apply(jsonString);
     }
 
+    public static OrbState forJsonObject(JsonObject orbJson) {
+        String lookupKey = orbJson.get("lookup_key").getAsString();
+
+        if (!StateFactories.orbClassByName.containsKey(lookupKey) || !StateFactories.orbByClassMap
+                .containsKey(StateFactories.orbClassByName.get(lookupKey))) {
+            if (IGNORE_MISSING_ORBS) {
+                return null;
+            } else {
+                throw new IllegalArgumentException("Missing state factory for orb " + lookupKey + " possible keys " + StateFactories.orbClassByName
+                        .keySet());
+            }
+        }
+
+        return StateFactories.orbByClassMap
+                .get(StateFactories.orbClassByName.get(lookupKey)).jsonObjectFactory.apply(orbJson);
+    }
+
     public static class OrbFactories {
         public Function<AbstractOrb, OrbState> factory;
         public Function<String, OrbState> jsonFactory;
+        public Function<JsonObject, OrbState> jsonObjectFactory;
 
-        public OrbFactories(Function<AbstractOrb, OrbState> factory, Function<String, OrbState> jsonFactory) {
+        public OrbFactories(Function<AbstractOrb, OrbState> factory, Function<String, OrbState> jsonFactory,Function<JsonObject, OrbState> jsonObjectFactory) {
+            this.jsonObjectFactory = jsonObjectFactory;
             this.factory = factory;
             this.jsonFactory = jsonFactory;
         }
+
+//        public OrbFactories(Function<AbstractOrb, OrbState> factory, Function<String, OrbState> jsonFactory) {
+//            this.factory = factory;
+//            this.jsonFactory = jsonFactory;
+//        }
     }
 }

@@ -43,6 +43,15 @@ public class BronzeAutomatonState extends MonsterState {
         monsterTypeNumber = Monster.BRONZE_AUTOMATON.ordinal();
     }
 
+    public BronzeAutomatonState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.numTurns = monsterJson.get("num_turns").getAsInt();
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.BRONZE_AUTOMATON.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         BronzeAutomaton monster = new BronzeAutomaton();
@@ -64,6 +73,16 @@ public class BronzeAutomatonState extends MonsterState {
         monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("num_turns", numTurns);
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 
     @SpirePatch(

@@ -1,6 +1,7 @@
 package savestate;
 
 import com.badlogic.gdx.math.RandomXS128;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.Settings;
@@ -76,6 +77,32 @@ public class RngState {
                                    .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public RngState(JsonObject rngJson, int floorNum) {
+        seed = rngJson.get("seed").getAsLong();
+        monsterRng = new Random(seed, rngJson.get("monster_rng_counter").getAsInt());
+        mapRng = new Random(seed, rngJson.get("map_rng_counter").getAsInt());
+        eventRng = new Random(seed, rngJson.get("event_rng_counter").getAsInt());
+        merchantRng = new Random(seed, rngJson.get("merchant_rng_counter").getAsInt());
+        cardRng = new Random(seed, rngJson.get("card_rng_counter").getAsInt());
+        treasureRng = new Random(seed, rngJson.get("treasure_rng_counter").getAsInt());
+        relicRng = new Random(seed, rngJson.get("relic_rng_counter").getAsInt());
+        potionRng = new Random(seed, rngJson.get("potion_rng_counter").getAsInt());
+
+        monsterHpRng = new Random(seed + floorNum, rngJson.get("monster_hp_rng_counter")
+                                                          .getAsInt());
+        aiRng = new Random(seed + floorNum, rngJson.get("ai_rng_counter").getAsInt());
+        shuffleRng = new Random(seed + floorNum, rngJson.get("shuffle_rng_counter").getAsInt());
+        cardRandomRng = new Random(seed + floorNum, rngJson.get("card_random_rng_counter")
+                                                           .getAsInt());
+        miscRng = new Random(seed + floorNum, rngJson.get("misc_rng_counter").getAsInt());
+
+        ArrayList<Float> eventChangesArrays = new ArrayList<>();
+        rngJson.get("event_helper_chances").getAsJsonArray()
+               .forEach(jsonElement -> eventChangesArrays.add(jsonElement.getAsFloat()));
+
+        eventHelperChances = eventChangesArrays;
+    }
+
     public void loadRng(long floorNum) {
         Settings.seed = seed;
         AbstractDungeon.monsterRng = betterCopy(monsterRng);
@@ -120,6 +147,31 @@ public class RngState {
         rngStateJson.addProperty("event_helper_chances", helperString);
 
         return rngStateJson.toString();
+    }
+
+    public JsonObject jsonEncode() {
+        JsonObject rngStateJson = new JsonObject();
+
+        rngStateJson.addProperty("seed", seed);
+        rngStateJson.addProperty("monster_rng_counter", monsterRng.counter);
+        rngStateJson.addProperty("map_rng_counter", mapRng.counter);
+        rngStateJson.addProperty("event_rng_counter", eventRng.counter);
+        rngStateJson.addProperty("merchant_rng_counter", merchantRng.counter);
+        rngStateJson.addProperty("card_rng_counter", cardRng.counter);
+        rngStateJson.addProperty("treasure_rng_counter", treasureRng.counter);
+        rngStateJson.addProperty("relic_rng_counter", relicRng.counter);
+        rngStateJson.addProperty("potion_rng_counter", potionRng.counter);
+        rngStateJson.addProperty("monster_hp_rng_counter", monsterHpRng.counter);
+        rngStateJson.addProperty("ai_rng_counter", aiRng.counter);
+        rngStateJson.addProperty("shuffle_rng_counter", shuffleRng.counter);
+        rngStateJson.addProperty("card_random_rng_counter", cardRandomRng.counter);
+        rngStateJson.addProperty("misc_rng_counter", miscRng.counter);
+
+        JsonArray eventChancesArray = new JsonArray();
+        eventHelperChances.forEach(f -> eventChancesArray.add(f));
+        rngStateJson.add("event_helper_chances", eventChancesArray);
+
+        return rngStateJson;
     }
 
     /**

@@ -29,6 +29,13 @@ public class ArtOfWarState extends RelicState {
         this.firstTurn = parsed.get("first_turn").getAsBoolean();
     }
 
+    public ArtOfWarState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.gainEnergyNext = powerJson.get("gain_energy_next").getAsBoolean();
+        this.firstTurn = powerJson.get("first_turn").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         ArtOfWar result = (ArtOfWar) super.loadRelic();
@@ -48,8 +55,16 @@ public class ArtOfWarState extends RelicState {
         parsed.addProperty("gain_energy_next", gainEnergyNext);
         parsed.addProperty("first_turn", firstTurn);
 
-
-
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("gain_energy_next", gainEnergyNext);
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 }

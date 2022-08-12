@@ -39,28 +39,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/Hermit.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/StSLib.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/BaseMod.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/TSSRelics.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/mintySpire.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/RelicStats.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/BattleAiMod.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/HermitState.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/MarisaState.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/TS05_Marisa.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/SaveStateMod.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/LudicrousSpeed.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/CommunicationMod.jar!/" />
-          <root url="jar://$MODULE_DIR$/../_ModTheSpire/mods/CommunicationModExtension.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="Maven: com.megacrit.cardcrawl:slaythespire:11-30-2020">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib/desktop-1.0.jar!/" />

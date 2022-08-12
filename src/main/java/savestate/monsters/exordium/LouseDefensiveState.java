@@ -43,6 +43,15 @@ public class LouseDefensiveState extends MonsterState {
         monsterTypeNumber = Monster.FUZZY_LOUSE_DEFENSIVE.ordinal();
     }
 
+    public LouseDefensiveState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.isOpen = monsterJson.get("is_open").getAsBoolean();
+        this.biteDamage = monsterJson.get("bite_damage").getAsInt();
+
+        monsterTypeNumber = Monster.FUZZY_LOUSE_DEFENSIVE.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         LouseDefensive monster = new LouseDefensive(offsetX, offsetY);
@@ -65,6 +74,16 @@ public class LouseDefensiveState extends MonsterState {
         monsterStateJson.addProperty("bite_damage", biteDamage);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("is_open", isOpen);
+        result.addProperty("bite_damage", biteDamage);
+
+        return result;
     }
 
     @SpirePatch(

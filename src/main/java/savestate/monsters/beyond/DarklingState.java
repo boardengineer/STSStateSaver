@@ -49,6 +49,16 @@ public class DarklingState extends MonsterState {
         monsterTypeNumber = Monster.DARKLING.ordinal();
     }
 
+    public DarklingState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.chompDmg = monsterJson.get("chomp_dmg").getAsInt();
+        this.nipDmg = monsterJson.get("nip_dmg").getAsInt();
+        this.firstMove = monsterJson.get("fist_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.DARKLING.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Darkling monster = new Darkling(offsetX, offsetY);
@@ -71,6 +81,17 @@ public class DarklingState extends MonsterState {
         monsterStateJson.addProperty("fist_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("chomp_dmg", chompDmg);
+        result.addProperty("nip_dmg", nipDmg);
+        result.addProperty("fist_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

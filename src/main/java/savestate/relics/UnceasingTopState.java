@@ -28,6 +28,13 @@ public class UnceasingTopState extends RelicState {
         this.canDraw = parsed.get("can_draw").getAsBoolean();
     }
 
+    public UnceasingTopState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.disabledUntilEndOfTurn = relicJson.get("disabled_until_end_of_turn").getAsBoolean();
+        this.canDraw = relicJson.get("can_draw").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         UnceasingTop result = (UnceasingTop) super.loadRelic();
@@ -48,5 +55,15 @@ public class UnceasingTopState extends RelicState {
         parsed.addProperty("disabled_until_end_of_turn", disabledUntilEndOfTurn);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("can_draw", canDraw);
+        result.addProperty("disabled_until_end_of_turn", disabledUntilEndOfTurn);
+
+        return result;
     }
 }

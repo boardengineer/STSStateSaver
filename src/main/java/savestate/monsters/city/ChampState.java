@@ -55,6 +55,18 @@ public class ChampState extends MonsterState {
         monsterTypeNumber = Monster.CHAMP.ordinal();
     }
 
+    public ChampState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.numTurns = monsterJson.get("num_turns").getAsInt();
+        this.forgeTimes = monsterJson.get("forge_times").getAsInt();
+        this.forgeThreshold = monsterJson.get("forge_threshold").getAsInt();
+        this.thresholdReached = monsterJson.get("threshold_reached").getAsBoolean();
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.CHAMP.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Champ monster = new Champ();
@@ -85,6 +97,19 @@ public class ChampState extends MonsterState {
         monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("num_turns", numTurns);
+        result.addProperty("forge_times", forgeTimes);
+        result.addProperty("forge_threshold", forgeThreshold);
+        result.addProperty("threshold_reached", thresholdReached);
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 
     @SpirePatch(

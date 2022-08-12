@@ -40,6 +40,14 @@ public class StunMonsterPowerState extends PowerState {
         this.move = new EnemyMoveInfoState(parsed.get("move").getAsString());
     }
 
+    public StunMonsterPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.moveByte = powerJson.get("move_byte").getAsByte();
+        this.moveIntentOrdinal = powerJson.get("move_intent_ordinal").getAsInt();
+        this.move = new EnemyMoveInfoState(powerJson.get("move").getAsJsonObject());
+    }
+
     @Override
     public AbstractPower loadPower(AbstractCreature targetAndSource) {
         // Hopefully no one tries to set this to a player, if they do we'll deal with this then
@@ -65,5 +73,16 @@ public class StunMonsterPowerState extends PowerState {
         parsed.addProperty("move", move.encode());
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("move_byte", moveByte);
+        result.addProperty("move_intent_ordinal", moveIntentOrdinal);
+        result.addProperty("move", move.encode());
+
+        return result;
     }
 }

@@ -39,6 +39,14 @@ public class SneckoState extends MonsterState {
         monsterTypeNumber = Monster.SNECKO.ordinal();
     }
 
+    public SneckoState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.SNECKO.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Snecko monster = new Snecko(offsetX, offsetY);
@@ -57,6 +65,15 @@ public class SneckoState extends MonsterState {
         monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 
     @SpirePatch(

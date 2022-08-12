@@ -1,8 +1,6 @@
 package savestate.monsters.ending;
 
 import basemod.ReflectionHacks;
-import savestate.fastobjects.AnimationStateFast;
-import savestate.monsters.MonsterState;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
@@ -12,6 +10,8 @@ import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.ending.SpireSpear;
+import savestate.fastobjects.AnimationStateFast;
+import savestate.monsters.MonsterState;
 
 import static savestate.SaveStateMod.shouldGoFast;
 
@@ -35,6 +35,13 @@ public class SpireSpearState extends MonsterState {
         this.skewerCount = parsed.get("skewer_count").getAsInt();
     }
 
+    public SpireSpearState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.moveCount = monsterJson.get("move_count").getAsInt();
+        this.skewerCount = monsterJson.get("skewer_count").getAsInt();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SpireSpear result = new SpireSpear();
@@ -55,6 +62,16 @@ public class SpireSpearState extends MonsterState {
         monsterStateJson.addProperty("skewer_count", skewerCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("move_count", moveCount);
+        result.addProperty("skewer_count", skewerCount);
+
+        return result;
     }
 
     @SpirePatch(

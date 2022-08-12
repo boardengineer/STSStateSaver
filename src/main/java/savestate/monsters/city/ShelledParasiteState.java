@@ -39,6 +39,14 @@ public class ShelledParasiteState extends MonsterState {
         monsterTypeNumber = Monster.SHELLED_PARASITE.ordinal();
     }
 
+    public ShelledParasiteState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.SHELLED_PARASITE.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         ShelledParasite monster = new ShelledParasite(offsetX, offsetY);
@@ -57,6 +65,15 @@ public class ShelledParasiteState extends MonsterState {
         monsterStateJson.addProperty("first_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

@@ -1,5 +1,6 @@
 package savestate.monsters.exordium;
 
+import com.google.gson.JsonObject;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
@@ -14,6 +15,12 @@ public class ApologySlimeState extends MonsterState {
 
     public ApologySlimeState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.APOLOGY_SLIME.ordinal();
+    }
+
+    public ApologySlimeState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.APOLOGY_SLIME.ordinal();
     }

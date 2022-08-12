@@ -1,6 +1,7 @@
 package savestate.monsters.city;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -23,6 +24,12 @@ public class SnakePlantState extends MonsterState {
 
     public SnakePlantState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.SNAKE_PLANT.ordinal();
+    }
+
+    public SnakePlantState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.SNAKE_PLANT.ordinal();
     }

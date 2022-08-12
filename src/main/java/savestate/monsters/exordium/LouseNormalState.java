@@ -43,6 +43,15 @@ public class LouseNormalState extends MonsterState {
         monsterTypeNumber = Monster.FUZZY_LOUSE_NORMAL.ordinal();
     }
 
+    public LouseNormalState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.isOpen = monsterJson.get("is_open").getAsBoolean();
+        this.biteDamage = monsterJson.get("bite_damage").getAsInt();
+
+        monsterTypeNumber = Monster.FUZZY_LOUSE_NORMAL.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         LouseNormal monster = new LouseNormal(offsetX, offsetY);
@@ -64,6 +73,16 @@ public class LouseNormalState extends MonsterState {
         monsterStateJson.addProperty("bite_damage", biteDamage);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("is_open", isOpen);
+        result.addProperty("bite_damage", biteDamage);
+
+        return result;
     }
 
     @SpirePatch(

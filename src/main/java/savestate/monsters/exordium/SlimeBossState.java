@@ -35,6 +35,14 @@ public class SlimeBossState extends MonsterState {
         monsterTypeNumber = Monster.SLIME_BOSS.ordinal();
     }
 
+    public SlimeBossState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.SLIME_BOSS.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SlimeBoss result = new SlimeBoss();
@@ -54,6 +62,14 @@ public class SlimeBossState extends MonsterState {
         return monsterStateJson.toString();
     }
 
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
+    }
 
     @SpirePatch(
             clz = SlimeBoss.class,

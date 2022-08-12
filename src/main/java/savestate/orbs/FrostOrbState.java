@@ -3,6 +3,7 @@ package savestate.orbs;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.DamageAllEnemiesAction;
 import com.megacrit.cardcrawl.cards.blue.Blizzard;
@@ -21,6 +22,10 @@ public class FrostOrbState extends OrbState {
 
     public FrostOrbState(String jsonString) {
         super(jsonString);
+    }
+
+    public FrostOrbState(JsonObject orbJson) {
+        super(orbJson);
     }
 
     @Override

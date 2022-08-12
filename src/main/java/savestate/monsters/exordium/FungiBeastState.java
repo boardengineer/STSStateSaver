@@ -1,5 +1,6 @@
 package savestate.monsters.exordium;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -22,6 +23,12 @@ public class FungiBeastState extends MonsterState {
 
     public FungiBeastState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.FUNGI_BEAST.ordinal();
+    }
+
+    public FungiBeastState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.FUNGI_BEAST.ordinal();
     }

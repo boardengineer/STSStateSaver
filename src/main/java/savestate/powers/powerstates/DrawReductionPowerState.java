@@ -8,8 +8,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.DrawReductionPower;
 
-public class DrawReductionPowerState extends PowerState
-{
+public class DrawReductionPowerState extends PowerState {
     private final boolean justApplied;
 
     public DrawReductionPowerState(AbstractPower power) {
@@ -27,6 +26,12 @@ public class DrawReductionPowerState extends PowerState
         this.justApplied = parsed.get("just_applied").getAsBoolean();
     }
 
+    public DrawReductionPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.justApplied = powerJson.get("just_applied").getAsBoolean();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -34,6 +39,15 @@ public class DrawReductionPowerState extends PowerState
         parsed.addProperty("just_applied", justApplied);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("just_applied", justApplied);
+
+        return result;
     }
 
     @Override

@@ -15,7 +15,7 @@ public class PowerState {
 
     public final String powerId;
     public final int amount;
-    protected JsonObject jObject = null;
+    protected JsonObject powerJson = null;
 
     public PowerState(AbstractPower power) {
         this.powerId = power.ID;
@@ -23,10 +23,17 @@ public class PowerState {
     }
 
     public PowerState(String jsonString) {
-        jObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        powerJson = new JsonParser().parse(jsonString).getAsJsonObject();
 
-        this.powerId = jObject.get("power_id").getAsString();
-        this.amount = jObject.get("amount").getAsInt();
+        this.powerId = powerJson.get("power_id").getAsString();
+        this.amount = powerJson.get("amount").getAsInt();
+    }
+
+    public PowerState(JsonObject powerJson) {
+        this.powerJson = powerJson;
+
+        this.powerId = powerJson.get("power_id").getAsString();
+        this.amount = powerJson.get("amount").getAsInt();
     }
 
     public AbstractPower loadPower(AbstractCreature targetAndSource) {
@@ -45,23 +52,28 @@ public class PowerState {
     }
 
     public String encode() {
-        if (jObject == null)
-            jObject = new JsonObject();
+        return jsonEncode().toString();
+    }
 
-        jObject.addProperty("power_id", powerId);
-        jObject.addProperty("amount", amount);
+    public JsonObject jsonEncode() {
+        if (powerJson == null) {
+            powerJson = new JsonObject();
+        }
 
-        return jObject.toString();
+        powerJson.addProperty("power_id", powerId);
+        powerJson.addProperty("amount", amount);
+
+        return powerJson;
     }
 
     public String diffEncode() {
-        if (jObject == null)
-            jObject = new JsonObject();
+        if (powerJson == null)
+            powerJson = new JsonObject();
 
-        jObject.addProperty("power_id", powerId);
-        jObject.addProperty("amount", amount);
+        powerJson.addProperty("power_id", powerId);
+        powerJson.addProperty("amount", amount);
 
-        return jObject.toString();
+        return powerJson.toString();
     }
 
     // A generic empty power so that power factories can be used for basic json powers
@@ -104,18 +116,42 @@ public class PowerState {
         return StateFactories.powerByIdMap.get(id).jsonFactory.apply(jsonString);
     }
 
+    public static PowerState forJsonObject(JsonObject powerJson) {
+        String id = powerJson.get("power_id").getAsString();
+
+        if (!StateFactories.powerByIdMap.containsKey(id)) {
+            if (IGNORE_MISSING_POWERS) {
+                return null;
+            } else {
+                throw new IllegalStateException("No Power State for " + id);
+            }
+        }
+        return StateFactories.powerByIdMap.get(id).jsonObjectFactory.apply(powerJson);
+    }
+
     public static class PowerFactories {
         public final Function<AbstractPower, PowerState> factory;
         public final Function<String, PowerState> jsonFactory;
+        public final Function<JsonObject, PowerState> jsonObjectFactory;
 
-        public PowerFactories(Function<AbstractPower, PowerState> factory, Function<String, PowerState> jsonFactory) {
+        public PowerFactories(Function<AbstractPower, PowerState> factory,
+                              Function<String, PowerState> jsonFactory,
+                              Function<JsonObject, PowerState> jsonObjectFactory) {
+            this.jsonObjectFactory = jsonObjectFactory;
             this.factory = factory;
             this.jsonFactory = jsonFactory;
         }
 
+//        public PowerFactories(Function<AbstractPower, PowerState> factory,
+//                              Function<String, PowerState> jsonFactory) {
+//            this.factory = factory;
+//            this.jsonFactory = jsonFactory;
+//        }
+
         public PowerFactories(Function<AbstractPower, PowerState> factory) {
             this.factory = factory;
             this.jsonFactory = json -> new PowerState(json);
+            this.jsonObjectFactory = jsonObject -> new PowerState(jsonObject);
         }
     }
 }

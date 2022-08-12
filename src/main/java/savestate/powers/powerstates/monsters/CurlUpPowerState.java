@@ -5,8 +5,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.CurlUpPower;
 
-public class CurlUpPowerState extends PowerState
-{
+public class CurlUpPowerState extends PowerState {
     public CurlUpPowerState(AbstractPower power) {
         super(power);
     }

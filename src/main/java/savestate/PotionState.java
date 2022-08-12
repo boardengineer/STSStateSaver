@@ -24,13 +24,22 @@ public class PotionState {
         this.slot = parsed.get("slot").getAsInt();
     }
 
+    public PotionState(JsonObject jsonObject) {
+        this.potionId = jsonObject.get("id").getAsString();
+        this.slot = jsonObject.get("slot").getAsInt();
+    }
+
     public String encode() {
+        return jsonEncode().toString();
+    }
+
+    public JsonObject jsonEncode() {
         JsonObject potionJson = new JsonObject();
 
         potionJson.addProperty("id", potionId);
         potionJson.addProperty("slot", slot);
 
-        return potionJson.toString();
+        return potionJson;
     }
 
     public AbstractPotion loadPotion() {

@@ -68,6 +68,20 @@ public class HexaghostState extends MonsterState {
         monsterTypeNumber = Monster.HEXAGHOST.ordinal();
     }
 
+    public HexaghostState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.activated = monsterJson.get("activated").getAsBoolean();
+        this.burnUpgraded = monsterJson.get("burn_upgraded").getAsBoolean();
+        this.orbActiveCount = monsterJson.get("orb_active_count").getAsInt();
+        ArrayList<Boolean> orbs = new ArrayList<>();
+        monsterJson.get("active_orbs").getAsJsonArray()
+              .forEach(active -> orbs.add(active.getAsBoolean()));
+        this.activeOrbs = orbs;
+
+        monsterTypeNumber = Monster.HEXAGHOST.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Hexaghost monster = new Hexaghost();
@@ -79,13 +93,6 @@ public class HexaghostState extends MonsterState {
                 .setPrivate(monster, Hexaghost.class, "burnUpgraded", burnUpgraded);
         ReflectionHacks
                 .setPrivate(monster, Hexaghost.class, "orbActiveCount", orbActiveCount);
-//        ArrayList<HexaghostOrb> orbs = ReflectionHacks
-//                .getPrivate(monster, Hexaghost.class, "orbs");
-//        for (int i = 0; i < activeOrbs.size(); i++) {
-//            if (activeOrbs.get(i)) {
-//                orbs.get(i).activate(0, 0);
-//            }
-//        }
 
         return monster;
     }
@@ -102,6 +109,21 @@ public class HexaghostState extends MonsterState {
         monsterStateJson.add("active_orbs", orbArray);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("activated", activated);
+        result.addProperty("burn_upgraded", burnUpgraded);
+        result.addProperty("orb_active_count", orbActiveCount);
+
+        JsonArray orbArray = new JsonArray();
+        activeOrbs.forEach(isActive -> orbArray.add(isActive));
+        result.add("active_orbs", orbArray);
+
+        return result;
     }
 
     @SpirePatch(

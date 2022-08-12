@@ -40,6 +40,15 @@ public class ByrdState extends MonsterState {
         monsterTypeNumber = Monster.BYRD.ordinal();
     }
 
+    public ByrdState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        firstMove = monsterJson.get("first_move").getAsBoolean();
+        isFlying = monsterJson.get("is_flying").getAsBoolean();
+
+        monsterTypeNumber = Monster.BYRD.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Byrd monster = new Byrd(offsetX, offsetY);
@@ -59,6 +68,16 @@ public class ByrdState extends MonsterState {
         monsterStateJson.addProperty("is_flying", isFlying);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+        result.addProperty("is_flying", isFlying);
+
+        return result;
     }
 
     @SpirePatch(

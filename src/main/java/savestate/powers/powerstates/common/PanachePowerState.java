@@ -25,6 +25,12 @@ public class PanachePowerState extends PowerState {
         this.damage = parsed.get("damage").getAsInt();
     }
 
+    public PanachePowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.damage = powerJson.get("damage").getAsInt();
+    }
+
     @Override
     public AbstractPower loadPower(AbstractCreature targetAndSource) {
         PanachePower result = new PanachePower(targetAndSource, damage);
@@ -41,5 +47,14 @@ public class PanachePowerState extends PowerState {
         parsed.addProperty("damage", damage);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("damage", damage);
+
+        return result;
     }
 }

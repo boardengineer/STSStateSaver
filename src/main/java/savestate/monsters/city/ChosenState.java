@@ -41,6 +41,15 @@ public class ChosenState extends MonsterState {
         monsterTypeNumber = Monster.CHOSEN.ordinal();
     }
 
+    public ChosenState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.usedHex = monsterJson.get("used_hex").getAsBoolean();
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.CHOSEN.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Chosen monster = new Chosen(offsetX, offsetY);
@@ -60,6 +69,16 @@ public class ChosenState extends MonsterState {
         monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("used_hex", usedHex);
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 
     @SpirePatch(

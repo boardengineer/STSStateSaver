@@ -1,6 +1,7 @@
 package savestate.monsters.beyond;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonObject;
 import savestate.monsters.MonsterState;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -19,6 +20,10 @@ public class RepulsorState extends MonsterState {
 
     public RepulsorState(String jsonString) {
         super(jsonString);
+    }
+
+    public RepulsorState(JsonObject monsterJson) {
+        super(monsterJson);
     }
 
     @Override

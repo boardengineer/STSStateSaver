@@ -1,5 +1,6 @@
 package savestate;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -105,8 +106,6 @@ public class CreatureState {
     }
 
     public CreatureState(String jsonString) {
-        long loadStartTime = System.currentTimeMillis();
-
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.name = parsed.get("name").getAsString();
@@ -148,6 +147,51 @@ public class CreatureState {
                             .map(PowerState::forJsonString)
                             .filter(powerState -> powerState != null)
                             .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public CreatureState(JsonObject creatureJson) {
+        this.name = creatureJson.get("name").getAsString();
+        this.id = creatureJson.get("id").isJsonNull() ? null : creatureJson.get("id").getAsString();
+        this.isPlayer = creatureJson.get("is_player").getAsBoolean();
+        this.isBloodied = creatureJson.get("is_bloodied").getAsBoolean();
+        this.drawX = creatureJson.get("draw_x").getAsInt();
+        this.drawY = creatureJson.get("draw_y").getAsInt();
+        this.dialogX = creatureJson.get("dialog_x").getAsInt();
+        this.dialogY = creatureJson.get("dialog_y").getAsInt();
+        this.gold = creatureJson.get("gold").getAsInt();
+        this.displayGold = creatureJson.get("display_gold").getAsInt();
+        this.isDying = creatureJson.get("is_dying").getAsBoolean();
+        this.isDead = creatureJson.get("is_dead").getAsBoolean();
+        this.halfDead = creatureJson.get("half_dead").getAsBoolean();
+        this.flipHorizontal = creatureJson.get("flip_horizontal").getAsBoolean();
+        this.flipVertical = creatureJson.get("flip_vertical").getAsBoolean();
+        this.escapeTimer = creatureJson.get("escape_timer").getAsInt();
+        this.isEscaping = creatureJson.get("is_escaping").getAsBoolean();
+        this.lastDamageTaken = creatureJson.get("last_damage_taken").getAsInt();
+        this.hb_x = creatureJson.get("hb_x").getAsInt();
+        this.hb_y = creatureJson.get("hb_y").getAsInt();
+        this.hb_w = creatureJson.get("hb_w").getAsInt();
+        this.hb_h = creatureJson.get("hb_h").getAsInt();
+        this.currentHealth = creatureJson.get("current_health").getAsInt();
+        this.maxHealth = creatureJson.get("max_health").getAsInt();
+        this.currentBlock = creatureJson.get("current_block").getAsInt();
+        this.hbAlpha = creatureJson.get("hb_alpha").getAsInt();
+        this.animX = creatureJson.get("anim_x").getAsInt();
+        this.animY = creatureJson.get("anim_y").getAsInt();
+        this.reticleAlpha = creatureJson.get("reticle_alpha").getAsInt();
+        this.reticleRendered = creatureJson.get("reticle_rendered").getAsBoolean();
+
+        this.hb = new HitboxState(creatureJson.get("hb").getAsJsonObject());
+        this.healthHb = new HitboxState(creatureJson.get("health_hb").getAsJsonObject());
+
+        JsonArray powersJsonArray = creatureJson.get("powers").getAsJsonArray();
+        ArrayList<PowerState> powersArrayList = new ArrayList<>();
+
+        powersJsonArray.forEach(jsonElement -> {
+            powersArrayList.add(PowerState.forJsonObject(jsonElement.getAsJsonObject()));
+        });
+
+        this.powers = powersArrayList;
     }
 
     public void loadCreature(AbstractCreature creature) {
@@ -250,6 +294,50 @@ public class CreatureState {
                                                               .joining(POWER_DELIMETER)));
 
         return creatureStateJson.toString();
+    }
+
+    public JsonObject jsonEncode() {
+        JsonObject creatureStateJson = new JsonObject();
+
+        creatureStateJson.addProperty("name", name);
+        creatureStateJson.addProperty("id", id);
+        creatureStateJson.addProperty("is_player", isPlayer);
+        creatureStateJson.addProperty("is_bloodied", isBloodied);
+        creatureStateJson.addProperty("draw_x", drawX);
+        creatureStateJson.addProperty("draw_y", drawY);
+        creatureStateJson.addProperty("dialog_x", dialogX);
+        creatureStateJson.addProperty("dialog_y", dialogY);
+        creatureStateJson.addProperty("gold", gold);
+        creatureStateJson.addProperty("display_gold", displayGold);
+        creatureStateJson.addProperty("is_dying", isDying);
+        creatureStateJson.addProperty("is_dead", isDead);
+        creatureStateJson.addProperty("half_dead", halfDead);
+        creatureStateJson.addProperty("flip_horizontal", flipHorizontal);
+        creatureStateJson.addProperty("flip_vertical", flipVertical);
+        creatureStateJson.addProperty("escape_timer", escapeTimer);
+        creatureStateJson.addProperty("is_escaping", isEscaping);
+        creatureStateJson.addProperty("last_damage_taken", lastDamageTaken);
+        creatureStateJson.addProperty("hb_x", hb_x);
+        creatureStateJson.addProperty("hb_y", hb_y);
+        creatureStateJson.addProperty("hb_w", hb_w);
+        creatureStateJson.addProperty("hb_h", hb_h);
+        creatureStateJson.addProperty("current_health", currentHealth);
+        creatureStateJson.addProperty("max_health", maxHealth);
+        creatureStateJson.addProperty("current_block", currentBlock);
+        creatureStateJson.addProperty("hb_alpha", hbAlpha);
+        creatureStateJson.addProperty("anim_x", animX);
+        creatureStateJson.addProperty("anim_y", animY);
+        creatureStateJson.addProperty("reticle_alpha", reticleAlpha);
+        creatureStateJson.addProperty("reticle_rendered", reticleRendered);
+
+        creatureStateJson.add("hb", hb.jsonEncode());
+        creatureStateJson.add("health_hb", healthHb.jsonEncode());
+
+        JsonArray powersJson = new JsonArray();
+        powers.forEach(power -> powersJson.add(power.jsonEncode()));
+        creatureStateJson.add("powers", powersJson);
+
+        return creatureStateJson;
     }
 
     public String diffEncode() {

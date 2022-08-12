@@ -3,6 +3,7 @@ package savestate.monsters.city;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.city.Healer;
 import savestate.fastobjects.AnimationStateFast;
@@ -20,6 +21,12 @@ public class HealerState extends MonsterState {
 
     public HealerState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.HEALER.ordinal();
+    }
+
+    public HealerState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.HEALER.ordinal();
     }

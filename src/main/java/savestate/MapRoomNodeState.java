@@ -1,6 +1,7 @@
 package savestate;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.map.MapRoomNode;
@@ -110,6 +111,29 @@ public class MapRoomNodeState {
         this.phase = AbstractRoom.RoomPhase.valueOf(parsed.get("phase_name").getAsString());
 
         this.roomType = RoomType.valueOf(parsed.get("room_type").getAsString());
+    }
+
+    public MapRoomNodeState(JsonObject roomNodeJson) {
+        this.taken = roomNodeJson.get("taken").getAsBoolean();
+        this.highlighted = roomNodeJson.get("highlighted").getAsBoolean();
+        this.hasEmeraldKey = roomNodeJson.get("has_emerald_key").getAsBoolean();
+        this.isBattleOver = roomNodeJson.get("is_battle_over").getAsBoolean();
+        this.cannotLose = roomNodeJson.get("cannot_lose").getAsBoolean();
+        this.eliteTrigger = roomNodeJson.get("elite_trigger").getAsBoolean();
+        this.mugged = roomNodeJson.get("mugged").getAsBoolean();
+        this.combatEvent = roomNodeJson.get("combat_event").getAsBoolean();
+        this.rewardAllowed = roomNodeJson.get("reward_allowed").getAsBoolean();
+        this.rewardTime = roomNodeJson.get("reward_time").getAsBoolean();
+        this.skipMonsterTurn = roomNodeJson.get("skip_monster_turn").getAsBoolean();
+        this.phase = AbstractRoom.RoomPhase.valueOf(roomNodeJson.get("phase_name").getAsString());
+        this.roomType = RoomType.valueOf(roomNodeJson.get("room_type").getAsString());
+        this.waitTimer = roomNodeJson.get("wait_timer").getAsFloat();
+
+        ArrayList<MonsterState> monsterData = new ArrayList<>();
+        roomNodeJson.get("monster_data").getAsJsonArray().forEach(jsonElement -> monsterData
+                .add(MonsterState.forJsonObject(jsonElement.getAsJsonObject())));
+        this.monsterData = monsterData;
+
     }
 
     public MapRoomNode loadMapRoomNode(MapRoomNode mapRoomNode) {
@@ -235,6 +259,31 @@ public class MapRoomNodeState {
         mapRoomNodeStateJson.addProperty("phase_name", phase.name());
 
         return mapRoomNodeStateJson.toString();
+    }
+
+    public JsonObject jsonEncode() {
+        JsonObject mapRoomNodeStateJson = new JsonObject();
+
+        mapRoomNodeStateJson.addProperty("taken", taken);
+        mapRoomNodeStateJson.addProperty("highlighted", highlighted);
+        mapRoomNodeStateJson.addProperty("has_emerald_key", hasEmeraldKey);
+        mapRoomNodeStateJson.addProperty("is_battle_over", isBattleOver);
+        mapRoomNodeStateJson.addProperty("cannot_lose", cannotLose);
+        mapRoomNodeStateJson.addProperty("elite_trigger", eliteTrigger);
+        mapRoomNodeStateJson.addProperty("mugged", mugged);
+        mapRoomNodeStateJson.addProperty("combat_event", combatEvent);
+        mapRoomNodeStateJson.addProperty("reward_allowed", rewardAllowed);
+        mapRoomNodeStateJson.addProperty("reward_time", rewardTime);
+        mapRoomNodeStateJson.addProperty("skip_monster_turn", skipMonsterTurn);
+        mapRoomNodeStateJson.addProperty("wait_timer", waitTimer);
+        mapRoomNodeStateJson.addProperty("room_type", roomType.name());
+        mapRoomNodeStateJson.addProperty("phase_name", phase.name());
+
+        JsonArray monsterDataToSet = new JsonArray();
+        monsterData.forEach(monsterState -> monsterDataToSet.add(monsterState.jsonEncode()));
+        mapRoomNodeStateJson.add("monster_data", monsterDataToSet);
+
+        return mapRoomNodeStateJson;
     }
 
     public String diffEncode() {

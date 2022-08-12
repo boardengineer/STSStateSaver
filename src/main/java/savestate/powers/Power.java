@@ -1,6 +1,7 @@
 package savestate.powers;
 
 import com.evacipated.cardcrawl.mod.stslib.powers.StunMonsterPower;
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import savestate.powers.powerstates.*;
 import savestate.powers.powerstates.common.*;
@@ -37,11 +38,11 @@ public enum Power {
     CHOKED("Choked", power -> new ChokePowerState(power)),
     CURL_UP("Curl Up", power -> new CurlUpPowerState(power)),
     COLLECT("Collect", power -> new CollectPowerState(power)),
-    COMBUST("Combust", power -> new CombustPowerState(power), json -> new CombustPowerState(json)),
+    COMBUST("Combust", power -> new CombustPowerState(power), json -> new CombustPowerState(json), jsonObject -> new CombustPowerState(jsonObject)),
     COMPULSIVE("Compulsive", power -> new ReactivePowerState(power)),
     CONFUSION("Confusion", power -> new ConfusionPowerState(power)),
     CONSERVE("Conserve", power -> new ConservePowerState(power)),
-    CONSTRICTED("Constricted", power -> new ConstrictedPowerState(power), json -> new ConstrictedPowerState(json)),
+    CONSTRICTED("Constricted", power -> new ConstrictedPowerState(power)),
     CONTROLLED("Controlled", power -> new MentalFortressPowerState(power)),
     CORPSE_EXPLOSION_POWER("CorpseExplosionPower", power -> new CorpseExplosionPowerState(power)),
     CORRUPTION("Corruption", power -> new CorruptionPowerState(power)),
@@ -49,7 +50,7 @@ public enum Power {
     CURIOSITY("Curiosity", power -> new CuriosityPowerState(power)),
     DARK_EMBRACE("Dark Embrace", power -> new DarkEmbracePowerState(power)),
     DEMON_FORM("Demon Form", power -> new DemonFormPowerState(power)),
-    DEVA_FORM("DevaForm", power -> new DevaPowerState(power), json -> new DevaPowerState(json)),
+    DEVA_FORM("DevaForm", power -> new DevaPowerState(power), json -> new DevaPowerState(json), jsonObject -> new DevaPowerState(jsonObject)),
     DEVOTION_POWER("DevotionPower", power -> new DevotionPowerState(power)),
     DEX_LOSS("DexLoss", power -> new LoseDexterityPowerState(power)),
     DEXTERITY("Dexterity", power -> new DexterityPowerState(power)),
@@ -57,9 +58,9 @@ public enum Power {
     DOUBLE_TAP("Double Tap", power -> new DoubleTapPowerState(power)),
     DRAW("Draw", power -> new DrawPowerState(power)),
     DRAW_CARD("Draw Card", power -> new DrawCardNextTurnPowerState(power)),
-    DRAW_REDUCTION("Draw Reduction", power -> new DrawReductionPowerState(power), json -> new DrawReductionPowerState(json)),
+    DRAW_REDUCTION("Draw Reduction", power -> new DrawReductionPowerState(power), json -> new DrawReductionPowerState(json), jsonObject -> new DrawReductionPowerState(jsonObject)),
     DUPLICATION_POWER("DuplicationPower", power -> new DuplicationPowerState(power)),
-    ECHO_FORM("Echo Form", power -> new EchoPowerState(power), json -> new EchoPowerState(json)),
+    ECHO_FORM("Echo Form", power -> new EchoPowerState(power), json -> new EchoPowerState(json), jsonObject -> new EchoPowerState(jsonObject)),
     ELECTRO("Electro", power -> new ElectroPowerState(power)),
     END_TURN_DEATH("EndTurnDeath", power -> new EndTurnDeathPowerState(power)),
     ENTANGLED("Entangled", power -> new EntanglePowerState(power)),
@@ -76,7 +77,7 @@ public enum Power {
     FIRE_BREATHING("Fire Breathing", power -> new FireBreathingPowerState(power)),
     FLAME_BARRIER("Flame Barrier", power -> new FlameBarrierPowerState(power)),
     FLEX("Flex", power -> new LoseStrengthPowerState(power)),
-    FLIGHT("Flight", power -> new FlightPowerState(power), json -> new FlightPowerState(json)),
+    FLIGHT("Flight", power -> new FlightPowerState(power), json -> new FlightPowerState(json), jsonObject -> new FlightPowerState(jsonObject)),
     FOCUS("Focus", power -> new FocusPowerState(power)),
     FRAIL("Frail", power -> new FrailPowerState(power)),
     FREE_ATTACK_POWER("FreeAttackPower", power -> new FreeAttackPowerState(power)),
@@ -85,16 +86,16 @@ public enum Power {
     HELLO("Hello", power -> new HelloPowerState(power)),
     HEX("Hex", power -> new HexPowerState(power)),
     INFINITE_BLADES("Infinite Blades", power -> new InfiniteBladesPowerState(power)),
-    INTANGIBLE("Intangible", power -> new IntangiblePowerState(power), json -> new IntangiblePowerState(json)),
+    INTANGIBLE("Intangible", power -> new IntangiblePowerState(power), json -> new IntangiblePowerState(json), jsonObject -> new IntangiblePowerState(jsonObject)),
     INTANGIBLE_PLAYER("IntangiblePlayer", power -> new IntangiblePlayerPowerState(power)),
-    INVINCIBLE("Invincible", power -> new InvinciblePowerState(power), json -> new InvinciblePowerState(json)),
+    INVINCIBLE("Invincible", power -> new InvinciblePowerState(power), json -> new InvinciblePowerState(json), jsonObject -> new InvinciblePowerState(jsonObject)),
     JUGGERNAUT("Juggernaut", power -> new JuggernautPowerState(power)),
     LIFE_LINK("Life Link", power -> new RegrowPowerState(power)),
     LIKE_WATER_POWER("LikeWaterPower", power -> new LikeWaterPowerState(power)),
     LOCK_ON("Lockon", power -> new LockOnPowerState(power)),
     LOOP("Loop", power -> new LoopPowerState(power)),
     MAGNETISM("Magnetism", power -> new MagnetismPowerState(power)),
-    MALLEABLE("Malleable", power -> new MalleablePowerState(power), json -> new MalleablePowerState(json)),
+    MALLEABLE("Malleable", power -> new MalleablePowerState(power), json -> new MalleablePowerState(json), jsonObject -> new MalleablePowerState(jsonObject)),
     MANTRA("Mantra", power -> new MantraPowerState(power)),
     MASTER_REALITY_POWER("MasterRealityPower", power -> new MasterRealityPowerState(power)),
     MAYHEM("Mayhem", power -> new MayhemPowerState(power)),
@@ -102,7 +103,7 @@ public enum Power {
     NEXT_TURN_BLOCK("Next Turn Block", power -> new NextTurnBlockPowerState(power)),
     MINION("Minion", power -> new MinionPowerState(power)),
     MODE_SHIFT("Mode Shift", power -> new ModeShiftPowerState(power)),
-    NIGHTMARE("Night Terror", power -> new NightmarePowerState(power), json -> new NightmarePowerState(json)),
+    NIGHTMARE("Night Terror", power -> new NightmarePowerState(power), json -> new NightmarePowerState(json), jsonObject -> new NightmarePowerState(jsonObject)),
     NIRVANA("Nirvana", power -> new NirvanaPowerState(power)),
     NO_BLOCK_POWER("NoBlockPower", power -> new NoBlockPowerState(power)),
     NO_DRAW("No Draw", power -> new NoDrawPowerState(power)),
@@ -111,7 +112,7 @@ public enum Power {
     OMEGA_POWER("OmegaPower", power -> new OmegaPowerState(power)),
     OMNISCIENCE_POWER("OmnisciencePower", power -> new OmnisciencePowerState(power)),
     PAINFUL_STABS("Painful Stabs", power -> new PainfulStabsPowerState(power)),
-    PANACHE("Panache", power -> new PanachePowerState(power), json -> new PanachePowerState(json)),
+    PANACHE("Panache", power -> new PanachePowerState(power), json -> new PanachePowerState(json), jsonObject -> new PanachePowerState(jsonObject)),
     PATH_TO_VICTORY_POWER("PathToVictoryPower", power -> new MarkPowerState(power)),
     PHANTASMAL("Phantasmal", power -> new PhantasmalPowerState(power)),
     POISON("Poison", power -> new PoisonPowerState(power)),
@@ -119,11 +120,11 @@ public enum Power {
     REGENERATION("Regeneration", power -> new RegenPowerState(power)),
     PEN_NIB("Pen Nib", power -> new PenNibPowerState(power)),
     PLATED_ARMOR("Plated Armor", power -> new PlatedArmorPowerState(power)),
-    REBOUND("Rebound", power -> new ReboundPowerState(power), json -> new ReboundPowerState(json)),
+    REBOUND("Rebound", power -> new ReboundPowerState(power), json -> new ReboundPowerState(json), jsonObject -> new ReboundPowerState(jsonObject)),
     REGENRATE("Regenerate", power -> new RegenerateMonsterPowerState(power)),
     REPAIR("Repair", power -> new RepairPowerState(power)),
     RETAIN_CARDS("Retain Cards", power -> new RetainCardPowerState(power)),
-    RITUAL("Ritual", power -> new RitualPowerState(power), json -> new RitualPowerState(json)),
+    RITUAL("Ritual", power -> new RitualPowerState(power), json -> new RitualPowerState(json), jsonObject -> new RitualPowerState(jsonObject)),
     RUPTURE("Rupture", power -> new RupturePowerState(power)),
     SADISTIC("Sadistic", power -> new SadisticPowerState(power)),
     SHACKLED("Shackled", power -> new GainStrengthPowerState(power)),
@@ -133,18 +134,18 @@ public enum Power {
     SPORE_CLOUD("Spore Cloud", power -> new SporeCloudPowerState(power)),
     SHARP_HIDE("Sharp Hide", power -> new SharpHidePowerState(power)),
     SPLIT("Split", power -> new SplitPowerState(power)),
-    STASIS("Stasis", power -> new StasisPowerState(power), json -> new StasisPowerState(json)),
+    STASIS("Stasis", power -> new StasisPowerState(power), json -> new StasisPowerState(json), jsonObject -> new StasisPowerState(jsonObject)),
     STATIC_DISCHARGE("StaticDischarge", power -> new StaticDischargePowerState(power)),
     STORM("Storm", power -> new StormPowerState(power)),
     STRENGTH("Strength", power -> new StrengthPowerState(power)),
     STRIKE_UP("StrikeUp", power -> new StrikeUpPowerState(power)),
     STUDY("Study", power -> new StudyPowerState(power)),
-    STUN_MONSTER(StunMonsterPower.POWER_ID, power -> new StunMonsterPowerState(power), json -> new StunMonsterPowerState(json)),
+    STUN_MONSTER(StunMonsterPower.POWER_ID, power -> new StunMonsterPowerState(power), json -> new StunMonsterPowerState(json), jsonObject -> new StunMonsterPowerState(jsonObject)),
     SURROUNDED("Surrounded", power -> new SurroundedPowerState(power)),
     THIEVERY("Thievery", power -> new ThieveryPowerState(power)),
-    THE_BOMB("TheBomb", power -> new TheBombPowerState(power), json -> new TheBombPowerState(json)),
+    THE_BOMB("TheBomb", power -> new TheBombPowerState(power), json -> new TheBombPowerState(json), jsonObject -> new TheBombPowerState(jsonObject)),
     THOUSAND_CUTS("Thousand Cuts", power -> new ThousandCutsPowerState(power)),
-    TIME_MAZE_POWER("TimeMazePower", power -> new TimeMazePowerState(power), json -> new TimeMazePowerState(json)),
+    TIME_MAZE_POWER("TimeMazePower", power -> new TimeMazePowerState(power), json -> new TimeMazePowerState(json), jsonObject -> new TimeMazePowerState(jsonObject)),
     TIME_WARP("Time Warp", power -> new TimeWarpPowerState(power)),
     THORNS("Thorns", power -> new ThornsPowerState(power)),
     TOOLS_OF_THE_TRADE("Tools Of The Trade", power -> new ToolsOfTheTradePowerState(power)),
@@ -152,7 +153,7 @@ public enum Power {
     VIGOR("Vigor", power -> new VigorPowerState(power)),
     VULNERABLE("Vulnerable", power -> new VulnerablePowerState(power)),
     WAVE_OF_THE_HAND_POWER("WaveOfTheHandPower", power -> new WaveOfTheHandPowerState(power)),
-    WEAKENED("Weakened", power -> new WeakenedPowerState(power), json -> new WeakenedPowerState(json)),
+    WEAKENED("Weakened", power -> new WeakenedPowerState(power), json -> new WeakenedPowerState(json), json -> new WeakenedPowerState(json)),
     WIRE_HEADING_POWER("WireheadingPower", power -> new ForesightPowerState(power)),
     WRATH_NEXT_TURN_POWER("WrathNextTurnPower", power -> new WrathNextTurnPowerState(power)),
     WRAITH_FORM_V2("Wraith Form v2", power -> new WraithFormPowerState(power)),
@@ -161,6 +162,7 @@ public enum Power {
     public final String powerId;
     public final Function<AbstractPower, PowerState> factory;
     public final Function<String, PowerState> jsonFactory;
+    public Function<JsonObject, PowerState> jsonObjectFactory = null;
 
     Power(String id, Function<AbstractPower, PowerState> factory) {
         this.powerId = id;
@@ -168,9 +170,17 @@ public enum Power {
 
         // parsing the ID and amount is enough for most powers
         this.jsonFactory = jsonString -> new PowerState(jsonString);
+        this.jsonObjectFactory = jsonObject -> new PowerState(jsonObject);
     }
 
-    Power(String id, Function<AbstractPower, PowerState> factory, Function<String, PowerState> jsonFactory) {
+//    Power(String id, Function<AbstractPower, PowerState> factory, Function<String, PowerState> jsonFactory) {
+//        this.powerId = id;
+//        this.factory = factory;
+//        this.jsonFactory = jsonFactory;
+//    }
+
+    Power(String id, Function<AbstractPower, PowerState> factory, Function<String, PowerState> jsonFactory, Function<JsonObject, PowerState> jsonObjectFactory) {
+        this.jsonObjectFactory = jsonObjectFactory;
         this.powerId = id;
         this.factory = factory;
         this.jsonFactory = jsonFactory;

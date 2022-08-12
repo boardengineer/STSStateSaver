@@ -53,6 +53,18 @@ public class LagavulinState extends MonsterState {
         monsterTypeNumber = Monster.LAGAVULIN.ordinal();
     }
 
+    public LagavulinState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.debuffTurnCount = monsterJson.get("debuff_turn_count").getAsInt();
+        this.idleCount = monsterJson.get("idle_count").getAsInt();
+        this.asleep = monsterJson.get("asleep").getAsBoolean();
+        this.isOut = monsterJson.get("is_out").getAsBoolean();
+        this.isOutTriggered = monsterJson.get("is_out_triggered").getAsBoolean();
+
+        monsterTypeNumber = Monster.LAGAVULIN.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Lagavulin monster = new Lagavulin(asleep);
@@ -83,6 +95,19 @@ public class LagavulinState extends MonsterState {
         monsterStateJson.addProperty("is_out_triggered", isOutTriggered);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("asleep", asleep);
+        result.addProperty("is_out", isOut);
+        result.addProperty("idle_count", idleCount);
+        result.addProperty("debuff_turn_count", debuffTurnCount);
+        result.addProperty("is_out_triggered", isOutTriggered);
+
+        return result;
     }
 
     @SpirePatch(

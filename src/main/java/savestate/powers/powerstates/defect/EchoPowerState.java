@@ -1,6 +1,7 @@
 package savestate.powers.powerstates.defect;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
@@ -18,7 +19,14 @@ public class EchoPowerState extends PowerState {
 
     public EchoPowerState(String jsonString) {
         super(jsonString);
-        this.cardsDoubledThisTurn = jObject.get("cards_doubled_this_turn").getAsInt();
+
+        this.cardsDoubledThisTurn = powerJson.get("cards_doubled_this_turn").getAsInt();
+    }
+
+    public EchoPowerState(JsonObject tempPowerJson) {
+        super(tempPowerJson);
+
+        this.cardsDoubledThisTurn = tempPowerJson.get("cards_doubled_this_turn").getAsInt();
     }
 
     @Override
@@ -31,12 +39,21 @@ public class EchoPowerState extends PowerState {
 
     @Override
     public String encode() {
-        if (jObject == null) {
-            jObject = new JsonParser().parse(super.encode()).getAsJsonObject();
+        if (powerJson == null) {
+            powerJson = new JsonParser().parse(super.encode()).getAsJsonObject();
         }
 
-        jObject.addProperty("cards_doubled_this_turn", cardsDoubledThisTurn);
+        powerJson.addProperty("cards_doubled_this_turn", cardsDoubledThisTurn);
 
-        return jObject.toString();
+        return powerJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result =  super.jsonEncode();
+
+        result.addProperty("cards_doubled_this_turn", cardsDoubledThisTurn);
+
+        return result;
     }
 }

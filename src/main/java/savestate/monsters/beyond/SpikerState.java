@@ -32,6 +32,12 @@ public class SpikerState extends MonsterState {
         this.thornsCount = parsed.get("thorns_count").getAsInt();
     }
 
+    public SpikerState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.thornsCount = monsterJson.get("thorns_count").getAsInt();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Spiker monster = new Spiker(offsetX, offsetY);
@@ -50,6 +56,15 @@ public class SpikerState extends MonsterState {
         monsterStateJson.addProperty("thorns_count", thornsCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("thorns_count", thornsCount);
+
+        return result;
     }
 
     @SpirePatch(

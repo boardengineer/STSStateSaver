@@ -39,6 +39,14 @@ public class SnakerDaggerState extends MonsterState {
         monsterTypeNumber = Monster.SNAKE_DAGGER.ordinal();
     }
 
+    public SnakerDaggerState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("fist_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.SNAKE_DAGGER.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SnakeDagger monster = new SnakeDagger(offsetX, offsetY);
@@ -57,6 +65,15 @@ public class SnakerDaggerState extends MonsterState {
         monsterStateJson.addProperty("fist_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("fist_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

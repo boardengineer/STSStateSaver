@@ -24,6 +24,12 @@ public class CentennialPuzzleState extends RelicState {
         this.usedThisCombat = parsed.get("used_this_combat").getAsBoolean();
     }
 
+    public CentennialPuzzleState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.usedThisCombat = relicJson.get("used_this_combat").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         CentennialPuzzle result = (CentennialPuzzle) super.loadRelic();
@@ -41,5 +47,14 @@ public class CentennialPuzzleState extends RelicState {
         parsed.addProperty("used_this_combat", usedThisCombat);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("used_this_combat", usedThisCombat);
+
+        return result;
     }
 }

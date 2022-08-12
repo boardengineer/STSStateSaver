@@ -49,6 +49,23 @@ public class HitboxState {
         this.clickStarted = parsed.get("click_started").getAsBoolean();
     }
 
+    public HitboxState(JsonObject hitboxJson) {
+        this.x = hitboxJson.get("x").getAsFloat();
+        this.y = hitboxJson.get("y").getAsFloat();
+
+        this.cX = hitboxJson.get("c_x").getAsFloat();
+        this.cY = hitboxJson.get("c_y").getAsFloat();
+
+        this.width = hitboxJson.get("width").getAsFloat();
+        this.height = hitboxJson.get("height").getAsFloat();
+
+        this.hovered = hitboxJson.get("hovered").getAsBoolean();
+        this.justHovered = hitboxJson.get("just_hovered").getAsBoolean();
+
+        this.clicked = hitboxJson.get("clicked").getAsBoolean();
+        this.clickStarted = hitboxJson.get("click_started").getAsBoolean();
+    }
+
     public Hitbox loadHitbox() {
         Hitbox result = new Hitbox(width, height);
         result.x = x;
@@ -64,6 +81,10 @@ public class HitboxState {
     }
 
     public String encode() {
+        return jsonEncode().toString();
+    }
+
+    public JsonObject jsonEncode() {
         JsonObject hitboxStateJson = new JsonObject();
 
         hitboxStateJson.addProperty("x", x);
@@ -77,6 +98,6 @@ public class HitboxState {
         hitboxStateJson.addProperty("click_started", clickStarted);
         hitboxStateJson.addProperty("clicked", clicked);
 
-        return hitboxStateJson.toString();
+        return hitboxStateJson;
     }
 }

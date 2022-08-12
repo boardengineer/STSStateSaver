@@ -25,6 +25,12 @@ public class ReboundPowerState extends PowerState {
         this.justEvoked = parsed.get("just_evoked").getAsBoolean();
     }
 
+    public ReboundPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.justEvoked = powerJson.get("just_evoked").getAsBoolean();
+    }
+
     @Override
     public AbstractPower loadPower(AbstractCreature targetAndSource) {
         ReboundPower result = new ReboundPower(targetAndSource);
@@ -41,5 +47,14 @@ public class ReboundPowerState extends PowerState {
         parsed.addProperty("just_evoked", justEvoked);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("just_evoked", justEvoked);
+
+        return result;
     }
 }

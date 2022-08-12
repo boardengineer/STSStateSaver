@@ -40,6 +40,15 @@ public class SlaverRedState extends MonsterState {
         monsterTypeNumber = Monster.SLAVER_RED.ordinal();
     }
 
+    public SlaverRedState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+        this.usedEntangle = monsterJson.get("used_entangle").getAsBoolean();
+
+        monsterTypeNumber = Monster.SLAVER_RED.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SlaverRed result = new SlaverRed(offsetX, offsetY);
@@ -59,6 +68,16 @@ public class SlaverRedState extends MonsterState {
         monsterStateJson.addProperty("used_entangle", usedEntangle);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_turn", firstTurn);
+        result.addProperty("used_entangle", usedEntangle);
+
+        return result;
     }
 
     @SpirePatch(

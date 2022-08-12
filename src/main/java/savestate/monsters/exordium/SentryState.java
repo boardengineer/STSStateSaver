@@ -44,6 +44,14 @@ public class SentryState extends MonsterState {
         monsterTypeNumber = Monster.SENTRY.ordinal();
     }
 
+    public SentryState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.SENTRY.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Sentry result = new Sentry(offsetX, offsetY);
@@ -62,6 +70,15 @@ public class SentryState extends MonsterState {
         monsterStateJson.addProperty("first_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

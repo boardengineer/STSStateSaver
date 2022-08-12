@@ -27,6 +27,12 @@ public class RitualPowerState extends PowerState {
         this.skipFirst = parsed.get("skip_first").getAsBoolean();
     }
 
+    public RitualPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.skipFirst = powerJson.get("skip_first").getAsBoolean();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -34,6 +40,15 @@ public class RitualPowerState extends PowerState {
         parsed.addProperty("skip_first", skipFirst);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("skip_first", skipFirst);
+
+        return result;
     }
 
     @Override

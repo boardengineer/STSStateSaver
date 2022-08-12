@@ -1,5 +1,6 @@
 package savestate.monsters.beyond;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class OrbWalkerState extends MonsterState {
 
     public OrbWalkerState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.ORG_WALKER.ordinal();
+    }
+
+    public OrbWalkerState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.ORG_WALKER.ordinal();
     }

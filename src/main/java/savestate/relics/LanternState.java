@@ -24,6 +24,12 @@ public class LanternState extends RelicState {
         this.firstTurn = parsed.get("first_turn").getAsBoolean();
     }
 
+    public LanternState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.firstTurn = relicJson.get("first_turn").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         Lantern result = (Lantern) super.loadRelic();
@@ -41,5 +47,14 @@ public class LanternState extends RelicState {
         parsed.addProperty("first_turn", firstTurn);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 }

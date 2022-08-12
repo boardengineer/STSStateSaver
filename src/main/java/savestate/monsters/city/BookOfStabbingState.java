@@ -39,6 +39,14 @@ public class BookOfStabbingState extends MonsterState {
         monsterTypeNumber = Monster.BOOK_OF_STABBING.ordinal();
     }
 
+    public BookOfStabbingState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.stabCount = monsterJson.get("stab_count").getAsInt();
+
+        monsterTypeNumber = Monster.BOOK_OF_STABBING.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         BookOfStabbing monster = new BookOfStabbing();
@@ -57,6 +65,15 @@ public class BookOfStabbingState extends MonsterState {
         monsterStateJson.addProperty("stab_count", stabCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("stab_count", stabCount);
+
+        return result;
     }
 
     @SpirePatch(

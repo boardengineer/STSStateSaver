@@ -3,7 +3,6 @@ package savestate.powers.powerstates.silent;
 import basemod.ReflectionHacks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.NightmarePower;
@@ -16,7 +15,7 @@ public class NightmarePowerState extends PowerState {
     public NightmarePowerState(AbstractPower power) {
         super(power);
 
-        this.card = CardState.forCard((AbstractCard) ReflectionHacks
+        this.card = CardState.forCard(ReflectionHacks
                 .getPrivate(power, NightmarePower.class, "card"));
     }
 
@@ -26,6 +25,12 @@ public class NightmarePowerState extends PowerState {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.card = CardState.forString(parsed.get("card").getAsString());
+    }
+
+    public NightmarePowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.card = CardState.forJson(powerJson.get("card").getAsJsonObject());
     }
 
     @Override
@@ -40,5 +45,14 @@ public class NightmarePowerState extends PowerState {
         parsed.addProperty("card", card.encode());
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.add("card", card.jsonEncode());
+
+        return result;
     }
 }

@@ -39,6 +39,14 @@ public class TransientState extends MonsterState {
         monsterTypeNumber = Monster.TRANSIENT.ordinal();
     }
 
+    public TransientState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.count = monsterJson.get("count").getAsInt();
+
+        monsterTypeNumber = Monster.TRANSIENT.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Transient monster = new Transient();
@@ -56,6 +64,15 @@ public class TransientState extends MonsterState {
         monsterStateJson.addProperty("count", count);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("count", count);
+
+        return result;
     }
 
     @SpirePatch(

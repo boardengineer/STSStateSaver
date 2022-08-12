@@ -38,7 +38,7 @@ public class SaveState {
     boolean previousScreenUp;
     boolean myTurn = false;
     public int turn;
-    private int totalDiscardedThisTurn;
+    private final int totalDiscardedThisTurn;
 
 
     private final ArrayList<Integer> cardsPlayedThisTurn;
@@ -52,7 +52,7 @@ public class SaveState {
     AbstractDungeon.CurrentScreen screen;
     AbstractDungeon.CurrentScreen previousScreen;
 
-//    ListState listState;
+    //    ListState listState;
     public PlayerState playerState;
     private HandSelectScreenState handSelectScreenState = null;
     private GridCardSelectScreenState gridCardSelectScreenState = null;
@@ -155,7 +155,8 @@ public class SaveState {
         this.gridCardSelectAmount = ReflectionHacks
                 .getPrivate(AbstractDungeon.gridSelectScreen, GridCardSelectScreen.class, "cardSelectAmount");
 
-        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories.entrySet()) {
+        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories
+                .entrySet()) {
             final String key = entry.getKey();
             final StateElement.ElementFactories value = entry.getValue();
             additionalElements.put(key, value.factory.get());
@@ -199,11 +200,57 @@ public class SaveState {
         this.gridSelectedCards = new ArrayList<>();
         this.drawnCards = new ArrayList<>();
 
-        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories.entrySet()) {
+        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories
+                .entrySet()) {
             String key = entry.getKey();
             StateElement.ElementFactories value = entry.getValue();
             additionalElements.put(key, value.jsonFactory
                     .apply(parsed.get(key).getAsString()));
+        }
+    }
+
+    public SaveState(JsonObject saveStateObject) {
+        this.floorNum = saveStateObject.get("floor_num").getAsInt();
+        this.previousScreenUp = saveStateObject.get("previous_screen_up").getAsBoolean();
+        this.myTurn = saveStateObject.get("my_turn").getAsBoolean();
+        this.turn = saveStateObject.get("turn").getAsInt();
+        this.mantraGained = saveStateObject.get("mantra_gained").getAsInt();
+
+        this.screen = AbstractDungeon.CurrentScreen
+                .valueOf(saveStateObject.get("screen_name").getAsString());
+        JsonElement previousScreenName = saveStateObject.get("previous_screen_name");
+        this.previousScreen = previousScreenName.isJsonNull() ? null : AbstractDungeon.CurrentScreen
+                .valueOf(previousScreenName.getAsString());
+//        this.listState = new ListState(parsed.get("list_state").getAsString());
+
+        this.playerState = new PlayerState(saveStateObject.get("player_state").getAsJsonObject());
+        this.rngState = new RngState(saveStateObject.get("rng_state").getAsJsonObject(), floorNum);
+
+        this.curMapNodeState = new MapRoomNodeState(saveStateObject.get("cur_map_node_state")
+                                                                   .getAsJsonObject());
+        this.isScreenUp = saveStateObject.get("is_screen_up").getAsBoolean();
+        this.ascensionLevel = saveStateObject.get("ascension_level").getAsInt();
+        this.bombIdOffset = saveStateObject.get("bomb_id_offset").getAsInt();
+        this.totalDiscardedThisTurn = saveStateObject.get("total_discarded_this_turn").getAsInt();
+
+        // start counting from the json start
+        this.lessonLearnedCount = 0;
+        this.parasiteCount = 0;
+
+        // TODO
+        this.handSelectScreenState = null;
+        this.cardsPlayedThisTurn = new ArrayList<>();
+        this.cardsPlayedThisTurnBackup = new ArrayList<>();
+        this.cardsPlayedThisCombat = new ArrayList<>();
+        this.gridSelectedCards = new ArrayList<>();
+        this.drawnCards = new ArrayList<>();
+
+        for (Map.Entry<String, StateElement.ElementFactories> entry : StateFactories.elementFactories
+                .entrySet()) {
+            String key = entry.getKey();
+            StateElement.ElementFactories value = entry.getValue();
+            additionalElements.put(key, value.jsonObjectFactory
+                    .apply(saveStateObject.get(key).getAsJsonObject()));
         }
     }
 
@@ -411,6 +458,35 @@ public class SaveState {
 
         System.err.println("completed encoding");
         return saveStateJson.toString();
+    }
+
+    public JsonObject jsonEncode() {
+        JsonObject saveStateJson = new JsonObject();
+
+        saveStateJson.addProperty("floor_num", floorNum);
+
+        saveStateJson.addProperty("previous_screen_up", previousScreenUp);
+        saveStateJson.addProperty("my_turn", myTurn);
+        saveStateJson.addProperty("turn", turn);
+
+        saveStateJson.addProperty("screen_name", screen.name());
+        saveStateJson.addProperty("previous_screen_name", previousScreen != null ? previousScreen
+                .name() : null);
+        saveStateJson.addProperty("is_screen_up", isScreenUp);
+        saveStateJson.addProperty("ascension_level", ascensionLevel);
+        saveStateJson.addProperty("mantra_gained", mantraGained);
+        saveStateJson.addProperty("bomb_id_offset", bombIdOffset);
+        saveStateJson.addProperty("total_discarded_this_turn", totalDiscardedThisTurn);
+
+        saveStateJson.add("player_state", playerState.jsonEncode());
+        saveStateJson.add("rng_state", rngState.jsonEncode());
+        saveStateJson.add("cur_map_node_state", curMapNodeState.jsonEncode());
+
+        for (String key : StateFactories.elementFactories.keySet()) {
+            saveStateJson.add(key, additionalElements.get(key).jsonEncode());
+        }
+
+        return saveStateJson;
     }
 
     public String diffEncode() {

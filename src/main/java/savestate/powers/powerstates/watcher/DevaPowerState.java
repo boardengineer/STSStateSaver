@@ -25,6 +25,12 @@ public class DevaPowerState extends PowerState {
         this.energyGainAmount = parsed.get("energy_gain_amount").getAsInt();
     }
 
+    public DevaPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.energyGainAmount = powerJson.get("energy_gain_amount").getAsInt();
+    }
+
     @Override
     public AbstractPower loadPower(AbstractCreature targetAndSource) {
         DevaPower result = new DevaPower(targetAndSource);
@@ -42,5 +48,14 @@ public class DevaPowerState extends PowerState {
         parsed.addProperty("energy_gain_amount", energyGainAmount);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("energy_gain_amount", energyGainAmount);
+
+        return result;
     }
 }

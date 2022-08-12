@@ -41,6 +41,15 @@ public class NemesisState extends MonsterState {
         monsterTypeNumber = Monster.NEMESIS.ordinal();
     }
 
+    public NemesisState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.scytheCooldown = monsterJson.get("scythe_cooldown").getAsInt();
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.NEMESIS.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Nemesis monster = new Nemesis();
@@ -61,6 +70,16 @@ public class NemesisState extends MonsterState {
         monsterStateJson.addProperty("first_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("scythe_cooldown", scytheCooldown);
+        result.addProperty("first_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

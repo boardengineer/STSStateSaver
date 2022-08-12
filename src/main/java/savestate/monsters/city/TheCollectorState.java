@@ -45,6 +45,16 @@ public class TheCollectorState extends MonsterState {
         monsterTypeNumber = Monster.THE_COLLECTOR.ordinal();
     }
 
+    public TheCollectorState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.utUsed = monsterJson.get("ult_used").getAsBoolean();
+        this.turnsTaken = monsterJson.get("turns_taken").getAsInt();
+        this.initialSpawn = monsterJson.get("initial_spawn").getAsBoolean();
+
+        monsterTypeNumber = Monster.THE_COLLECTOR.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         TheCollector monster = new TheCollector();
@@ -69,6 +79,17 @@ public class TheCollectorState extends MonsterState {
         monsterStateJson.addProperty("ult_used", utUsed);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("initial_spawn", initialSpawn);
+        result.addProperty("turns_taken", turnsTaken);
+        result.addProperty("ult_used", utUsed);
+
+        return result;
     }
 
     @SpirePatch(

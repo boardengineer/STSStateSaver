@@ -38,6 +38,14 @@ public class DonuState extends MonsterState {
         monsterTypeNumber = Monster.DONU.ordinal();
     }
 
+    public DonuState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.isAttacking = monsterJson.get("is_attacking").getAsBoolean();
+
+        monsterTypeNumber = Monster.DONU.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Donu monster = new Donu();
@@ -56,6 +64,15 @@ public class DonuState extends MonsterState {
         monsterStateJson.addProperty("is_attacking", isAttacking);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("is_attacking", isAttacking);
+
+        return result;
     }
 
     @SpirePatch(

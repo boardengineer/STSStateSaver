@@ -41,6 +41,15 @@ public class TimeEaterState extends MonsterState {
         monsterTypeNumber = Monster.TIME_EATER.ordinal();
     }
 
+    public TimeEaterState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.usedHaste = monsterJson.get("used_haste").getAsBoolean();
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.TIME_EATER.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         TimeEater monster = new TimeEater();
@@ -61,6 +70,16 @@ public class TimeEaterState extends MonsterState {
         monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("used_haste", usedHaste);
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 
     @SpirePatch(

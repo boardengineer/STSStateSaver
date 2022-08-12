@@ -30,6 +30,14 @@ public abstract class AbstractCardModifierState {
         return modifierJson.toString();
     }
 
+    public JsonObject jsonEncode() {
+        JsonObject modifierJson = new JsonObject();
+
+        modifierJson.addProperty("identifier", identifier);
+
+        return modifierJson;
+    }
+
     public static AbstractCardModifierState forModifier(AbstractCardModifier modifier) {
         String identifier = modifier.identifier(null);
         return StateFactories.cardModifierFactories.get(identifier).factory.apply(modifier);
@@ -49,11 +57,31 @@ public abstract class AbstractCardModifierState {
         return StateFactories.cardModifierFactories.get(identifier).jsonFactory.apply(jsonString);
     }
 
+    public static AbstractCardModifierState forJsonObject(JsonObject modifierJson) {
+        String identifier = modifierJson.get("identifier").getAsString();
+
+        if (!StateFactories.cardModifierFactories.containsKey(identifier)) {
+            if (IGNORE_MISSING_MODIFIER) {
+                return null;
+            }
+        }
+
+        return StateFactories.cardModifierFactories.get(identifier).jsonObjectFactory
+                .apply(modifierJson);
+    }
+
     public abstract AbstractCardModifier loadModifier();
 
     public static class CardModifierStateFactories {
         public final Function<AbstractCardModifier, AbstractCardModifierState> factory;
         public final Function<String, AbstractCardModifierState> jsonFactory;
+        public Function<JsonObject, AbstractCardModifierState> jsonObjectFactory = null;
+
+        public CardModifierStateFactories(Function<AbstractCardModifier, AbstractCardModifierState> factory, Function<String, AbstractCardModifierState> jsonFactory, Function<JsonObject, AbstractCardModifierState> jsonObjectFactory) {
+            this.jsonObjectFactory = jsonObjectFactory;
+            this.factory = factory;
+            this.jsonFactory = jsonFactory;
+        }
 
         public CardModifierStateFactories(Function<AbstractCardModifier, AbstractCardModifierState> factory, Function<String, AbstractCardModifierState> jsonFactory) {
             this.factory = factory;

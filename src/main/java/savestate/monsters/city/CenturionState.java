@@ -1,5 +1,6 @@
 package savestate.monsters.city;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class CenturionState extends MonsterState {
 
     public CenturionState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.CENTURION.ordinal();
+    }
+
+    public CenturionState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.CENTURION.ordinal();
     }

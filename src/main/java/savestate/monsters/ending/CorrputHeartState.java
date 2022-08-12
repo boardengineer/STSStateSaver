@@ -42,6 +42,15 @@ public class CorrputHeartState extends MonsterState {
         this.buffCount = parsed.get("buff_count").getAsInt();
     }
 
+    public CorrputHeartState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.bloodHitCount = monsterJson.get("blood_hit_count").getAsInt();
+        this.isFirstMove = monsterJson.get("is_first_move").getAsBoolean();
+        this.moveCount = monsterJson.get("move_count").getAsInt();
+        this.buffCount = monsterJson.get("buff_count").getAsInt();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         CorruptHeart result = new CorruptHeart();
@@ -66,6 +75,18 @@ public class CorrputHeartState extends MonsterState {
         monsterStateJson.addProperty("buff_count", buffCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("blood_hit_count", bloodHitCount);
+        result.addProperty("is_first_move", isFirstMove);
+        result.addProperty("move_count", moveCount);
+        result.addProperty("buff_count", buffCount);
+
+        return result;
     }
 
     @SpirePatch(

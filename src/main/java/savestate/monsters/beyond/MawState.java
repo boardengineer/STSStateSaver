@@ -41,6 +41,15 @@ public class MawState extends MonsterState {
         monsterTypeNumber = Monster.MAW.ordinal();
     }
 
+    public MawState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.turnCount = monsterJson.get("turn_count").getAsInt();
+        this.roared = monsterJson.get("roared").getAsBoolean();
+
+        monsterTypeNumber = Monster.MAW.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Maw monster = new Maw(offsetX, offsetY);
@@ -63,6 +72,16 @@ public class MawState extends MonsterState {
         monsterStateJson.addProperty("roared", roared);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("turn_count", turnCount);
+        result.addProperty("roared", roared);
+
+        return result;
     }
 
     @SpirePatch(

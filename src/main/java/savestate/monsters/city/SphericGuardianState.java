@@ -42,6 +42,15 @@ public class SphericGuardianState extends MonsterState {
         monsterTypeNumber = Monster.SPHERIC_GUARDIAN.ordinal();
     }
 
+    public SphericGuardianState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+        this.secondMove = monsterJson.get("second_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.SPHERIC_GUARDIAN.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SphericGuardian monster = new SphericGuardian(offsetX, offsetY);
@@ -63,6 +72,16 @@ public class SphericGuardianState extends MonsterState {
         monsterStateJson.addProperty("second_move", secondMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+        result.addProperty("second_move", secondMove);
+
+        return result;
     }
 
     @SpirePatch(

@@ -22,6 +22,12 @@ public class OrichalcumState extends RelicState {
         this.trigger = parsed.get("trigger").getAsBoolean();
     }
 
+    public OrichalcumState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.trigger = relicJson.get("trigger").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         Orichalcum result = (Orichalcum) super.loadRelic();
@@ -38,5 +44,14 @@ public class OrichalcumState extends RelicState {
         result.addProperty("trigger", trigger);
 
         return result.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("trigger", trigger);
+
+        return result;
     }
 }

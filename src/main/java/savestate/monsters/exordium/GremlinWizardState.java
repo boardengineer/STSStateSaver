@@ -37,6 +37,14 @@ public class GremlinWizardState extends MonsterState {
         monsterTypeNumber = Monster.GREMLIN_WIZARD.ordinal();
     }
 
+    public GremlinWizardState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.currentCharge = monsterJson.get("current_charge").getAsInt();
+
+        monsterTypeNumber = Monster.GREMLIN_WIZARD.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         GremlinWizard monster = new GremlinWizard(offsetX, offsetY);
@@ -55,6 +63,15 @@ public class GremlinWizardState extends MonsterState {
         monsterStateJson.addProperty("current_charge", currentCharge);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("current_charge", currentCharge);
+
+        return result;
     }
 
     @SpirePatch(

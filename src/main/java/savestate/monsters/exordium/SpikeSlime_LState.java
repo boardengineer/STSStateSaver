@@ -36,6 +36,14 @@ public class SpikeSlime_LState extends MonsterState {
         monsterTypeNumber = Monster.SPIKE_SLIME_L.ordinal();
     }
 
+    public SpikeSlime_LState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.splitTriggered = monsterJson.get("split_triggered").getAsBoolean();
+
+        monsterTypeNumber = Monster.SPIKE_SLIME_L.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SpikeSlime_L result = new SpikeSlime_L(offsetX, offsetY);
@@ -53,6 +61,15 @@ public class SpikeSlime_LState extends MonsterState {
         monsterStateJson.addProperty("split_triggered", splitTriggered);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("split_triggered", splitTriggered);
+
+        return result;
     }
 
     @SpirePatch(

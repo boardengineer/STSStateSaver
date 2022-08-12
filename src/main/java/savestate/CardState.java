@@ -156,6 +156,59 @@ public class CardState {
         this.dontTriggerOnUseCard = false;
     }
 
+    public CardState(JsonObject cardJson) {
+        this.cardIdIndex =
+                StateFactories.cardIdToIndexMap.get(cardJson.get("card_id").getAsString());
+        this.upgraded = cardJson.get("upgraded").getAsBoolean();
+        this.baseDamage = cardJson.get("base_damage").getAsInt();
+        this.cost = cardJson.get("cost").getAsInt();
+        this.costForTurn = cardJson.get("cost_for_turn").getAsInt();
+
+        this.inBottleLightning = cardJson.get("in_bottle_lightning").getAsBoolean();
+        this.inBottleTornado = cardJson.get("in_bottle_tornado").getAsBoolean();
+        this.inBottleFlame = cardJson.get("in_bottle_flame").getAsBoolean();
+
+        this.uuid = UUID.fromString(cardJson.get("uuid").getAsString());
+        this.freeToPlayOnce = cardJson.get("free_to_play_once").getAsBoolean();
+        this.isCostModifiedForTurn = cardJson.get("is_cost_modified_for_turn").getAsBoolean();
+        this.isCostModified = cardJson.get("is_cost_modified").getAsBoolean();
+        this.magicNumber = cardJson.get("magic_number").getAsInt();
+        this.block = cardJson.get("block").getAsInt();
+        this.baseMagicNumber = cardJson.get("base_magic_number").getAsInt();
+        this.baseBlock = cardJson.get("base_block").getAsInt();
+        this.timesUpgraded = cardJson.get("times_upgraded").getAsInt();
+        this.exhaust = cardJson.get("exhaust").getAsBoolean();
+        this.purgeOnUse = cardJson.get("purge_on_use").getAsBoolean();
+        this.isEthereal = cardJson.get("is_ethereal").getAsBoolean();
+        this.misc = cardJson.get("misc").getAsInt();
+        this.damage = cardJson.get("damage").getAsInt();
+        this.retain = cardJson.get("retain").getAsBoolean();
+        this.selfRetain = cardJson.get("self_retain").getAsBoolean();
+        this.shuffleBackIntoDrawPile = cardJson.get("shuffle_back_into_draw_pile").getAsBoolean();
+        if (cardJson.has("target_enum_ordinal")) {
+            this.targetEnumOrdinal = cardJson.get("target_enum_ordinal").getAsInt();
+        } else {
+            this.targetEnumOrdinal = -1;
+        }
+
+        JsonElement modsElement = cardJson.get("modifiers");
+        if (modsElement.isJsonNull()) {
+            this.cardModifiers = null;
+        } else {
+            this.cardModifiers = new ArrayList<>();
+            cardJson.get("modifiers").getAsJsonArray().forEach(jsonElement -> {
+                AbstractCardModifierState modState = AbstractCardModifierState
+                        .forJsonObject(jsonElement.getAsJsonObject());
+                if (modState != null) {
+                    cardModifiers
+                            .add(AbstractCardModifierState.forString(jsonElement.getAsString()));
+                }
+            });
+        }
+
+        this.dontTriggerOnUseCard = false;
+    }
+
     public AbstractCard loadCard() {
         AbstractCard result = getCard(StateFactories.cardIds[cardIdIndex]);
 
@@ -245,6 +298,49 @@ public class CardState {
         }
 
         return cardStateJson.toString();
+    }
+
+    public JsonObject jsonEncode() {
+        JsonObject cardStateJson = new JsonObject();
+
+        cardStateJson.addProperty("card_id", StateFactories.cardIds[cardIdIndex]);
+        cardStateJson.addProperty("upgraded", upgraded);
+        cardStateJson.addProperty("base_damage", baseDamage);
+        cardStateJson.addProperty("cost", cost);
+        cardStateJson.addProperty("cost_for_turn", costForTurn);
+        cardStateJson.addProperty("in_bottle_lightning", inBottleLightning);
+        cardStateJson.addProperty("in_bottle_flame", inBottleFlame);
+        cardStateJson.addProperty("in_bottle_tornado", inBottleTornado);
+        cardStateJson.addProperty("free_to_play_once", freeToPlayOnce);
+        cardStateJson.addProperty("uuid", uuid.toString());
+        cardStateJson.addProperty("is_cost_modified_for_turn", isCostModifiedForTurn);
+        cardStateJson.addProperty("is_cost_modified", isCostModified);
+        cardStateJson.addProperty("magic_number", magicNumber);
+        cardStateJson.addProperty("block", block);
+        cardStateJson.addProperty("base_magic_number", baseMagicNumber);
+        cardStateJson.addProperty("base_block", baseBlock);
+        cardStateJson.addProperty("times_upgraded", timesUpgraded);
+        cardStateJson.addProperty("exhaust", exhaust);
+        cardStateJson.addProperty("is_ethereal", isEthereal);
+        cardStateJson.addProperty("purge_on_use", purgeOnUse);
+        cardStateJson.addProperty("misc", misc);
+        cardStateJson.addProperty("damage", damage);
+        cardStateJson.addProperty("retain", retain);
+        cardStateJson.addProperty("self_retain", selfRetain);
+        cardStateJson.addProperty("shuffle_back_into_draw_pile", shuffleBackIntoDrawPile);
+        cardStateJson.addProperty("target_enum_ordinal", targetEnumOrdinal);
+
+        if (cardModifiers == null) {
+            cardStateJson.add("modifiers", null);
+        } else {
+            JsonArray modifierJsonArray = new JsonArray();
+            for (AbstractCardModifierState state : cardModifiers) {
+                modifierJsonArray.add(state.jsonEncode());
+            }
+            cardStateJson.add("modifiers", modifierJsonArray);
+        }
+
+        return cardStateJson;
     }
 
     public String diffEncode() {
@@ -411,8 +507,10 @@ public class CardState {
     public static class CardFactories {
         public final Function<AbstractCard, CardState> factory;
         public final Function<String, CardState> jsonFactory;
+        public Function<JsonObject, CardState> jsonObjectFactory = null;
 
-        public CardFactories(Function<AbstractCard, CardState> factory, Function<String, CardState> jsonFactory) {
+        public CardFactories(Function<AbstractCard, CardState> factory, Function<String, CardState> jsonFactory, Function<JsonObject, CardState> jsonObjectFactory) {
+            this.jsonObjectFactory = jsonObjectFactory;
             this.factory = factory;
             this.jsonFactory = jsonFactory;
         }
@@ -466,5 +564,23 @@ public class CardState {
         }
 
         return new CardState(jsonString);
+    }
+
+    public static CardState forJson(JsonObject cardJson) {
+        if (!IGNORE_MOD_SUBTYPES) {
+            if (cardJson.has("type")) {
+                return StateFactories.cardFactoriesByTypeName
+                        .get(cardJson.get("type").getAsString()).jsonObjectFactory
+                        .apply(cardJson);
+            }
+
+            if (StateFactories.cardFactoriesByCardId.containsKey(cardJson.get("card_id"))) {
+                return StateFactories.cardFactoriesByCardId
+                        .get(cardJson.get("card_id")).jsonObjectFactory
+                        .apply(cardJson);
+            }
+        }
+
+        return new CardState(cardJson);
     }
 }

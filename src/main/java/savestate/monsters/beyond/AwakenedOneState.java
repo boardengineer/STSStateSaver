@@ -42,6 +42,15 @@ public class AwakenedOneState extends MonsterState {
         monsterTypeNumber = Monster.AWAKENED_ONE.ordinal();
     }
 
+    public AwakenedOneState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.form1 = monsterJson.get("form1").getAsBoolean();
+        this.firstTurn = monsterJson.get("first_turn").getAsBoolean();
+
+        monsterTypeNumber = Monster.AWAKENED_ONE.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         AwakenedOne monster = new AwakenedOne(offsetX, offsetY);
@@ -62,6 +71,16 @@ public class AwakenedOneState extends MonsterState {
         monsterStateJson.addProperty("first_turn", firstTurn);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("form1", form1);
+        result.addProperty("first_turn", firstTurn);
+
+        return result;
     }
 
     @SpirePatch(

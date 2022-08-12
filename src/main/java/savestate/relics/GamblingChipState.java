@@ -24,6 +24,12 @@ public class GamblingChipState extends RelicState {
         this.activated = parsed.get("activated").getAsBoolean();
     }
 
+    public GamblingChipState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.activated = relicJson.get("activated").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         GamblingChip result = (GamblingChip) super.loadRelic();
@@ -41,5 +47,14 @@ public class GamblingChipState extends RelicState {
         parsed.addProperty("activated", activated);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("activated", activated);
+
+        return result;
     }
 }

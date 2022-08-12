@@ -1,5 +1,6 @@
 package savestate.monsters.city;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class BanditPointyState extends MonsterState {
 
     public BanditPointyState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.BANDIT_CHILD.ordinal();
+    }
+
+    public BanditPointyState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.BANDIT_CHILD.ordinal();
     }

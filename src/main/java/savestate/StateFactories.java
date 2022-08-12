@@ -73,7 +73,7 @@ public class StateFactories {
         HashMap<String, MonsterState.MonsterFactories> monsterByIdmap = new HashMap<>();
         for (Monster monster : Monster.values()) {
             monsterByIdmap
-                    .put(monster.monsterId, new MonsterState.MonsterFactories(monster.factory, monster.jsonFactory));
+                    .put(monster.monsterId, new MonsterState.MonsterFactories(monster.factory, monster.jsonFactory, monster.jsonObjectFactory));
         }
         return monsterByIdmap;
     }
@@ -90,7 +90,7 @@ public class StateFactories {
         HashMap<String, PowerState.PowerFactories> powerByIdmap = new HashMap<>();
         for (Power power : Power.values()) {
             powerByIdmap
-                    .put(power.powerId, new PowerState.PowerFactories(power.factory, power.jsonFactory));
+                    .put(power.powerId, new PowerState.PowerFactories(power.factory, power.jsonFactory, power.jsonObjectFactory));
         }
         return powerByIdmap;
     }
@@ -99,7 +99,7 @@ public class StateFactories {
         HashMap<String, RelicState.RelicFactories> relicByIdMap = new HashMap<>();
         for (Relic relic : Relic.values()) {
             relicByIdMap
-                    .put(relic.relicId, new RelicState.RelicFactories(relic.factory, relic.jsonFactory));
+                    .put(relic.relicId, new RelicState.RelicFactories(relic.factory, relic.jsonFactory, relic.jsonObjectFactory));
         }
         return relicByIdMap;
     }
@@ -127,7 +127,7 @@ public class StateFactories {
 
         for (Orb orbEnum : Orb.values()) {
             orbFactoryByClassMap
-                    .put(orbEnum.orbClass, new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory));
+                    .put(orbEnum.orbClass, new OrbState.OrbFactories(orbEnum.factory, orbEnum.jsonFactory, orbEnum.jsonObjectFactory));
         }
         return orbFactoryByClassMap;
     }

@@ -226,6 +226,88 @@ public class PlayerState extends CreatureState {
         this.renderCorpse = false;
     }
 
+    public PlayerState(JsonObject playerJson) {
+        super(playerJson.get("creature").getAsJsonObject());
+
+        AbstractPlayer.PlayerClass tempClass = AbstractPlayer.PlayerClass.IRONCLAD;
+
+        try {
+            tempClass = AbstractPlayer.PlayerClass
+                    .valueOf(playerJson.get("chosen_class_name").getAsString());
+        } catch (IllegalArgumentException e) {
+            if (!IGNORE_MISSING_CLASSES) {
+                throw e;
+            }
+        }
+
+        this.chosenClass = tempClass;
+
+        this.gameHandSize = playerJson.get("game_hand_size").getAsInt();
+        this.masterHandSize = playerJson.get("master_hand_size").getAsInt();
+        this.startingMaxHP = playerJson.get("starting_max_hp").getAsInt();
+        this.potionSLots = playerJson.get("potion_slots").getAsInt();
+        this.temporaryHp = playerJson.get("temporary_hp").getAsInt();
+
+        this.energyManagerEnergy = playerJson.get("energy_manager_energy").getAsInt();
+        this.energyPanelTotalEnergy = playerJson.get("energy_panel_total_energy").getAsInt();
+        this.energyManagerMaxMaster = playerJson.get("energy_manager_max_master").getAsInt();
+
+        this.isEndingTurn = playerJson.get("is_ending_turn").getAsBoolean();
+        this.viewingRelics = playerJson.get("viewing_relics").getAsBoolean();
+        this.inspectMode = playerJson.get("inspect_mode").getAsBoolean();
+        this.inspectHb = playerJson.get("inspect_hb").isJsonNull() ?
+                null : new HitboxState(playerJson.get("inspect_hb").getAsJsonObject());
+        this.damagedThisCombat = playerJson.get("damaged_this_combat").getAsInt();
+
+        this.title = playerJson.get("title").getAsString();
+
+        this.cardInUse = playerJson.get("card_in_use").isJsonNull() ?
+                null : new CardState(playerJson.get("card_in_use").getAsJsonObject());
+
+        this.masterDeck = decodeCardList(playerJson.get("master_deck").getAsJsonArray());
+        this.drawPile = decodeCardList(playerJson.get("draw_pile").getAsJsonArray());
+        this.hand = decodeCardList(playerJson.get("hand").getAsJsonArray());
+        this.discardPile = decodeCardList(playerJson.get("discard_pile").getAsJsonArray());
+        this.exhaustPile = decodeCardList(playerJson.get("exhaust_pile").getAsJsonArray());
+        this.limbo = decodeCardList(playerJson.get("limbo").getAsJsonArray());
+
+        ArrayList<RelicState> relicStateArray = new ArrayList<>();
+        playerJson.get("relics").getAsJsonArray().forEach(relic ->
+                relicStateArray.add(RelicState.forJsonObject(relic.getAsJsonObject())));
+        this.relics = relicStateArray;
+
+        final JsonArray potionsAsJson = playerJson.get("potions").getAsJsonArray();
+        this.potions = new ArrayList<>(potionsAsJson.size());
+        for (JsonElement potionElement : potionsAsJson) {
+            this.potions.add(new PotionState(potionElement.getAsJsonObject()));
+        }
+
+        this.maxOrbs = playerJson.get("max_orbs").getAsInt();
+        this.masterMaxOrbs = playerJson.get("master_max_orbs").getAsInt();
+
+        final JsonArray orbsAsJson = playerJson.get("orbs").getAsJsonArray();
+        this.orbs = new ArrayList<>(orbsAsJson.size());
+        for (JsonElement orb : orbsAsJson) {
+            OrbState orbState = OrbState.forJsonObject(orb.getAsJsonObject());
+            if (orbState != null) {
+                this.orbs.add(orbState);
+            }
+        }
+
+        final JsonArray orbsChanneledThisCombatAsJson = playerJson.get("orbs_channeled_this_combat")
+                                                                  .getAsJsonArray();
+        this.orbsChanneledThisCombat = new ArrayList<>(orbsChanneledThisCombatAsJson.size());
+        for (JsonElement orbElement : orbsChanneledThisCombatAsJson) {
+            this.orbsChanneledThisCombat
+                    .add(OrbState.forJsonObject(orbElement.getAsJsonObject()));
+        }
+
+        this.stance = playerJson.get("stance").getAsString();
+
+        //TODO
+        this.renderCorpse = false;
+    }
+
     public void initPlayerAndCardPool() {
         AbstractDungeon.player = CardCrawlGame.characterManager.getCharacter(chosenClass);
 
@@ -510,6 +592,66 @@ public class PlayerState extends CreatureState {
         return playerStateJson.toString();
     }
 
+    public JsonObject jsonEncode() {
+        JsonObject playerStateJson = new JsonObject();
+
+        playerStateJson.add("creature", super.jsonEncode());
+        playerStateJson.add("inspect_hb", inspectHb == null ? null : inspectHb.jsonEncode());
+
+        playerStateJson.addProperty("chosen_class_name", chosenClass.name());
+        playerStateJson.addProperty("game_hand_size", gameHandSize);
+        playerStateJson.addProperty("master_hand_size", masterHandSize);
+        playerStateJson.addProperty("starting_max_hp", startingMaxHP);
+        playerStateJson.addProperty("energy_manager_energy", energyManagerEnergy);
+        playerStateJson.addProperty("energy_manager_max_master", energyManagerMaxMaster);
+        playerStateJson.addProperty("energy_panel_total_energy", energyPanelTotalEnergy);
+        playerStateJson.addProperty("is_ending_turn", isEndingTurn);
+        playerStateJson.addProperty("viewing_relics", viewingRelics);
+        playerStateJson.addProperty("inspect_mode", inspectMode);
+        playerStateJson.addProperty("damaged_this_combat", damagedThisCombat);
+        playerStateJson.addProperty("title", title);
+
+        playerStateJson.add("card_in_use", this.cardInUse != null ? cardInUse
+                .jsonEncode() : JsonNull.INSTANCE);
+
+        playerStateJson.add("master_deck", jsonEncodeCardList(masterDeck));
+        playerStateJson.add("draw_pile", jsonEncodeCardList(drawPile));
+        playerStateJson.add("hand", jsonEncodeCardList(hand));
+        playerStateJson.add("discard_pile", jsonEncodeCardList(discardPile));
+        playerStateJson.add("exhaust_pile", jsonEncodeCardList(exhaustPile));
+        playerStateJson.add("limbo", jsonEncodeCardList(limbo));
+        playerStateJson.addProperty("potion_slots", potionSLots);
+        playerStateJson.addProperty("stance", stance);
+        playerStateJson.addProperty("temporary_hp", temporaryHp);
+
+        JsonArray relicsArray = new JsonArray();
+        relics.forEach(relicState -> relicsArray.add(relicState.jsonEncode()));
+        playerStateJson.add("relics", relicsArray);
+
+        playerStateJson.addProperty("max_orbs", maxOrbs);
+        playerStateJson.addProperty("master_max_orbs", masterMaxOrbs);
+
+        JsonArray potionArray = new JsonArray();
+        for (PotionState potion : potions) {
+            potionArray.add(potion.jsonEncode());
+        }
+        playerStateJson.add("potions", potionArray);
+
+        JsonArray orbArray = new JsonArray();
+        for (OrbState orb : orbs) {
+            orbArray.add(orb.jsonEncode());
+        }
+        playerStateJson.add("orbs", orbArray);
+
+        JsonArray orbChanneledThisCombatArray = new JsonArray();
+        for (OrbState orb : orbsChanneledThisCombat) {
+            orbChanneledThisCombatArray.add(orb.jsonEncode());
+        }
+        playerStateJson.add("orbs_channeled_this_combat", orbChanneledThisCombatArray);
+
+        return playerStateJson;
+    }
+
     public static String encodeCardList(CardState[] cardList) {
         StringJoiner cardJoiner = new StringJoiner(CARD_DELIMETER);
         for (CardState cardState : cardList) {
@@ -517,6 +659,16 @@ public class PlayerState extends CreatureState {
             cardJoiner.add(encode);
         }
         return cardJoiner.toString();
+    }
+
+    public static JsonArray jsonEncodeCardList(CardState[] cardList) {
+        JsonArray result = new JsonArray();
+
+        for (CardState cardState : cardList) {
+            result.add(cardState.jsonEncode());
+        }
+
+        return result;
     }
 
     public static String encodeCardListV2(ArrayList<CardState> cardList) {
@@ -529,6 +681,16 @@ public class PlayerState extends CreatureState {
         return Stream.of(cardListString.split(CARD_DELIMETER))
                      .filter(s -> !s.isEmpty())
                      .map(CardState::forString).toArray(CardState[]::new);
+    }
+
+    private static CardState[] decodeCardList(JsonArray cardJsonArray) {
+        CardState[] result = new CardState[cardJsonArray.size()];
+
+        for (int i = 0; i < cardJsonArray.size(); i++) {
+            result[i] = CardState.forJson(cardJsonArray.get(i).getAsJsonObject());
+        }
+
+        return result;
     }
 
     private static ArrayList<CardState> decodeCardListV2(String cardListString) {

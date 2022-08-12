@@ -93,6 +93,13 @@ public class RelicState {
         this.pulse = parsed.get("pulse").getAsBoolean();
     }
 
+    public RelicState(JsonObject relicJson) {
+        this.relicId = relicJson.get("relic_id").getAsString();
+        this.counter = relicJson.get("counter").getAsInt();
+        this.grayscale = relicJson.get("grayscale").getAsBoolean();
+        this.pulse = relicJson.get("pulse").getAsBoolean();
+    }
+
     public AbstractRelic loadRelic() {
         AbstractRelic result;
 
@@ -117,6 +124,17 @@ public class RelicState {
         return relicStateJson.toString();
     }
 
+    public JsonObject jsonEncode() {
+        JsonObject relicStateJson = new JsonObject();
+
+        relicStateJson.addProperty("relic_id", relicId);
+        relicStateJson.addProperty("counter", counter);
+        relicStateJson.addProperty("grayscale", grayscale);
+        relicStateJson.addProperty("pulse", pulse);
+
+        return relicStateJson;
+    }
+
     public static RelicState forRelic(AbstractRelic relic) {
         if (StateFactories.relicByIdMap.containsKey(relic.relicId)) {
             return StateFactories.relicByIdMap.get(relic.relicId).factory.apply(relic);
@@ -136,14 +154,31 @@ public class RelicState {
         return new RelicState(jsonString);
     }
 
+    public static RelicState forJsonObject(JsonObject relicJson) {
+
+        String relicId = relicJson.get("relic_id").getAsString();
+        if (StateFactories.relicByIdMap.containsKey(relicId)) {
+            return StateFactories.relicByIdMap.get(relicId).jsonObjectFactory.apply(relicJson);
+        }
+
+        return new RelicState(relicJson);
+    }
+
     public static class RelicFactories {
         public final Function<AbstractRelic, RelicState> factory;
         public final Function<String, RelicState> jsonFactory;
+        public Function<JsonObject, RelicState> jsonObjectFactory;
 
-        public RelicFactories(Function<AbstractRelic, RelicState> factory, Function<String, RelicState> jsonFactory) {
+        public RelicFactories(Function<AbstractRelic, RelicState> factory, Function<String, RelicState> jsonFactory, Function<JsonObject, RelicState> jsonObjectFactory) {
+            this.jsonObjectFactory = jsonObjectFactory;
             this.factory = factory;
             this.jsonFactory = jsonFactory;
         }
+
+//        public RelicFactories(Function<AbstractRelic, RelicState> factory, Function<String, RelicState> jsonFactory) {
+//            this.factory = factory;
+//            this.jsonFactory = jsonFactory;
+//        }
 
         public RelicFactories(Function<AbstractRelic, RelicState> factory) {
             this.factory = factory;

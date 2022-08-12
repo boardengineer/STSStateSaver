@@ -37,6 +37,14 @@ public class GiantHeadState extends MonsterState {
         monsterTypeNumber = Monster.GIANT_HEAD.ordinal();
     }
 
+    public GiantHeadState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.count = monsterJson.get("count").getAsInt();
+
+        monsterTypeNumber = Monster.GIANT_HEAD.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         AbstractMonster monster = new GiantHead();
@@ -55,6 +63,15 @@ public class GiantHeadState extends MonsterState {
         monsterStateJson.addProperty("count", count);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("count", count);
+
+        return result;
     }
 
     @SpirePatch(

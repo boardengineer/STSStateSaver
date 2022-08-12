@@ -41,6 +41,15 @@ public class LooterState extends MonsterState {
         monsterTypeNumber = Monster.LOOTER.ordinal();
     }
 
+    public LooterState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.slashCount = monsterJson.get("slash_count").getAsInt();
+        this.stolenGold = monsterJson.get("stolen_gold").getAsInt();
+
+        monsterTypeNumber = Monster.LOOTER.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Looter monster = new Looter(offsetX, offsetY);
@@ -62,6 +71,16 @@ public class LooterState extends MonsterState {
         monsterStateJson.addProperty("stolen_gold", stolenGold);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("slash_count", slashCount);
+        result.addProperty("stolen_gold", stolenGold);
+
+        return result;
     }
 
     @SpirePatch(

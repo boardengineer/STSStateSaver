@@ -26,6 +26,12 @@ public class CombustPowerState extends PowerState
         this.hpLoss = parsed.get("hp_loss").getAsInt();
     }
 
+    public CombustPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.hpLoss = powerJson.get("hp_loss").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject result = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -33,6 +39,15 @@ public class CombustPowerState extends PowerState
         result.addProperty("hp_loss", hpLoss);
 
         return result.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("hp_loss", hpLoss);
+
+        return result;
     }
 
     @Override

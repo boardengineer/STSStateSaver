@@ -26,6 +26,12 @@ public class TheBombPowerState extends PowerState {
         this.damage = parsed.get("damage").getAsInt();
     }
 
+    public TheBombPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.damage = powerJson.get("damage").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -35,6 +41,14 @@ public class TheBombPowerState extends PowerState {
         return parsed.toString();
     }
 
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("damage", damage);
+
+        return result;
+    }
 
     @Override
     public AbstractPower loadPower(AbstractCreature targetAndSource) {

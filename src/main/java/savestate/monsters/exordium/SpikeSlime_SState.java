@@ -1,5 +1,6 @@
 package savestate.monsters.exordium;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class SpikeSlime_SState extends MonsterState {
 
     public SpikeSlime_SState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.SPIKE_SLIME_S.ordinal();
+    }
+
+    public SpikeSlime_SState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.SPIKE_SLIME_S.ordinal();
     }

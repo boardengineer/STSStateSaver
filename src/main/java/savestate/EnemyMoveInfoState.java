@@ -30,7 +30,19 @@ public class EnemyMoveInfoState {
         this.isMultiDamage = parsed.get("is_multi_damage").getAsBoolean();
     }
 
+    public EnemyMoveInfoState(JsonObject enemyMoveStateJson) {
+        this.nextMove = enemyMoveStateJson.get("next_move").getAsByte();
+        this.intent = AbstractMonster.Intent.valueOf(enemyMoveStateJson.get("intent_name").getAsString());
+        this.baseDamage = enemyMoveStateJson.get("base_damage").getAsInt();
+        this.multiplier = enemyMoveStateJson.get("multiplier").getAsInt();
+        this.isMultiDamage = enemyMoveStateJson.get("is_multi_damage").getAsBoolean();
+    }
+
     public String encode() {
+        return jsonEncode().toString();
+    }
+
+    public JsonObject jsonEncode() {
         JsonObject enemyMoveInfoStateJson = new JsonObject();
 
         enemyMoveInfoStateJson.addProperty("next_move", nextMove);
@@ -39,7 +51,7 @@ public class EnemyMoveInfoState {
         enemyMoveInfoStateJson.addProperty("multiplier", multiplier);
         enemyMoveInfoStateJson.addProperty("is_multi_damage", isMultiDamage);
 
-        return enemyMoveInfoStateJson.toString();
+        return enemyMoveInfoStateJson;
     }
 
     public EnemyMoveInfo loadMoveInfo() {

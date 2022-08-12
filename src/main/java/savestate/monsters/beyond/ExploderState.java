@@ -32,6 +32,12 @@ public class ExploderState extends MonsterState {
         this.turnCount = parsed.get("turn_count").getAsInt();
     }
 
+    public ExploderState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.turnCount = monsterJson.get("turn_count").getAsInt();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Exploder monster = new Exploder(offsetX, offsetY);
@@ -50,6 +56,15 @@ public class ExploderState extends MonsterState {
         monsterStateJson.addProperty("turn_count", turnCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("turn_count", turnCount);
+
+        return result;
     }
 
     @SpirePatch(

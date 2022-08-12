@@ -39,6 +39,15 @@ public class BronzeOrbState extends MonsterState {
         monsterTypeNumber = Monster.BRONZE_ORB.ordinal();
     }
 
+    public BronzeOrbState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.count = monsterJson.get("count").getAsInt();
+        this.usedStasis = monsterJson.get("used_stasis").getAsBoolean();
+
+        monsterTypeNumber = Monster.BRONZE_ORB.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         BronzeOrb monster = new BronzeOrb(offsetX, offsetY, count);
@@ -57,6 +66,16 @@ public class BronzeOrbState extends MonsterState {
         monsterStateJson.addProperty("used_stasis", usedStasis);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("count", count);
+        result.addProperty("used_stasis", usedStasis);
+
+        return result;
     }
 
     @SpirePatch(

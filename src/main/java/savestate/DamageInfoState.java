@@ -32,15 +32,30 @@ public class DamageInfoState {
         this.isModified = parsed.get("is_modified").getAsBoolean();
     }
 
+    public DamageInfoState(JsonObject damageInfoJson) {
+        this.name = damageInfoJson.get("name").isJsonNull() ? null : damageInfoJson.get("name")
+                                                                                   .getAsString();
+        this.type = damageInfoJson.get("type_name").isJsonArray() ? null : DamageInfo.DamageType
+                .valueOf(damageInfoJson.get("type_name").getAsString());
+        this.base = damageInfoJson.get("base").getAsInt();
+        this.output = damageInfoJson.get("output").getAsInt();
+        this.isModified = damageInfoJson.get("is_modified").getAsBoolean();
+    }
+
     public DamageInfo loadDamageInfo() {
         DamageInfo damageInfo = new DamageInfo(owner, base, type);
         damageInfo.name = name;
         damageInfo.output = output;
         damageInfo.isModified = isModified;
+
         return damageInfo;
     }
 
     public String encode() {
+        return jsonEncode().toString();
+    }
+
+    public JsonObject jsonEncode() {
         JsonObject damageInfoStateJson = new JsonObject();
 
         damageInfoStateJson.addProperty("base", base);
@@ -49,6 +64,6 @@ public class DamageInfoState {
         damageInfoStateJson.addProperty("output", output);
         damageInfoStateJson.addProperty("is_modified", isModified);
 
-        return damageInfoStateJson.toString();
+        return damageInfoStateJson;
     }
 }

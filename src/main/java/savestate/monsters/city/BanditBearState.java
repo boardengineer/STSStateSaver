@@ -3,6 +3,7 @@ package savestate.monsters.city;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.city.BanditBear;
 import savestate.fastobjects.AnimationStateFast;
@@ -20,6 +21,12 @@ public class BanditBearState extends MonsterState {
 
     public BanditBearState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.BANDIT_BEAR.ordinal();
+    }
+
+    public BanditBearState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.BANDIT_BEAR.ordinal();
     }

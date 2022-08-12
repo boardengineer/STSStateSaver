@@ -36,6 +36,14 @@ public class JawWormState extends MonsterState {
         monsterTypeNumber = Monster.JAWWORM.ordinal();
     }
 
+    public JawWormState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.JAWWORM.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         JawWorm result = new JawWorm(offsetX, offsetY);
@@ -53,6 +61,15 @@ public class JawWormState extends MonsterState {
         monsterStateJson.addProperty("first_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

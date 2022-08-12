@@ -39,6 +39,15 @@ public class GremlinNobState extends MonsterState {
         monsterTypeNumber = Monster.GREMLIN_NOB.ordinal();
     }
 
+    public GremlinNobState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.usedBellow = monsterJson.get("used_bellow").getAsBoolean();
+        this.canVuln = monsterJson.get("can_vuln").getAsBoolean();
+
+        monsterTypeNumber = Monster.GREMLIN_NOB.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         GremlinNob monster = new GremlinNob(offsetX, offsetY);
@@ -58,6 +67,16 @@ public class GremlinNobState extends MonsterState {
         monsterStateJson.addProperty("used_bellow", usedBellow);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("can_vuln", canVuln);
+        result.addProperty("used_bellow", usedBellow);
+
+        return result;
     }
 
     @SpirePatch(

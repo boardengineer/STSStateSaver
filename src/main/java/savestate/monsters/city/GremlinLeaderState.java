@@ -1,6 +1,7 @@
 package savestate.monsters.city;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -23,6 +24,12 @@ public class GremlinLeaderState extends MonsterState {
 
     public GremlinLeaderState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.GREMLIN_LEADER.ordinal();
+    }
+
+    public GremlinLeaderState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.GREMLIN_LEADER.ordinal();
     }

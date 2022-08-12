@@ -24,6 +24,12 @@ public class TimeMazePowerState extends PowerState {
         maxAmount = parsed.get("max_amount").getAsInt();
     }
 
+    public TimeMazePowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        maxAmount = powerJson.get("max_amount").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -31,6 +37,15 @@ public class TimeMazePowerState extends PowerState {
         parsed.addProperty("max_amount", maxAmount);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("max_amount", maxAmount);
+
+        return result;
     }
 
     @Override

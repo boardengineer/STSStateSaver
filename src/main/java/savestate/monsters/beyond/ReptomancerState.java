@@ -78,6 +78,24 @@ public class ReptomancerState extends MonsterState {
         monsterTypeNumber = Monster.REPTOMANCER.ordinal();
     }
 
+    public ReptomancerState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("fist_move").getAsBoolean();
+        JsonArray dIndeces = monsterJson.get("dagger_indeces").getAsJsonArray();
+
+        daggerIndeces = new ArrayList<>();
+        for (JsonElement index : dIndeces) {
+            if (index.isJsonNull()) {
+                daggerIndeces.add(null);
+            } else {
+                daggerIndeces.add(index.getAsInt());
+            }
+        }
+
+        monsterTypeNumber = Monster.REPTOMANCER.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Reptomancer monster = new Reptomancer();
@@ -100,6 +118,19 @@ public class ReptomancerState extends MonsterState {
         monsterStateJson.add("dagger_indeces", dIndeces);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("fist_move", firstMove);
+
+        JsonArray dIndeces = new JsonArray();
+        daggerIndeces.forEach((index) -> dIndeces.add(index));
+        result.add("dagger_indeces", dIndeces);
+
+        return result;
     }
 
     @SpirePatch(

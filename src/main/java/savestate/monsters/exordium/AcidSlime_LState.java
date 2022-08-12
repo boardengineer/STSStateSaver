@@ -39,6 +39,14 @@ public class AcidSlime_LState extends MonsterState {
         monsterTypeNumber = Monster.ACID_SLIME_L.ordinal();
     }
 
+    public AcidSlime_LState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.splitTriggered = monsterJson.get("split_triggered").getAsBoolean();
+
+        monsterTypeNumber = Monster.ACID_SLIME_L.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         AcidSlime_L result = new AcidSlime_L(offsetX, offsetY);
@@ -56,6 +64,15 @@ public class AcidSlime_LState extends MonsterState {
         monsterStateJson.addProperty("split_triggered", splitTriggered);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("split_triggered", splitTriggered);
+
+        return result;
     }
 
     @SpirePatch(

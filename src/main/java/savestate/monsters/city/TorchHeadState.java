@@ -3,6 +3,7 @@ package savestate.monsters.city;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.city.TorchHead;
@@ -21,6 +22,12 @@ public class TorchHeadState extends MonsterState {
 
     public TorchHeadState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.TORCH_HEAD.ordinal();
+    }
+
+    public TorchHeadState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.TORCH_HEAD.ordinal();
     }

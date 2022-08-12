@@ -24,6 +24,12 @@ public class HoveringKiteState extends RelicState {
         this.triggeredThisTurn = parsed.get("triggered_this_turn").getAsBoolean();
     }
 
+    public HoveringKiteState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.triggeredThisTurn = relicJson.get("triggered_this_turn").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         HoveringKite result = (HoveringKite) super.loadRelic();
@@ -41,5 +47,14 @@ public class HoveringKiteState extends RelicState {
         parsed.addProperty("triggered_this_turn", triggeredThisTurn);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("triggered_this_turn", triggeredThisTurn);
+
+        return result;
     }
 }

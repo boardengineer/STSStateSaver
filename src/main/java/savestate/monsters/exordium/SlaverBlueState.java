@@ -1,5 +1,6 @@
 package savestate.monsters.exordium;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class SlaverBlueState extends MonsterState {
 
     public SlaverBlueState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.SLAVER_BLUE.ordinal();
+    }
+
+    public SlaverBlueState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.SLAVER_BLUE.ordinal();
     }

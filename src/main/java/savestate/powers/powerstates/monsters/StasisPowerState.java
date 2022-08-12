@@ -10,8 +10,7 @@ import com.megacrit.cardcrawl.powers.StasisPower;
 import savestate.CardState;
 import savestate.powers.PowerState;
 
-public class StasisPowerState extends PowerState
-{
+public class StasisPowerState extends PowerState {
     private final CardState card;
 
     public StasisPowerState(AbstractPower power) {
@@ -33,6 +32,12 @@ public class StasisPowerState extends PowerState
         this.card = CardState.forString(parsed.get("card").getAsString());
     }
 
+    public StasisPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.card = CardState.forJson(powerJson.get("card").getAsJsonObject());
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -40,6 +45,15 @@ public class StasisPowerState extends PowerState
         parsed.addProperty("card", card.encode());
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.add("card", card.jsonEncode());
+
+        return result;
     }
 
     @Override

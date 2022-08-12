@@ -1,5 +1,6 @@
 package savestate.monsters.city;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class TaskmasterState extends MonsterState {
 
     public TaskmasterState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.SLAVER_BOSS.ordinal();
+    }
+
+    public TaskmasterState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.SLAVER_BOSS.ordinal();
     }

@@ -24,6 +24,12 @@ public class RedSkullState extends RelicState {
         this.isActive = parsed.get("is_active").getAsBoolean();
     }
 
+    public RedSkullState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.isActive = relicJson.get("is_active").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         RedSkull result = (RedSkull) super.loadRelic();
@@ -41,5 +47,14 @@ public class RedSkullState extends RelicState {
         parsed.addProperty("is_active", isActive);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("is_active", isActive);
+
+        return result;
     }
 }

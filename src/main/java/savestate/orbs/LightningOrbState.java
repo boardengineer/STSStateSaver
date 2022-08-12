@@ -1,5 +1,6 @@
 package savestate.orbs;
 
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.Lightning;
 
@@ -10,6 +11,10 @@ public class LightningOrbState extends OrbState {
 
     public LightningOrbState(String jsonString) {
         super(jsonString);
+    }
+
+    public LightningOrbState(JsonObject orgJson) {
+        super(orgJson);
     }
 
     @Override

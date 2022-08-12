@@ -46,6 +46,15 @@ public class WrithingMassState extends MonsterState {
         monsterTypeNumber = Monster.WRITHING_MASS.ordinal();
     }
 
+    public WrithingMassState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+        this.usedMegaDebuff = monsterJson.get("used_mega_debuff").getAsBoolean();
+
+        monsterTypeNumber = Monster.WRITHING_MASS.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         WrithingMass monster = new WrithingMass();
@@ -66,6 +75,16 @@ public class WrithingMassState extends MonsterState {
         monsterStateJson.addProperty("used_mega_debuff", usedMegaDebuff);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+        result.addProperty("used_mega_debuff", usedMegaDebuff);
+
+        return result;
     }
 
     @SpirePatch(clz = WrithingMass.class, method = "takeTurn")

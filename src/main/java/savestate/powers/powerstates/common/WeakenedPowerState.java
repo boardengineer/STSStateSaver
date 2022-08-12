@@ -26,6 +26,12 @@ public class WeakenedPowerState extends PowerState {
         this.justApplied = parsed.get("just_applied").getAsBoolean();
     }
 
+    public WeakenedPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.justApplied = powerJson.get("just_applied").getAsBoolean();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -33,6 +39,15 @@ public class WeakenedPowerState extends PowerState {
         parsed.addProperty("just_applied", justApplied);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("just_applied", justApplied);
+
+        return result;
     }
 
     @Override

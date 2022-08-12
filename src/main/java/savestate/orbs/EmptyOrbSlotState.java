@@ -1,5 +1,6 @@
 package savestate.orbs;
 
+import com.google.gson.JsonObject;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
 
@@ -10,6 +11,10 @@ public class EmptyOrbSlotState extends OrbState {
 
     public EmptyOrbSlotState(String jsonString) {
         super(jsonString);
+    }
+
+    public EmptyOrbSlotState(JsonObject orbJson) {
+        super(orbJson);
     }
 
     @Override

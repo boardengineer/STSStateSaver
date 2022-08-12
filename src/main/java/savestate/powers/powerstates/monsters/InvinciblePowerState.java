@@ -3,10 +3,10 @@ package savestate.powers.powerstates.monsters;
 import basemod.ReflectionHacks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import savestate.powers.PowerState;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.InvinciblePower;
+import savestate.powers.PowerState;
 
 public class InvinciblePowerState extends PowerState {
     private final int maxAmt;
@@ -23,6 +23,12 @@ public class InvinciblePowerState extends PowerState {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         this.maxAmt = parsed.get("max_amt").getAsInt();
+    }
+
+    public InvinciblePowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.maxAmt = powerJson.get("max_amt").getAsInt();
     }
 
 
@@ -42,5 +48,14 @@ public class InvinciblePowerState extends PowerState {
         parsed.addProperty("max_amt", maxAmt);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("max_amt", maxAmt);
+
+        return result;
     }
 }

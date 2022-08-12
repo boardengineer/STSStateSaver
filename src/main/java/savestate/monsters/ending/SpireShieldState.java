@@ -32,6 +32,12 @@ public class SpireShieldState extends MonsterState {
         this.moveCount = parsed.get("move_count").getAsInt();
     }
 
+    public SpireShieldState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.moveCount = monsterJson.get("move_count").getAsInt();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         SpireShield result = new SpireShield();
@@ -50,6 +56,15 @@ public class SpireShieldState extends MonsterState {
         monsterStateJson.addProperty("move_count", moveCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("move_count", moveCount);
+
+        return result;
     }
 
     @SpirePatch(

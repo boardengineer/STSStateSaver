@@ -38,6 +38,14 @@ public class DecaState extends MonsterState {
         monsterTypeNumber = Monster.DECA.ordinal();
     }
 
+    public DecaState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.isAttacking = monsterJson.get("is_attacking").getAsBoolean();
+
+        monsterTypeNumber = Monster.DECA.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Deca monster = new Deca();
@@ -56,6 +64,15 @@ public class DecaState extends MonsterState {
         monsterStateJson.addProperty("is_attacking", isAttacking);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("is_attacking", isAttacking);
+
+        return result;
     }
 
     @SpirePatch(

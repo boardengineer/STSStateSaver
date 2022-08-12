@@ -8,8 +8,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.MalleablePower;
 
-public class MalleablePowerState extends PowerState
-{
+public class MalleablePowerState extends PowerState {
     private final int basePower;
 
     public MalleablePowerState(AbstractPower power) {
@@ -28,6 +27,12 @@ public class MalleablePowerState extends PowerState
         this.basePower = parsed.get("base_power").getAsInt();
     }
 
+    public MalleablePowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.basePower = powerJson.get("base_power").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -35,6 +40,15 @@ public class MalleablePowerState extends PowerState
         parsed.addProperty("base_power", basePower);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("base_power", basePower);
+
+        return result;
     }
 
     @Override

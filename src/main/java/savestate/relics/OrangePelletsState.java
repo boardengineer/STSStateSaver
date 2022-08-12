@@ -29,6 +29,14 @@ public class OrangePelletsState extends RelicState {
         this.ATTACK = parsed.get("attack").getAsBoolean();
     }
 
+    public OrangePelletsState(JsonObject relicJson) {
+        super(relicJson);
+
+        this.SKILL = relicJson.get("skill").getAsBoolean();
+        this.POWER = relicJson.get("power").getAsBoolean();
+        this.ATTACK = relicJson.get("attack").getAsBoolean();
+    }
+
     @Override
     public AbstractRelic loadRelic() {
         OrangePellets result = (OrangePellets) super.loadRelic();
@@ -49,5 +57,16 @@ public class OrangePelletsState extends RelicState {
         parsed.addProperty("attack", ATTACK);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("skill", SKILL);
+        result.addProperty("power", POWER);
+        result.addProperty("attack", ATTACK);
+
+        return result;
     }
 }

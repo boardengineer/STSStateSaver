@@ -1,6 +1,7 @@
 package savestate.monsters;
 
 import basemod.ReflectionHacks;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -129,6 +130,56 @@ public abstract class MonsterState extends CreatureState {
         offsetY = tempY;
     }
 
+    public MonsterState(JsonObject monsterJson) {
+        super(monsterJson.get("creature").getAsJsonObject());
+
+        this.deathTimer = monsterJson.get("death_timer").getAsFloat();
+        this.tintFadeOutCalled = monsterJson.get("tint_fade_out_called").getAsBoolean();
+        this.escaped = monsterJson.get("escaped").getAsBoolean();
+        this.escapeNext = monsterJson.get("escape_next").getAsBoolean();
+        this.type = AbstractMonster.EnemyType.valueOf(monsterJson.get("type_name").getAsString());
+        this.cannotEscape = monsterJson.get("cannot_escape").getAsBoolean();
+        this.nextMove = monsterJson.get("next_move").getAsByte();
+        this.intentHb = new HitboxState(monsterJson.get("intent_hb").getAsJsonObject());
+        this.intent = AbstractMonster.Intent.valueOf(monsterJson.get("intent_name").getAsString());
+        this.tipIntent = AbstractMonster.Intent
+                .valueOf(monsterJson.get("tip_intent_name").getAsString());
+        this.intentAlpha = monsterJson.get("intent_alpha").getAsFloat();
+        this.intentAlphaTarget = monsterJson.get("intent_alpha_target").getAsFloat();
+        this.intentOffsetX = monsterJson.get("intent_offset_x").getAsFloat();
+        this.moveName = monsterJson.get("move_name").isJsonNull() ? null : monsterJson
+                .get("move_name")
+                .getAsString();
+
+        this.moveInfo = new EnemyMoveInfoState(monsterJson.get("move_info").getAsJsonObject());
+
+        ArrayList<DamageInfoState> damageInfoStates = new ArrayList<>();
+        JsonArray damageJsonArrays = monsterJson.get("damage").getAsJsonArray();
+        damageJsonArrays.forEach(damageJson ->
+                damageInfoStates.add(new DamageInfoState(damageJson.getAsJsonObject())));
+        this.damage = damageInfoStates;
+
+        ArrayList<Byte> moveHistoryArray = new ArrayList<>();
+        JsonArray moveHistoryJsonArray = monsterJson.getAsJsonArray("move_history")
+                                                    .getAsJsonArray();
+        moveHistoryJsonArray
+                .forEach(move -> moveHistoryArray.add(Byte.parseByte(move.getAsString())));
+        this.moveHistory = moveHistoryArray;
+
+        float tempX = 0;
+        float tempY = 0;
+
+        try {
+            tempX = (drawX - (float) Settings.WIDTH * 0.75F) / Settings.xScale;
+            tempY = (drawY - AbstractDungeon.floorY) / Settings.yScale;
+        } catch (ExceptionInInitializerError | NoClassDefFoundError e) {
+
+        }
+
+        offsetX = tempX;
+        offsetY = tempY;
+    }
+
     public abstract AbstractMonster loadMonster();
 
     public void populateSharedFields(AbstractMonster monster) {
@@ -208,6 +259,39 @@ public abstract class MonsterState extends CreatureState {
                                                              .joining(DAMAGE_DELIMETER)));
 
         return monsterStateJson.toString();
+    }
+
+    public JsonObject jsonEncode() {
+        JsonObject monsterStateJson = new JsonObject();
+
+        monsterStateJson.add("creature", super.jsonEncode());
+
+        monsterStateJson.addProperty("death_timer", deathTimer);
+        monsterStateJson.addProperty("tint_fade_out_called", tintFadeOutCalled);
+        monsterStateJson.addProperty("escaped", escaped);
+        monsterStateJson.addProperty("escape_next", escapeNext);
+        monsterStateJson.addProperty("cannot_escape", cannotEscape);
+        monsterStateJson.addProperty("next_move", nextMove);
+        monsterStateJson.addProperty("intent_alpha", intentAlpha);
+        monsterStateJson.addProperty("intent_alpha_target", intentAlphaTarget);
+        monsterStateJson.addProperty("intent_offset_x", intentOffsetX);
+        monsterStateJson.addProperty("move_name", moveName);
+        monsterStateJson.addProperty("intent_name", intent.name());
+        monsterStateJson.addProperty("type_name", type.name());
+        monsterStateJson.addProperty("tip_intent_name", tipIntent.name());
+
+        JsonArray moveHistoryArray = new JsonArray();
+        moveHistory.forEach(moveByte -> moveHistoryArray.add(String.valueOf(moveByte)));
+        monsterStateJson.add("move_history", moveHistoryArray);
+
+        JsonArray damageArray = new JsonArray();
+        damage.forEach(damageInfo -> damageArray.add(damageInfo.jsonEncode()));
+        monsterStateJson.add("damage", damageArray);
+
+        monsterStateJson.add("intent_hb", intentHb.jsonEncode());
+        monsterStateJson.add("move_info", moveInfo.jsonEncode());
+
+        return monsterStateJson;
     }
 
     public String diffEncode() {
@@ -305,13 +389,31 @@ public abstract class MonsterState extends CreatureState {
         return StateFactories.monsterByIdMap.get(id).jsonFactory.apply(jsonString);
     }
 
+    public static MonsterState forJsonObject(JsonObject monsterJson) {
+        JsonObject creatureJsonObject = monsterJson.get("creature").getAsJsonObject();
+
+        String id = creatureJsonObject.get("id").getAsString();
+        if (!StateFactories.monsterByIdMap.containsKey(id)) {
+            throw new IllegalStateException("Missing json factory for " + id);
+        }
+
+        return StateFactories.monsterByIdMap.get(id).jsonObjectFactory.apply(monsterJson);
+    }
+
     public static class MonsterFactories {
         public final Function<AbstractMonster, MonsterState> factory;
         public final Function<String, MonsterState> jsonFactory;
+        public final Function<JsonObject, MonsterState> jsonObjectFactory;
 
-        public MonsterFactories(Function<AbstractMonster, MonsterState> factory, Function<String, MonsterState> jsonFactory) {
+        public MonsterFactories(Function<AbstractMonster, MonsterState> factory, Function<String, MonsterState> jsonFactory, Function<JsonObject, MonsterState> jsonObjectFactory) {
+            this.jsonObjectFactory = jsonObjectFactory;
             this.factory = factory;
             this.jsonFactory = jsonFactory;
         }
+
+//        public MonsterFactories(Function<AbstractMonster, MonsterState> factory, Function<String, MonsterState> jsonFactory) {
+//            this.factory = factory;
+//            this.jsonFactory = jsonFactory;
+//        }
     }
 }

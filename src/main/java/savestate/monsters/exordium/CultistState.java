@@ -36,6 +36,14 @@ public class CultistState extends MonsterState {
         monsterTypeNumber = Monster.CULTIST.ordinal();
     }
 
+    public CultistState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.firstMove = monsterJson.get("first_move").getAsBoolean();
+
+        monsterTypeNumber = Monster.CULTIST.ordinal();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Cultist monster = new Cultist(offsetX, offsetY);
@@ -55,6 +63,15 @@ public class CultistState extends MonsterState {
         monsterStateJson.addProperty("first_move", firstMove);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("first_move", firstMove);
+
+        return result;
     }
 
     @SpirePatch(

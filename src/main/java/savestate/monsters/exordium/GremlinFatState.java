@@ -1,5 +1,6 @@
 package savestate.monsters.exordium;
 
+import com.google.gson.JsonObject;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -20,6 +21,12 @@ public class GremlinFatState extends MonsterState {
 
     public GremlinFatState(String jsonString) {
         super(jsonString);
+
+        monsterTypeNumber = Monster.GREMLIN_FAT.ordinal();
+    }
+
+    public GremlinFatState(JsonObject monsterJson) {
+        super(monsterJson);
 
         monsterTypeNumber = Monster.GREMLIN_FAT.ordinal();
     }
