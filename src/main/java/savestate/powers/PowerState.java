@@ -106,6 +106,13 @@ public class PowerState {
 
         String id = parsed.get("power_id").getAsString();
 
+        for (String prefix : StateFactories.powerPrefixes) {
+            if (id.startsWith(prefix)) {
+                id = prefix;
+                break;
+            }
+        }
+
         if (!StateFactories.powerByIdMap.containsKey(id)) {
             if (IGNORE_MISSING_POWERS) {
                 return null;
@@ -118,6 +125,13 @@ public class PowerState {
 
     public static PowerState forJsonObject(JsonObject powerJson) {
         String id = powerJson.get("power_id").getAsString();
+
+        for (String prefix : StateFactories.powerPrefixes) {
+            if (id.startsWith(prefix)) {
+                id = prefix;
+                break;
+            }
+        }
 
         if (!StateFactories.powerByIdMap.containsKey(id)) {
             if (IGNORE_MISSING_POWERS) {
