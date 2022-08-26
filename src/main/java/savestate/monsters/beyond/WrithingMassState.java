@@ -8,6 +8,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
+import com.megacrit.cardcrawl.actions.common.RollMoveAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -97,6 +98,9 @@ public class WrithingMassState extends MonsterState {
                     SaveState.CountParasitesPatch.count++;
                     ReflectionHacks.setPrivate(mass, WrithingMass.class, "usedMegaDebuff", true);
                     AbstractDungeon.actionManager.addToBottom(new BetterAddCardToDeckAction(CardLibrary.getCard("Parasite").makeCopy()));
+
+                    AbstractDungeon.actionManager.addToBottom(new RollMoveAction(mass));
+
                     return SpireReturn.Return(null);
                 }
             }
