@@ -14,6 +14,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.beyond.WrithingMass;
+import savestate.SaveState;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
 import savestate.monsters.MonsterState;
@@ -93,6 +94,8 @@ public class WrithingMassState extends MonsterState {
         public static SpireReturn betterObtain(WrithingMass mass) {
             if (shouldGoFast) {
                 if (mass.nextMove == 4) {
+                    SaveState.CountParasitesPatch.count++;
+                    ReflectionHacks.setPrivate(mass, WrithingMass.class, "usedMegaDebuff", true);
                     AbstractDungeon.actionManager.addToBottom(new BetterAddCardToDeckAction(CardLibrary.getCard("Parasite").makeCopy()));
                     return SpireReturn.Return(null);
                 }
