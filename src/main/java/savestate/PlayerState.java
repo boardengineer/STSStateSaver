@@ -683,7 +683,7 @@ public class PlayerState extends CreatureState {
                      .map(CardState::forString).toArray(CardState[]::new);
     }
 
-    private static CardState[] decodeCardList(JsonArray cardJsonArray) {
+    public static CardState[] decodeCardList(JsonArray cardJsonArray) {
         CardState[] result = new CardState[cardJsonArray.size()];
 
         for (int i = 0; i < cardJsonArray.size(); i++) {
