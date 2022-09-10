@@ -22,6 +22,10 @@ public abstract class AbstractCardModifierState {
         this.identifier = parsed.get("identifier").getAsString();
     }
 
+    public AbstractCardModifierState(JsonObject modifierJson) {
+        this.identifier = modifierJson.get("identifier").getAsString();
+    }
+
     public String encode() {
         JsonObject modifierJson = new JsonObject();
 

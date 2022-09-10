@@ -1,9 +1,9 @@
 package savestate.powers.powerstates.monsters;
 
-import savestate.powers.PowerState;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.TimeWarpPower;
+import savestate.powers.PowerState;
 
 public class TimeWarpPowerState extends PowerState
 {

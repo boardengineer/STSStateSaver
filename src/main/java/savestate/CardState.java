@@ -159,6 +159,7 @@ public class CardState {
     public CardState(JsonObject cardJson) {
         this.cardIdIndex =
                 StateFactories.cardIdToIndexMap.get(cardJson.get("card_id").getAsString());
+        System.err.println(cardJson.get("card_id").getAsString());
         this.upgraded = cardJson.get("upgraded").getAsBoolean();
         this.baseDamage = cardJson.get("base_damage").getAsInt();
         this.cost = cardJson.get("cost").getAsInt();
@@ -201,7 +202,8 @@ public class CardState {
                         .forJsonObject(jsonElement.getAsJsonObject());
                 if (modState != null) {
                     cardModifiers
-                            .add(AbstractCardModifierState.forString(jsonElement.getAsString()));
+                            .add(AbstractCardModifierState
+                                    .forJsonObject(jsonElement.getAsJsonObject()));
                 }
             });
         }
@@ -574,9 +576,9 @@ public class CardState {
                         .apply(cardJson);
             }
 
-            if (StateFactories.cardFactoriesByCardId.containsKey(cardJson.get("card_id"))) {
+            if (StateFactories.cardFactoriesByCardId.containsKey(cardJson.get("card_id").getAsString())) {
                 return StateFactories.cardFactoriesByCardId
-                        .get(cardJson.get("card_id")).jsonObjectFactory
+                        .get(cardJson.get("card_id").getAsString()).jsonObjectFactory
                         .apply(cardJson);
             }
         }
