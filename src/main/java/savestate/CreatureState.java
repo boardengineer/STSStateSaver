@@ -382,7 +382,7 @@ public class CreatureState {
         if (!blockMatch) {
             result = false;
             System.err
-                    .printf("Mismatched %s bleck; actual:%d expected:%d\n", name, one
+                    .printf("Mismatched %s block; actual:%d expected:%d\n", name, one
                             .get("current_block").getAsInt(), two
                             .get("current_block").getAsInt());
         }

@@ -159,7 +159,6 @@ public class CardState {
     public CardState(JsonObject cardJson) {
         this.cardIdIndex =
                 StateFactories.cardIdToIndexMap.get(cardJson.get("card_id").getAsString());
-        System.err.println(cardJson.get("card_id").getAsString());
         this.upgraded = cardJson.get("upgraded").getAsBoolean();
         this.baseDamage = cardJson.get("base_damage").getAsInt();
         this.cost = cardJson.get("cost").getAsInt();
@@ -459,6 +458,16 @@ public class CardState {
             testIndex++;
         }
 
+        for (AbstractCard candidate : AbstractDungeon.player.limbo.group) {
+            if (card == candidate) {
+                return testIndex;
+            }
+            testIndex++;
+        }
+
+//        if (card.type != AbstractCard.CardType.POWER && !card.purgeOnUse) {
+//            throw new IllegalArgumentException("Failed to find card " + card.cardID);
+//        }
         return -1;
     }
 
@@ -497,6 +506,13 @@ public class CardState {
         }
 
         for (AbstractCard candidate : AbstractDungeon.player.exhaustPile.group) {
+            if (index == testIndex) {
+                return candidate;
+            }
+            testIndex++;
+        }
+
+        for (AbstractCard candidate : AbstractDungeon.player.limbo.group) {
             if (index == testIndex) {
                 return candidate;
             }
@@ -576,7 +592,8 @@ public class CardState {
                         .apply(cardJson);
             }
 
-            if (StateFactories.cardFactoriesByCardId.containsKey(cardJson.get("card_id").getAsString())) {
+            if (StateFactories.cardFactoriesByCardId
+                    .containsKey(cardJson.get("card_id").getAsString())) {
                 return StateFactories.cardFactoriesByCardId
                         .get(cardJson.get("card_id").getAsString()).jsonObjectFactory
                         .apply(cardJson);
