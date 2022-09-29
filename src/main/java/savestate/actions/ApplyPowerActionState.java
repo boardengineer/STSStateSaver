@@ -6,7 +6,6 @@ import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import savestate.powers.PowerState;
-import savestate.StateFactories;
 
 public class ApplyPowerActionState implements ActionState {
     private final PowerState powerToApply;
@@ -22,7 +21,7 @@ public class ApplyPowerActionState implements ActionState {
 
         AbstractPower power = ReflectionHacks
                 .getPrivate(action, ApplyPowerAction.class, "powerToApply");
-        this.powerToApply = StateFactories.powerByIdMap.get(power.ID).factory.apply(power);;
+        this.powerToApply = PowerState.forPower(power);;
         this.amount = action.amount;
     }
 

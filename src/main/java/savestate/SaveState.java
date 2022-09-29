@@ -25,9 +25,12 @@ import savestate.selectscreen.CardRewardScreenState;
 import savestate.selectscreen.GridCardSelectScreenState;
 import savestate.selectscreen.HandSelectScreenState;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static savestate.SaveStateMod.addRuntime;
 import static savestate.SaveStateMod.shouldGoFast;
@@ -567,6 +570,16 @@ public class SaveState {
             } else {
                 return allCards.get(cardIndex);
             }
+        }
+    }
+
+    public static SaveState forFile(String fileName) throws IOException {
+        try (FileInputStream fis = new FileInputStream(fileName);
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(isr)) {
+            return new SaveState(new JsonParser().parse(reader.lines().collect(Collectors.joining()))
+                                          .getAsJsonObject());
+
         }
     }
 
