@@ -2,12 +2,11 @@ package savestate.actions;
 
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.LoseHPAction;
-import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
 public class LoseHPActionState implements ActionState {
     private final int amount;
-    private final AbstractCreature target;
+    private final int targetIndex;
 
     public LoseHPActionState(AbstractGameAction action) {
         this((LoseHPAction) action);
@@ -15,11 +14,11 @@ public class LoseHPActionState implements ActionState {
 
     public LoseHPActionState(LoseHPAction action) {
         this.amount = action.amount;
-        this.target = action.target;
+        this.targetIndex = ActionState.indexForCreature(action.target);
     }
 
     @Override
     public AbstractGameAction loadAction() {
-        return new LoseHPAction(target, AbstractDungeon.player, amount);
+        return new LoseHPAction(ActionState.creatureForIndex(targetIndex), AbstractDungeon.player, amount);
     }
 }
