@@ -5,6 +5,8 @@ import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.Plasma;
 
 public class PlasmaOrbState extends OrbState {
+    public static String LOOKUP_KEY = new Plasma().getClass().getSimpleName();
+
     public PlasmaOrbState(AbstractOrb orb) {
         super(orb);
     }
@@ -23,5 +25,10 @@ public class PlasmaOrbState extends OrbState {
         result.evokeAmount = this.evokeAmount;
         result.passiveAmount = this.passiveAmount;
         return result;
+    }
+
+    @Override
+    public String getLookupKey() {
+        return LOOKUP_KEY;
     }
 }

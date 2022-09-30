@@ -16,6 +16,8 @@ import savestate.SaveStateMod;
 import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.actionManager;
 
 public class FrostOrbState extends OrbState {
+    public static String LOOKUP_KEY = new Frost().getClass().getSimpleName();
+
     public FrostOrbState(AbstractOrb orb) {
         super(orb);
     }
@@ -26,6 +28,11 @@ public class FrostOrbState extends OrbState {
 
     public FrostOrbState(JsonObject orbJson) {
         super(orbJson);
+    }
+
+    @Override
+    public String getLookupKey() {
+        return LOOKUP_KEY;
     }
 
     @Override

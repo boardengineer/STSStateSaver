@@ -58,9 +58,13 @@ public abstract class OrbState {
         result.addProperty("base_evoke_amount", evokeAmount);
         result.addProperty("base_passive_amount", passiveAmount);
 
-        result.addProperty("lookup_key", loadOrb().getClass().getSimpleName());
+        result.addProperty("lookup_key", getLookupKey());
 
         return result;
+    }
+
+    public String getLookupKey() {
+        return loadOrb().getClass().getSimpleName();
     }
 
     public abstract AbstractOrb loadOrb();
@@ -110,7 +114,7 @@ public abstract class OrbState {
         public Function<String, OrbState> jsonFactory;
         public Function<JsonObject, OrbState> jsonObjectFactory;
 
-        public OrbFactories(Function<AbstractOrb, OrbState> factory, Function<String, OrbState> jsonFactory,Function<JsonObject, OrbState> jsonObjectFactory) {
+        public OrbFactories(Function<AbstractOrb, OrbState> factory, Function<String, OrbState> jsonFactory, Function<JsonObject, OrbState> jsonObjectFactory) {
             this.jsonObjectFactory = jsonObjectFactory;
             this.factory = factory;
             this.jsonFactory = jsonFactory;

@@ -5,6 +5,8 @@ import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.Dark;
 
 public class DarkOrbState extends OrbState {
+    private static String LOOKUP_KEY = new Dark().getClass().getSimpleName();
+
     public DarkOrbState(AbstractOrb orb) {
         super(orb);
     }
@@ -23,5 +25,10 @@ public class DarkOrbState extends OrbState {
         result.evokeAmount = this.evokeAmount;
         result.passiveAmount = this.passiveAmount;
         return result;
+    }
+
+    @Override
+    public String getLookupKey() {
+        return LOOKUP_KEY;
     }
 }
