@@ -15,6 +15,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.beyond.WrithingMass;
+import com.megacrit.cardcrawl.relics.Omamori;
 import savestate.SaveState;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.monsters.Monster;
@@ -97,7 +98,9 @@ public class WrithingMassState extends MonsterState {
                 if (mass.nextMove == 4) {
                     SaveState.CountParasitesPatch.count++;
                     ReflectionHacks.setPrivate(mass, WrithingMass.class, "usedMegaDebuff", true);
-                    AbstractDungeon.actionManager.addToBottom(new BetterAddCardToDeckAction(CardLibrary.getCard("Parasite").makeCopy()));
+                    AbstractDungeon.actionManager
+                            .addToBottom(new BetterAddCardToDeckAction(CardLibrary
+                                    .getCard("Parasite").makeCopy()));
 
                     AbstractDungeon.actionManager.addToBottom(new RollMoveAction(mass));
 
@@ -119,6 +122,15 @@ public class WrithingMassState extends MonsterState {
         }
 
         public void update() {
+            if (cardToObtain.color == AbstractCard.CardColor.CURSE && AbstractDungeon.player
+                    .hasRelic("Omamori") && AbstractDungeon.player
+                    .getRelic("Omamori").counter != 0) {
+                ((Omamori) AbstractDungeon.player.getRelic("Omamori")).use();
+                this.duration = 0.0F;
+                this.isDone = true;
+                return;
+            }
+
             AbstractDungeon.player.relics.forEach(relic -> {
                 relic.onObtainCard(cardToObtain);
                 relic.onMasterDeckChange();

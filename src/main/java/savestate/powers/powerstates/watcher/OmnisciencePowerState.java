@@ -5,8 +5,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.watcher.OmnisciencePower;
 
-public class OmnisciencePowerState extends PowerState
-{
+public class OmnisciencePowerState extends PowerState {
     public OmnisciencePowerState(AbstractPower power) {
         super(power);
     }

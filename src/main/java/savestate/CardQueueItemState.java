@@ -27,10 +27,12 @@ public class CardQueueItemState {
     }
 
     public CardQueueItem loadItem() {
-        return new CardQueueItem(card == null ? null : card
+        CardQueueItem result = new CardQueueItem(card == null ? null : card
                 .loadCard(), (AbstractMonster) (monsterIndex
                 .isPresent() ? ActionState
                 .creatureForIndex(monsterIndex
                         .get()) : null), energyOnUse, ignoreEnergyTotal, autoplayCard);
+        result.randomTarget = randomTarget;
+        return result;
     }
 }
