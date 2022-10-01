@@ -6,7 +6,7 @@ import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.ExhaustAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
-public class ExhaustActionState implements CurrentActionState {
+public class ExhaustActionState implements CurrentActionState, ActionState {
     private final boolean isRandom;
     private final boolean anyNumber;
     private final boolean canPickZero;
@@ -21,6 +21,11 @@ public class ExhaustActionState implements CurrentActionState {
         this.anyNumber = ReflectionHacks.getPrivate(action, ExhaustAction.class, "anyNumber");
         this.canPickZero = ReflectionHacks.getPrivate(action, ExhaustAction.class, "canPickZero");
         this.amount = action.amount;
+    }
+
+    @Override
+    public AbstractGameAction loadAction() {
+        return new ExhaustAction(AbstractDungeon.player, AbstractDungeon.player, amount, isRandom, anyNumber);
     }
 
     @Override

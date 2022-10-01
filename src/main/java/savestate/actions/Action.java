@@ -33,6 +33,7 @@ public enum Action {
     ENQUEUE_END_TURN_ACTION(EnqueueEndTurnAction.class, action -> new EnqueueEndTurnActionState()),
     ESCAPE_ACTION(EscapeAction.class, action -> new EscapeActionState(action)),
     ESTABLISHMENT_POWER_ACTION(EstablishmentPowerAction.class, action -> new EstablishmentPowerActionState(action)),
+    EXHAUST_ACTION(ExhaustAction.class, action -> new ExhaustActionState(action)),
     GAIN_BLOCK_ACTION(GainBlockAction.class, action -> new GainBlockActionState(action)),
     GAIN_ENERGY_ACTION(GainEnergyAction.class, action -> new GainEnergyActionState(action)),
     HAND_CHECK_ACTION(HandCheckAction.class, action -> new HandCheckActionState(action)),
