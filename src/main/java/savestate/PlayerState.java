@@ -38,9 +38,9 @@ public class PlayerState extends CreatureState {
     private final int startingMaxHP;
     private final int temporaryHp;
 
-    private final int energyManagerEnergy;
-    private final int energyManagerMaxMaster;
-    private final int energyPanelTotalEnergy;
+    public final int energyManagerEnergy;
+    public final int energyManagerMaxMaster;
+    public final int energyPanelTotalEnergy;
 
     private final boolean isEndingTurn;
     private final boolean viewingRelics;

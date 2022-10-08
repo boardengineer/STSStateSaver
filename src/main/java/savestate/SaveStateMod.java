@@ -1,10 +1,12 @@
 package savestate;
 
 import basemod.BaseMod;
-import basemod.TopPanelItem;
+import basemod.interfaces.OnStartBattleSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
-import basemod.interfaces.PreUpdateSubscriber;
-import com.badlogic.gdx.graphics.Texture;
+import basemod.interfaces.PostUpdateSubscriber;
+import basemod.interfaces.RenderSubscriber;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
@@ -13,11 +15,13 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
+import com.megacrit.cardcrawl.rooms.AbstractRoom;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @SpireInitializer
-public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscriber {
+public class SaveStateMod implements PostInitializeSubscriber, RenderSubscriber, OnStartBattleSubscriber, PostUpdateSubscriber {
 
     /**
      * If true, states will be saved and loaded in ways that prioritize speed and function at the
@@ -27,13 +31,10 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
      */
     public static boolean shouldGoFast = false;
 
-    /**
-     * The simple Proof-of-concept UI for saving state will be two buttons, one to load state and
-     * one to save state.  To that end, store a single static save state.
-     */
-    public static SaveState saveState;
-
+    public static SpireConfig optionsConfig;
+    public static SaveStateController saveStateController;
     public static boolean shouldResetDungeon = false;
+
 
     public static void initialize() {
         BaseMod.subscribe(new SaveStateMod());
@@ -41,14 +42,21 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
 
     public static HashMap<String, Long> runTimes;
 
+    public SaveStateMod() {
+        try {
+            optionsConfig = new SpireConfig("SaveStateMod", "options");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void receivePostInitialize() {
-//        BaseMod.addTopPanelItem(new SaveStateTopPanel());
-//        BaseMod.addTopPanelItem(new LoadStateTopPanel());
-//        BaseMod.addTopPanelItem(new TestThingPanel());
+        saveStateController = new SaveStateController();
+        SaveStateController.numSaveStates = SaveStateController.getNumSaveStates();
 
         BaseMod.registerModBadge(ImageMaster
-                .loadImage("Icon.png"), "SaveState Mod", "Board Engineer", null, new FileLoadPanel());
+                .loadImage("Icon.png"), "SaveState Mod", "Board Engineer", null, new SaveStateModPanel());
 
         HashMap<String, AbstractCard> cards = CardLibrary.cards;
         StateFactories.cardIds = new String[cards.size()];
@@ -60,82 +68,6 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
         }
     }
 
-    public class SaveStateTopPanel extends TopPanelItem {
-        public static final String ID = "savestatemod:savestate";
-
-        public SaveStateTopPanel() {
-            super(new Texture("savestate.png"), ID);
-        }
-
-        @Override
-        protected void onClick() {
-            saveState = new SaveState();
-        }
-    }
-
-    public class LoadStateTopPanel extends TopPanelItem {
-        public static final String ID = "savestatemod:loadstate";
-
-        public LoadStateTopPanel() {
-            super(new Texture("loadstate.png"), ID);
-        }
-
-        @Override
-        protected void onClick() {
-            if (saveState != null) {
-                saveState.loadState();
-            }
-        }
-    }
-
-//    public class TestThingPanel extends TopPanelItem {
-//        public static final String ID = "savestatemod:cloudsave";
-//
-//        public TestThingPanel() {
-//            super(new Texture("loadstate.png"), ID);
-//        }
-//
-//        @Override
-//        protected void onClick() {
-//            SteamRemoteStorage remoteStorage = new SteamRemoteStorage(new SRCallback());
-//
-//            try {
-//                remoteStorage.fileWrite("testfile", ByteBuffer.allocateDirect(50)
-//                                                              .put("hello".getBytes()), 50);
-//            } catch (SteamException e) {
-//                e.printStackTrace();
-//            }
-//
-//            ByteBuffer buffer = ByteBuffer.allocateDirect(50);
-//            try {
-//                remoteStorage.fileRead("testfile", buffer, 50);
-//                while (buffer.hasRemaining()) {
-//                    System.err.println((char) buffer.get());
-//                }
-//                System.err.println("done reading");
-//            } catch (SteamException e) {
-//                e.printStackTrace();
-//            }
-//
-//            System.err.println("done trying");
-//
-//            System.err.println(remoteStorage.getFileCount());
-//        }
-//    }
-
-    @Override
-    public void receivePreUpdate() {
-//        if (shouldResetDungeon) {
-//            try {
-//                new Exordium(AbstractDungeon.player, new ArrayList<>());
-//                shouldResetDungeon = false;
-//            } catch (NullPointerException | ConcurrentModificationException | IndexOutOfBoundsException e) {
-//                System.err.println("Error Resetting Dungeon");
-//                e.printStackTrace();
-//            }
-//        }
-    }
-
     @SpirePatch(clz = PotionHelper.class, method = "initialize")
     public static class RemoveUnpalayablePotionsPatch {
         @SpirePostfixPatch
@@ -143,7 +75,6 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
             PotionHelper.potions.removeAll(PotionState.UNPLAYABLE_POTIONS);
         }
     }
-
 
     public static void addRuntime(String name, long amount) {
         if (runTimes == null) {
@@ -155,5 +86,21 @@ public class SaveStateMod implements PostInitializeSubscriber, PreUpdateSubscrib
         } else {
             runTimes.put(name, amount + runTimes.get(name));
         }
+    }
+
+    @Override
+    public void receiveRender(SpriteBatch spriteBatch) {
+        saveStateController.render(spriteBatch);
+    }
+
+    @Override
+    public void receiveOnBattleStart(AbstractRoom abstractRoom) {
+        System.err.println("starting battle");
+        saveStateController.initialize();
+    }
+
+    @Override
+    public void receivePostUpdate() {
+        saveStateController.update();
     }
 }
