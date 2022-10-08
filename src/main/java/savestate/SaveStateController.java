@@ -27,10 +27,12 @@ public class SaveStateController {
     private static final Texture LOAD_TEXTURE = new Texture("ui/loadstate.png");
 
     private static final float STATE_PANEL_HEIGHT = Math
-            .max(SAVE_TEXTURE.getHeight(), LOAD_TEXTURE.getHeight()) * 1.25f;
+            .max(SAVE_TEXTURE.getHeight(), LOAD_TEXTURE.getHeight()) * 1.25f * Settings.scale;
 
-    private static final float SAVE_BUTTON_X = X_POSITION + SAVE_TEXTURE.getWidth() * .5F;
-    private static final float LOAD_BUTTON_X = SAVE_BUTTON_X + SAVE_TEXTURE.getWidth() * 1.2F;
+    private static final float SAVE_BUTTON_X = X_POSITION + SAVE_TEXTURE
+            .getWidth() * .5F * Settings.scale;
+    private static final float LOAD_BUTTON_X = SAVE_BUTTON_X + SAVE_TEXTURE
+            .getWidth() * 1.2F * Settings.scale;
 
     private static final float PANEL_WIDTH = 350F * Settings.scale;
 
@@ -112,7 +114,7 @@ public class SaveStateController {
             saveButton.render(spriteBatch);
             loadButton.render(spriteBatch);
 
-            float textX = LOAD_BUTTON_X + LOAD_TEXTURE.getWidth() * 1.2F;
+            float textX = LOAD_BUTTON_X + LOAD_TEXTURE.getWidth() * 1.2F * Settings.scale;
             float textY = Y_POSITION_TOP - ((saveIndex + 1) * STATE_PANEL_HEIGHT) +
                     STATE_PANEL_HEIGHT * .70F;
 
