@@ -3,6 +3,8 @@ package savestate.actions;
 import basemod.ReflectionHacks;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.SetDontTriggerAction;
+import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.cards.colorless.Madness;
 import savestate.CardState;
 
 public class SetDontTriggerActionState implements ActionState {
@@ -14,13 +16,20 @@ public class SetDontTriggerActionState implements ActionState {
     }
 
     public SetDontTriggerActionState(SetDontTriggerAction action) {
-        this.cardIndex = CardState.indexForCard(ReflectionHacks
-                .getPrivate(action, SetDontTriggerAction.class, "card"));
+        AbstractCard card = ReflectionHacks
+                .getPrivate(action, SetDontTriggerAction.class, "card");
+        this.cardIndex = CardState.indexForCard(card);
         this.trigger = ReflectionHacks.getPrivate(action, SetDontTriggerAction.class, "trigger");
     }
 
     @Override
     public AbstractGameAction loadAction() {
-        return new SetDontTriggerAction(CardState.cardForIndex(cardIndex), trigger);
+        AbstractCard card = new Madness().makeCopy();
+
+        try {
+            card = CardState.cardForIndex(cardIndex);
+        } catch (IllegalStateException e) {
+        }
+        return new SetDontTriggerAction(card, trigger);
     }
 }
