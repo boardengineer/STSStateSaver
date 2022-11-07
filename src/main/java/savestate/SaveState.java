@@ -261,8 +261,10 @@ public class SaveState {
                     .apply(saveStateObject.get(key).getAsJsonObject()));
         }
 
-        this.lastCombatMetricKey = saveStateObject.get("lastCombatMetricKey")
-                                                  .getAsString();
+        // Legacy save states may be null, leave it blank if need be
+        this.lastCombatMetricKey = saveStateObject.has("lastCombatMetricKey") ? saveStateObject
+                .get("lastCombatMetricKey")
+                .getAsString() : "2 Louse";
     }
 
     public void initPlayerAndCardPool() {
