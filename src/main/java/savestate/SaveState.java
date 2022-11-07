@@ -66,6 +66,8 @@ public class SaveState {
     public final int lessonLearnedCount;
     public final int parasiteCount;
 
+    private final String lastCombatMetricKey;
+
     private boolean endTurnQueued;
     private boolean isEndingTurn;
 
@@ -164,6 +166,8 @@ public class SaveState {
             final StateElement.ElementFactories value = entry.getValue();
             additionalElements.put(key, value.factory.get());
         }
+
+        this.lastCombatMetricKey = AbstractDungeon.lastCombatMetricKey;
     }
 
     public SaveState(String jsonString) {
@@ -190,6 +194,7 @@ public class SaveState {
         this.ascensionLevel = parsed.get("ascension_level").getAsInt();
         this.bombIdOffset = parsed.get("bomb_id_offset").getAsInt();
         this.totalDiscardedThisTurn = parsed.get("total_discarded_this_turn").getAsInt();
+        this.lastCombatMetricKey = parsed.get("AbstractDungeon.lastCombatMetricKey").getAsString();
 
         // start counting from the json start
         this.lessonLearnedCount = 0;
@@ -255,6 +260,9 @@ public class SaveState {
             additionalElements.put(key, value.jsonObjectFactory
                     .apply(saveStateObject.get(key).getAsJsonObject()));
         }
+
+        this.lastCombatMetricKey = saveStateObject.get("lastCombatMetricKey")
+                                                  .getAsString();
     }
 
     public void initPlayerAndCardPool() {
@@ -394,6 +402,8 @@ public class SaveState {
         for (String key : StateFactories.elementFactories.keySet()) {
             additionalElements.get(key).restore();
         }
+
+        AbstractDungeon.lastCombatMetricKey = this.lastCombatMetricKey;
     }
 
     public void loadInitialState() {
@@ -454,6 +464,7 @@ public class SaveState {
 
         saveStateJson.addProperty("bomb_id_offset", bombIdOffset);
         saveStateJson.addProperty("total_discarded_this_turn", totalDiscardedThisTurn);
+        saveStateJson.addProperty("lastCombatMetricKey", lastCombatMetricKey);
 
         for (String key : StateFactories.elementFactories.keySet()) {
             saveStateJson.addProperty(key, additionalElements.get(key).encode());
@@ -484,6 +495,7 @@ public class SaveState {
         saveStateJson.add("player_state", playerState.jsonEncode());
         saveStateJson.add("rng_state", rngState.jsonEncode());
         saveStateJson.add("cur_map_node_state", curMapNodeState.jsonEncode());
+        saveStateJson.addProperty("lastCombatMetricKey", lastCombatMetricKey);
 
         for (String key : StateFactories.elementFactories.keySet()) {
             saveStateJson.add(key, additionalElements.get(key).jsonEncode());
@@ -577,8 +589,9 @@ public class SaveState {
         try (FileInputStream fis = new FileInputStream(fileName);
              InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(isr)) {
-            return new SaveState(new JsonParser().parse(reader.lines().collect(Collectors.joining()))
-                                          .getAsJsonObject());
+            return new SaveState(new JsonParser()
+                    .parse(reader.lines().collect(Collectors.joining()))
+                    .getAsJsonObject());
 
         }
     }
