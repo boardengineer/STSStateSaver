@@ -36,6 +36,7 @@ public enum Action {
     EXHAUST_ACTION(ExhaustAction.class, action -> new ExhaustActionState(action)),
     GAIN_BLOCK_ACTION(GainBlockAction.class, action -> new GainBlockActionState(action)),
     GAIN_ENERGY_ACTION(GainEnergyAction.class, action -> new GainEnergyActionState(action)),
+    GAIN_GOLD_ACTION(GainGoldAction.class, action -> new GainGoldActionState(action)),
     HAND_CHECK_ACTION(HandCheckAction.class, action -> new HandCheckActionState(action)),
     HEAL_ACTION(HealAction.class, action -> new HealActionState(action)),
     LOSE_ENERGY_ACTION(LoseEnergyAction.class, action -> new LoseEnergyActionState(action)),
