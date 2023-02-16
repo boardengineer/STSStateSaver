@@ -11,6 +11,7 @@ import com.megacrit.cardcrawl.actions.utility.*;
 import com.megacrit.cardcrawl.actions.watcher.ChangeStanceAction;
 import com.megacrit.cardcrawl.actions.watcher.PressEndTurnButtonAction;
 import com.megacrit.cardcrawl.actions.watcher.TriggerMarksAction;
+import savestate.fastobjects.MayhemAction;
 import savestate.fastobjects.actions.UpdateOnlyUseCardAction;
 
 import java.util.function.Function;
@@ -43,6 +44,7 @@ public enum Action {
     LOSE_HP_ACTION(LoseHPAction.class, action -> new LoseHPActionState(action)),
     MAKE_TEMP_CARD_IN_DRAW_PILE_ACTION(MakeTempCardInDrawPileAction.class, action -> new MakeTempCardInDrawPileActionState(action)),
     MAKE_TEMP_CARD_IN_HAND_ACTION(MakeTempCardInHandAction.class, action -> new MakeTempCardInHandActionState(action)),
+    MAYHEM_ACTION(MayhemAction.class, action -> new MayhemActionState()),
     MONSTER_START_TURN_ACTION(MonsterStartTurnAction.class, action -> new MonsterStartTurnActionState()),
     NEW_QUEUE_CARD_ACTION(NewQueueCardAction.class, action -> new NewQueueCardActionState()),
     OBTAIN_POTION_ACTION(ObtainPotionAction.class, action -> new ObtainPotionActionState(action)),
