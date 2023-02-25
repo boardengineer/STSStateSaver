@@ -42,7 +42,6 @@ public class SavesPatches {
 
     public static void load(String path, AbstractPlayer.PlayerClass playerClass) {
         preventDouble = false;
-        recallMode = true;
         SavesPatches.path = path;
         SavesPatches.playerClass = playerClass;
     }

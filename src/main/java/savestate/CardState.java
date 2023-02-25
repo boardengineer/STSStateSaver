@@ -569,14 +569,14 @@ public class CardState {
         JsonObject parsed = new JsonParser().parse(jsonString).getAsJsonObject();
 
         if (!IGNORE_MOD_SUBTYPES) {
-            if (parsed.has("type")) {
-                return StateFactories.cardFactoriesByTypeName
-                        .get(parsed.get("type").getAsString()).jsonFactory
+            if (StateFactories.cardFactoriesByCardId.containsKey(parsed.get("card_id"))) {
+                return StateFactories.cardFactoriesByCardId.get(parsed.get("card_id")).jsonFactory
                         .apply(jsonString);
             }
 
-            if (StateFactories.cardFactoriesByCardId.containsKey(parsed.get("card_id"))) {
-                return StateFactories.cardFactoriesByCardId.get(parsed.get("card_id")).jsonFactory
+            if (parsed.has("type")) {
+                return StateFactories.cardFactoriesByTypeName
+                        .get(parsed.get("type").getAsString()).jsonFactory
                         .apply(jsonString);
             }
         }
@@ -586,16 +586,16 @@ public class CardState {
 
     public static CardState forJson(JsonObject cardJson) {
         if (!IGNORE_MOD_SUBTYPES) {
-            if (cardJson.has("type")) {
-                return StateFactories.cardFactoriesByTypeName
-                        .get(cardJson.get("type").getAsString()).jsonObjectFactory
-                        .apply(cardJson);
-            }
-
             if (StateFactories.cardFactoriesByCardId
                     .containsKey(cardJson.get("card_id").getAsString())) {
                 return StateFactories.cardFactoriesByCardId
                         .get(cardJson.get("card_id").getAsString()).jsonObjectFactory
+                        .apply(cardJson);
+            }
+
+            if (cardJson.has("type")) {
+                return StateFactories.cardFactoriesByTypeName
+                        .get(cardJson.get("type").getAsString()).jsonObjectFactory
                         .apply(cardJson);
             }
         }
