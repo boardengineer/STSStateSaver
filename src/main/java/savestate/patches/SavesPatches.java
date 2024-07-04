@@ -21,6 +21,8 @@ import com.megacrit.cardcrawl.events.city.Colosseum;
 import com.megacrit.cardcrawl.events.city.MaskedBandits;
 import com.megacrit.cardcrawl.events.exordium.DeadAdventurer;
 import com.megacrit.cardcrawl.events.exordium.Mushrooms;
+import com.megacrit.cardcrawl.helpers.SaveHelper;
+import com.megacrit.cardcrawl.helpers.SeedHelper;
 import com.megacrit.cardcrawl.monsters.exordium.SlimeBoss;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoomBoss;
@@ -283,6 +285,32 @@ public class SavesPatches {
 
                 }
             }
+        }
+    }
+
+    public static boolean overrideSave = false;
+
+    @SpirePatch(clz = SaveHelper.class, method = "saveIfAppropriate")
+    public static class CreateBackupSavesPatch {
+        @SpirePrefixPatch
+        public static SpireReturn<Void> createSecondarySave(SaveFile.SaveType saveType) {
+            if (overrideSave) {
+                return SpireReturn.Continue();
+            }
+            overrideSave = true;
+
+            String basePath = SaveAndContinue.getPlayerSavePath(AbstractDungeon.player.chosenClass);
+            String newPath = String.format("startstates/%s/%02d/%s", SeedHelper.getString(Settings.seed), AbstractDungeon.floorNum, basePath);
+
+            overridePath = newPath;
+            SaveHelper.saveIfAppropriate(saveType);
+
+            overridePath = null;
+            SaveHelper.saveIfAppropriate(saveType);
+
+            overrideSave = false;
+
+            return SpireReturn.Return(null);
         }
     }
 }
